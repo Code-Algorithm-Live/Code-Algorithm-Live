@@ -1,31 +1,24 @@
+package com.ssafy.coala.config;
+
+//import com.fasterxml.classmate.TypeResolver;
+
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
+
+
 
 @Configuration
-@EnableWebMvc
 public class SwaggerConfig {
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
-                .useDefaultResponseMessages(true)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.coala"))
-                .paths(PathSelectors.any())
-                .build();
-    }
 
-    public ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("SpringBoot Rest API Documentation")
-                .description("3rd UMC Server: BAEMIN Clone coding - ?조")
-                .build();
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("코알라 API")
+                        .description("백준 문제 추천, 페어 프로그래밍 등의 기능을 제공합니다")
+                        .version("1.0.0"));
     }
 }
