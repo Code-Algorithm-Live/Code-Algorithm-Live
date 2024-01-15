@@ -1,10 +1,10 @@
-package com.ssafy.algo;
+package com.ssafy.coala;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AlgoApplicationTests {
+class CoalaApplicationTests {
 
 	@Test
 	void contextLoads() {

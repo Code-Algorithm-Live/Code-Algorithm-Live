@@ -1,13 +1,13 @@
-package com.ssafy.algo;
+package com.ssafy.coala;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AlgoApplication {
+public class CoalaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AlgoApplication.class, args);
+		SpringApplication.run(CoalaApplication.class, args);
 	}
 
 }
