@@ -1,37 +1,24 @@
 package com.ssafy.coala.config;
 
-import com.fasterxml.classmate.TypeResolver;
+//import com.fasterxml.classmate.TypeResolver;
+
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
-@EnableWebMvc
+
+
 @Configuration
-public class SwaggerConfig extends WebMvcConfigurationSupport {
+public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2) // 3.0 문서버전으로 세팅
-                .useDefaultResponseMessages(true)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.coala.domain.member.controller"))
-                .paths(PathSelectors.ant("/**"))
-                .build();
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Swagger 3.0 Api Sample")
-                .description("This is Sample")
-                .version("1.0")
-                .build();
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("코알라 API")
+                        .description("백준 문제 추천, 페어 프로그래밍 등의 기능을 제공합니다")
+                        .version("1.0.0"));
     }
 }
