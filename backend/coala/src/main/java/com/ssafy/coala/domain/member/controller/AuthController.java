@@ -1,21 +1,20 @@
 package com.ssafy.coala.domain.member.controller;
 
-import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/member")
-public class MemberController {
+@RequiredArgsConstructor
+public class AuthController {
 
-    @Operation(summary = "member", description = "member api")
+    @Operation(summary = "auth", description = "auth api")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
@@ -23,15 +22,12 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
 
-    @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@RequestBody Member member){
-        return ResponseEntity.ok(HttpStatus.OK);
+    @GetMapping("/login/oauth2/code/{registationId}")
+    public ResponseEntity<MemberDto> redirect(){
+        return new ResponseEntity<MemberDto>(HttpStatus.OK);
     }
 
-
-    @GetMapping("/signIn")
-    public ResponseEntity<String> signIn(@Parameter(description = "로그인", required = true, example = "reqMember") @RequestParam String reqMember) {
-        return ResponseEntity.ok("hello " + reqMember);
-    }
+//    @PostMapping("/auth/token")
+//    public ResponseEntity
 
 }
