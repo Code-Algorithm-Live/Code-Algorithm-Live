@@ -6,7 +6,11 @@ spring:
 #  username: ssafy
 #  password: ssafy
 #  driver-class-name: com.mysql.cj.jdbc.Driver
-
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: tutorial
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/test")
 @RestController
-
 public class SampleController {
 
     @Operation(summary = "test hello", description = "hello api example")

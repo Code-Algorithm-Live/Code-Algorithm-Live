@@ -9,24 +9,21 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    // SockJS를 사용할 경우, 클라이언트에서 WebSocket 요청을 보낼 때 설정한 엔드포인트 뒤에 /webSocket를 추가해줘야 정상 작동된다.
-    // sockJS Fallback을 이용해 노출할 endpoint 설정
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 웹소켓이 handshake를 하기 위해 연결하는 endpoint
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
 
+    //endpoint를 /stomp로 하고, allowedOrigins를 "*"로 하면 페이지에서
+    //Get /info 404 Error가 발생한다. 그래서 아래와 같이 2개의 계층으로 분리하고
+    //origins를 개발 도메인으로 변경하니 잘 동작하였다.
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry){
+        registry.addEndpoint("/stomp/chat")
+                .setAllowedOrigins("http://localhost:8080")
+                .withSockJS();
     }
 
-    //메세지 브로커에 관한 설정
+//    어플리케이션 내부에서 사용할 path를 지정할 수 있음
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 서버 -> 클라이언트로 발행하는 메세지에 대한 endpoint 설정 : 구독
-        registry.enableSimpleBroker("/sub");
-
-        // 클라이언트->서버로 발행하는 메세지에 대한 endpoint 설정 : 구독에 대한 메세지
         registry.setApplicationDestinationPrefixes("/pub");
+        registry.enableSimpleBroker("/sub");
     }
 }
