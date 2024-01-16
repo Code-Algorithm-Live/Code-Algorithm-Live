@@ -1,20 +1,37 @@
 package com.ssafy.coala.domain.chat.domain;
 
-import java.util.UUID;
+import com.ssafy.coala.domain.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoom {
 
-    private static final long serialVersionUID = 6494678977089006639L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
 
-    private String roomId;
-    private String name;
-    private long userCount; // 채팅방 인원수
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private Member sender;
 
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
-        return chatRoom;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private Member receiver;
+
+    public void setSender(Member sender) {
+        this.sender = sender;
+    }
+
+    public void setReceiver(Member receiver) {
+        this.receiver = receiver;
     }
 
 }
