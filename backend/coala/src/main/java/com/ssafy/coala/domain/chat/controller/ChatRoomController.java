@@ -1,5 +1,3 @@
-package com.ssafy.coala.domain.chat.controller;
-
 import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
