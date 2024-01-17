@@ -7,11 +7,8 @@ import com.ssafy.coala.domain.member.domain.Sample;
 //import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +35,7 @@ public class SampleController {
     }
 
 
+
 //    @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
 //    @ApiResponses({
 //            @ApiResponse(code = 200, message = "OK"),
@@ -49,7 +47,7 @@ public class SampleController {
 //            , value = "카카오 엑세스 토큰"
 //            , defaultValue = "None")
     @GetMapping
-    String getString(){
+    public String getString(){
         return "test";
     }
 
