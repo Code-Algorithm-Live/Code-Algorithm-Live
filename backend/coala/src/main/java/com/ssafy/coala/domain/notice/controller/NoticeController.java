@@ -1,7 +1,7 @@
-package com.ssafy.coala.domain.member.controller;
+package com.ssafy.coala.domain.notice.controller;
 
-import com.ssafy.coala.domain.member.application.NoticeService;
-import com.ssafy.coala.domain.member.domain.Notices;
+import com.ssafy.coala.domain.notice.application.NoticeService;
+import com.ssafy.coala.domain.notice.domain.Notices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

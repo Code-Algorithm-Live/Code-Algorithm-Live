@@ -1,6 +1,6 @@
-package com.ssafy.coala.domain.member.application;
+package com.ssafy.coala.domain.notice.application;
 
-import com.ssafy.coala.domain.member.domain.Notices;
+import com.ssafy.coala.domain.notice.domain.Notices;
 import org.springframework.stereotype.Service;
 
 @Service
