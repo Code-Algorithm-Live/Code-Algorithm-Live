@@ -1,3 +1,5 @@
+package com.ssafy.coala.domain.chat.controller;
+
 import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.dto.ChatMessageDto;
 import com.ssafy.coala.domain.member.application.MemberService;
