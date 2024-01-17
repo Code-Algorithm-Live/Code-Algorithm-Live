@@ -1,10 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
-import com.ssafy.coala.domain.member.domain.Sample;
-//import io.swagger.annotations.ApiImplicitParam;
-//import io.swagger.annotations.ApiOperation;
-//import io.swagger.annotations.ApiResponse;
-//import io.swagger.annotations.ApiResponses;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
