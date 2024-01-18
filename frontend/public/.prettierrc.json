@@ -1,7 +1,0 @@
-{
-    "semi": true,				// ; 사용 여부
-    "bracketSpacing": true,		// Object literal에 띄어쓰기 사용 여부 (ex: { foo: bar })
-    "arrowParens": "always",	// 함수에서 인자에 괄호 사용 여부 (ex: (x) => y)
-    "printWidth": 80            // 자동 줄 바꿈이 되는 길이
-    //https://prettier.io/docs/en/options.html
-}
