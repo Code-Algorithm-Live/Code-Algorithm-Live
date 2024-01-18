@@ -20,14 +20,14 @@ import java.util.Collections;
 @Transactional
 public class LoginServiceImpl implements LoginService{
 
-    @Value("${oauth.restapi}")
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
-    @Value("${oauth.redirecturi}")
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String KAKAO_REDIRECT_URI;
-    @Value("${oauth.secretkey}")
+    @Value("${spring.security.oauth2.client.registration.kakao.secretkey}")
     private String KAKAO_CLIENT_SECRET;
 
-    @Value("${oauth.kakaotokenuri}")
+    @Value("${spring.security.oauth2.client.registration.kakao.kakao-token-uri}")
     private String KAKAO_TOKEN_URI;
     @Override
     public KakaoTokenDto getKakaoAccessToken(String code) {

@@ -1,0 +1,24 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+#          google:
+#            client-id: {client-id}
+#            client-secret: {client-secret}
+#            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+#            authorization-grant-type: authorization_code
+#            scope: email
+
+          kakao:
+            client-id: fec2b4410bb3f5fec515844354a770c6
+            redirect-uri: http://localhost:3000/login/oauth2/callback/kakao
+            scope: profile_nickname, profile_image, account_email
+            secretkey: fEUXu1hCdBBgLZkNj67J83UURWs2hlnP
+            kakao-token-uri: https://kauth.kakao.com/oauth/token
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
