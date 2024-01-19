@@ -22,5 +22,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .setViewName("forward:/swagger-ui/index.html");
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+
+        corsRegistry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000");
+    }
 
 }
