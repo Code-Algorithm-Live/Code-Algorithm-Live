@@ -10,4 +10,3 @@ public interface NoticeService {
     public Notices addNotices(int id);
 
 }
-
