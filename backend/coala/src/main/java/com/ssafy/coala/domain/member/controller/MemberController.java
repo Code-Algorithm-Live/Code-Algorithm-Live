@@ -73,9 +73,9 @@ public class MemberController {
 
                 if (((String)map.get("bio")).equals("")){
                     result = (String) map.get("handle");
+                    System.out.println(getProblemList(bojId));
                 }
             }
-            System.out.println(getProblemList(bojId));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
