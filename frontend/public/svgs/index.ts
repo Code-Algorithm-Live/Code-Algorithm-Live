@@ -1,3 +1,3 @@
-import IconNext from "./next.svg";
+import IconNext from './next.svg';
 
 export { IconNext };

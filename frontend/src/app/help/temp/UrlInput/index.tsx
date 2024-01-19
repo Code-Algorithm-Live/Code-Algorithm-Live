@@ -18,8 +18,10 @@ const UrlInput = ({
   const debouncedUrl = useDebounce(url, 2000);
 
   const { mutate: fetchMetaData, isPending } = useMutation({
-    mutationFn: ()=>{return new Promise((resolve) => resolve("임시 Promise"))},
-    onSuccess: (data_) => {
+    mutationFn: () => {
+      return new Promise(resolve => resolve('임시 Promise'));
+    },
+    onSuccess: data_ => {
       onUrlFetchSuccess(data_);
       setErrorMessage('');
     },
@@ -32,9 +34,7 @@ const UrlInput = ({
     if (watchLoadingState) watchLoadingState(isPending);
   }, [isPending]);
 
-  const handleFetchURL = () => {
-   
-  };
+  const handleFetchURL = () => {};
 
   useEffect(() => {
     if (debouncedUrl) {
@@ -45,11 +45,11 @@ const UrlInput = ({
   return (
     <div style={{ marginBottom: '14px' }}>
       <input
-        type='text'
-        id='url'
-        placeholder='URL을 입력하거나 복사한 URL을 입력해주세요.'
+        type="text"
+        id="url"
+        placeholder="URL을 입력하거나 복사한 URL을 입력해주세요."
         value={url}
-        onChange={(e) => {
+        onChange={e => {
           setUrl(e.target.value);
           onInputChange(e);
         }}
