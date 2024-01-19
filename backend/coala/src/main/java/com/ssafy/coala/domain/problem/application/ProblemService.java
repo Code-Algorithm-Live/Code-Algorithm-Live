@@ -6,7 +6,6 @@ import com.ssafy.coala.domain.problem.domain.Tag;
 import java.util.List;
 
 public interface ProblemService {
-    public List<Tag> InsertTags(List<Tag> list);
     public List<Problem> InsertProblem(List<Problem> list);
     public Integer MaxId();
 

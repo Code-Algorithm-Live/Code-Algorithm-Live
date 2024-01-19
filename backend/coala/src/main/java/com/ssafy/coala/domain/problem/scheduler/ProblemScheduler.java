@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
 import com.ssafy.coala.domain.problem.domain.Tag;
+import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,16 +35,19 @@ public class ProblemScheduler {
     private ScheduledFuture<?> scheduledFuture;
 
     //최대로 저장할 문제 idx
-    int maxId = 999;
+    int maxId = 0;
     //다음 저장할 문제 idx
-    int curId = 999;
+    int curId = 0;
+
+    @PostConstruct
+    @Scheduled(cron = "0 0 0 * * *")
     public void setMaxId() throws IOException{
         String URL = "https://www.acmicpc.net/problem/added";
         Document doc = Jsoup.connect(URL).get();
 //        System.out.println(doc);
 //        Element element = doc.select(".list_problem_id").get(0);
         maxId = Integer.parseInt(doc.select(".list_problem_id").get(0).text());
-        System.out.println(maxId);
+        System.out.println("maxId:"+maxId);
     }
 
     //solved.ac api의 호출제한->15분당 256번ㄴ
@@ -53,21 +57,20 @@ public class ProblemScheduler {
     public void saveProblem() {
         try {
             // API 호출 주소
-            if (curId == 999) {
+            if (curId == 0){ //초깃값이면 db에서 가져온다.
                 curId = problemService.MaxId();
-                setMaxId();
             }
             if (curId>=maxId) {
                 System.out.println("save end!");
                 return;
             }
 
-            String apiUrl = "https://solved.ac/api/v3/problem/lookup?problemIds=";
+            StringBuilder apiUrl = new StringBuilder("https://solved.ac/api/v3/problem/lookup?problemIds=");
 
-            apiUrl += ++curId;
+            apiUrl.append(++curId);
 
             for (int i = 1; i < 100 && maxId>curId; i++) {
-                apiUrl += "%2C" + (++curId);
+                apiUrl.append("%2C").append(++curId);
             }
 //            System.out.println(apiUrl);
             // HttpClient 객체 생성
@@ -75,7 +78,7 @@ public class ProblemScheduler {
 
             // HttpRequest 객체 생성
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl))
+                    .uri(URI.create(apiUrl.toString()))
                     .build();
 
             // 응답 데이터 읽기

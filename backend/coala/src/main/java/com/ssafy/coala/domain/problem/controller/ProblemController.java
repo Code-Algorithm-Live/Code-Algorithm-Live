@@ -33,13 +33,9 @@ public class ProblemController {
     @Autowired
     ProblemService problemService;
 
-
-
-
-
     @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
     @GetMapping("recent/{bojId}")
-    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "bojId", required = true, example = "shiftpsh")
+    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "bojId", required = true, example = "col016")
                                                               @PathVariable String bojId){
         List<Problem> list = new ArrayList<>();
         for (int i=0; i<10; i++){
@@ -63,7 +59,7 @@ public class ProblemController {
 
     @Operation(summary = "푼 문제 리스트", description = "해당 유저가 푼 전체 리스트를 가져온다.")
     @GetMapping("problem/{bojId}")
-    public ResponseEntity<List<Problem>> getUserProblem(@Parameter(description = "bojId", required = true, example = "shiftpsh")
+    public ResponseEntity<List<Problem>> getUserProblem(@Parameter(description = "bojId", required = true, example = "col016")
                                                             @PathVariable String bojId){
         List<Problem> list = new ArrayList<>();
         for (int i=0; i<10; i++){
@@ -75,7 +71,7 @@ public class ProblemController {
 
     @Operation(summary = "유저 문제 갱신", description = "유저가 푼 문제 리스트를 갱신하고 가져온다. 성공시 유저의 최근 푼 문제, 추천문제도 갱신한다")
     @PutMapping("{bojId}")
-    public ResponseEntity<List<Problem>> updateUserProblem(@Parameter(description = "bojId", required = true, example = "shiftpsh")
+    public ResponseEntity<List<Problem>> updateUserProblem(@Parameter(description = "bojId", required = true, example = "col016")
                                                                @PathVariable String bojId){
         List<Problem> list = new ArrayList<>();
         for (int i=0; i<10; i++){
@@ -103,7 +99,8 @@ public class ProblemController {
         for (int i=0; i<10; i++){
             list.add(new Problem());
         }
-        return ResponseEntity.ok((list));    }
+        return ResponseEntity.ok((list));
+    }
 
     @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
     @GetMapping("{problemId}")
