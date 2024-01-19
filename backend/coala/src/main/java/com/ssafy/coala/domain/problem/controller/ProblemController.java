@@ -1,12 +1,16 @@
 package com.ssafy.coala.domain.problem.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
+import com.ssafy.coala.domain.problem.domain.Tag;
+import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -26,54 +30,10 @@ import java.util.Objects;
 @RequestMapping("/problem")
 public class ProblemController {
 
-    @Operation(summary = "문제 DB에 저장", description = "FE에서 사용하지 않음")
-    @GetMapping("save")
-    public ResponseEntity<String> saveProblem(){
-        try {
-            // API 호출 주소
-            String apiUrl = "https://solved.ac/api/v3/problem/lookup?problemIds=";
-            int start = 1000;
-            apiUrl += start;
-            for (int i=1; i<1; i++){
-                apiUrl += "%2C"+(start+i);
-            }
-//            System.out.println(apiUrl);
-            // HttpClient 객체 생성
-            HttpClient client = HttpClient.newHttpClient();
+    @Autowired
+    ProblemService problemService;
 
-            // HttpRequest 객체 생성
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl))
-                    .build();
 
-            // 응답 데이터 읽기
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // 응답 코드 확인
-            int statusCode = response.statusCode();
-//            System.out.println("Status Code: " + statusCode);
-            String result = "";
-
-            if (response.statusCode()==200){
-                try{
-                    ObjectMapper mapper = new ObjectMapper();
-                    List<Map> list = mapper.readValue(response.body(), List.class);
-//                    Problem p = new Problem(
-//                            resultMap.get("probelmId"),
-//                    );
-                    result += list.get(0);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-            // 응답 데이터 출력
-//            System.out.println("Response Data: " + response.body());
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok("False");
-    }
 
 
 
