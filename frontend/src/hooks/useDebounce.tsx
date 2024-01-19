@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 function useDebounce<T>(value: T, delay: number): T {
-  // 커밋 테스트 3
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
