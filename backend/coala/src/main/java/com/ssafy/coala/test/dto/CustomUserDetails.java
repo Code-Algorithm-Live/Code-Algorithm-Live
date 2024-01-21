@@ -32,13 +32,15 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return userEntity.getNickname();
     }
+
+    public String getEmail(){return userEntity.getEmail();}
 
     @Override
     public boolean isAccountNonExpired() {

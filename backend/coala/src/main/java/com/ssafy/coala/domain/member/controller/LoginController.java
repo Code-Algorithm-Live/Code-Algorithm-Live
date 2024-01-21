@@ -2,6 +2,7 @@ package com.ssafy.coala.domain.member.controller;
 
 import com.ssafy.coala.domain.member.application.LoginService;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
+import com.ssafy.coala.domain.member.dto.KakaoUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,14 +34,13 @@ public class LoginController {
     })
 
     @GetMapping("/oauth2/callback/kakao")
-    public ResponseEntity<String> kakaoLogin(@Parameter(description = "code", required = true) @RequestParam String code) {
+    public ResponseEntity<KakaoUserDto> kakaoLogin(@Parameter(description = "code", required = true) @RequestParam String code) throws Exception {
 //        String code = request.getParameter("code");
         KakaoTokenDto kakaoTokenDto = service.getKakaoAccessToken(code);
-        System.out.println(kakaoTokenDto);
-//        String code = request.getParameter("code");
+//        System.out.println(kakaoTokenDto);
+        KakaoUserDto user = service.kakaoLogin(kakaoTokenDto.getAccess_token());
 //        String kakaoAccessToken = authService.getKakaoAccessToken(code).getAccess_token();
-//        return authService.kakaoLogin(kakaoAccessToken);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
 }
