@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Entity
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
     @Column(name = "member_id")
-    private Long Id;
+    private String Id;
 
     @Column(name = "member_password")
     private String password;
@@ -27,5 +27,7 @@ public class Member {
 
     @Column(name = "member_exp")
     private Integer exp;
+
+
 
 }
