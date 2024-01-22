@@ -1,43 +1,37 @@
 package com.ssafy.coala.domain.chat.domain;
 
-import com.ssafy.coala.domain.member.domain.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ChatMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    public enum MessageType {
+        ENTER, TALK
+    }
 
-    @Column(nullable = false)
-    private String content;
+    private MessageType type;
 
-    @Column(nullable = false)
-    private LocalDateTime sendTime;
-
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private Member sender;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
-    public void setMember(Member sender) {
-        this.sender = sender;
-    }
+    //보내는 사람
+    private String sender;
+    //내용
+    private String message;
 
-    public void setChatRoom(ChatRoom chatRoom) {
-        this.chatRoom = chatRoom;
-    }
+    private String date;
+
+    // 채팅생성
 }
