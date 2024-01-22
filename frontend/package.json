@@ -24,7 +24,7 @@
     "sass": "^1.70.0",
     "styled-components": "^6.1.8",
     "styled-reset": "^4.5.2",
-    "zustand": "^4.4.7"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-private-methods": "^7.23.3",

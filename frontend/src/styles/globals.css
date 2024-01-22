@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -21,15 +22,44 @@
   --editorBlack-color: #282a36;
   --editorSub-color: #343746;
   --editorTypo-color: #e2e1e1;
-  --main-font: #090909;
-  --sub-font: #999999;
-  --link-font: #0395ff;
+  --main-font-color: #090909;
+  --sub-font-color: #999999;
+  --link-font-color: #0395ff;
+  --pretendard: 'pretendard';
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
+>>>>>>> f083a77736e58d8e5b9b665f480f1829d756f991
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+} */
+
+body {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
+}
+
+.basic-font {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
+}
+
+.main-title-font {
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.36px;
 }
