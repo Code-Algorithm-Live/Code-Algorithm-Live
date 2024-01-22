@@ -3,9 +3,6 @@ package com.ssafy.coala.domain.chat.controller;
 import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.dto.ChatMessageDto;
 import com.ssafy.coala.domain.member.application.MemberService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.RequiredArgsConstructor;
@@ -29,26 +26,26 @@ public class ChatController extends Socket {
     private MemberService memberService;
     private static final List<Session> session = new ArrayList<Session>();
 
-    @Operation(summary = "chat", description = "chat api")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
+//    @Operation(summary = "chat", description = "chat api")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
 
     @GetMapping("/")
     public String index(){
         return "index.html";
     }
 
-    @Operation(summary = "채팅 전송", description = "사용자 채팅 전송")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
+//    @Operation(summary = "채팅 전송", description = "사용자 채팅 전송")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
 // 사용자한테 채팅 전송
     @MessageMapping("/chats/messages/{room-id}") // 클라이언트에서 받은 요청을 @SendTo 설정한 구독자들한테 보냄
     public void message(@DestinationVariable("room-id") Long roomId, ChatMessageDto chatMessageDto) {
