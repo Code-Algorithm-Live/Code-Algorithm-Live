@@ -85,15 +85,17 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/main", "/join").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/main", "/join","/**").permitAll()
                         .anyRequest().authenticated());
 
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
 
-        http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http
+//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//
+//        http
+//                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
+
+
 
         //세션 설정
         http

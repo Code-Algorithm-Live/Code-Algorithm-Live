@@ -72,7 +72,7 @@ public class LoginServiceImpl implements LoginService{
                 kakaoTokenRequest,
                 String.class
         );
-        System.out.println(accessTokenResponse.getBody());
+//        System.out.println(accessTokenResponse.getBody());
         // JSON Parsing (-> KakaoTokenDto)
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
