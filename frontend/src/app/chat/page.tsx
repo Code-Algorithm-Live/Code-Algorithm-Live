@@ -1,10 +1,9 @@
-
+import Chatting from '@/components/Chat/Chatting';
 
 export default function Chat() {
-    return (
-      <h1>
-        Chat 
-      </h1>
-    )
-  }
-  
+  return (
+    <>
+      <Chatting />
+    </>
+  );
+}
