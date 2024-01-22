@@ -15,15 +15,15 @@ import java.util.List;
 public class Notices {
     //member id
     @Id
-    int id;
-    List<Notice> list;
+    private int id;
+    private List<Notice> list;
     @Getter
     @Setter
     public class Notice {
-        int type;
-        String name;
-        String content;
-        LocalDateTime time;
+        private int type;
+        private String name;
+        private String content;
+        private LocalDateTime time;
         public Notice(int type, String name, String content){
             this.type = type;
             this.name = name;

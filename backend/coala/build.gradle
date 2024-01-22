@@ -20,7 +20,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 //	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//	implementation 'mysql:mysql-connector-java:8.0.32'
+	implementation 'mysql:mysql-connector-java:8.0.32'
 	// springfox-swagger-ui
 	implementation "com.h2database:h2"
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
@@ -43,6 +43,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.2.0'
 
 //	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+	implementation 'org.jsoup:jsoup:1.17.1'
 
 }
 
