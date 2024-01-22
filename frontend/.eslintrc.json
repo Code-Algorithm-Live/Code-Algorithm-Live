@@ -28,7 +28,8 @@
     "class-methods-use-this": "off",
     "no-continue": "off",
     "no-case-declarations": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "import/prefer-default-export": "off"
   },
   "settings": {
     "react": {
