@@ -5,41 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //@Entity
 @Entity
+@Getter
 public class Problem {
-    public Integer getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public int getAccepted_user_count() {
-        return accepted_user_count;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public boolean isGive_no_rating() {
-        return give_no_rating;
-    }
-
-    public float getAverage_tries() {
-        return average_tries;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
     @Id
     private Integer id;
     private String title;
@@ -48,12 +23,12 @@ public class Problem {
     private boolean give_no_rating;
     private float average_tries;
 
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.JOIN)
+    private List<Tag> tags = new ArrayList<>();
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
-
-    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
-    private List<Tag> tags = new ArrayList<>();
     public Problem(){};
 
     public Problem(Integer id, String title, int accepted_user_count,
