@@ -1,4 +1,4 @@
-package com.ssafy.coala.domain.member.domain;
+package com.ssafy.coala.domain.notice.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,10 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 @Getter
 @Setter
@@ -17,15 +15,15 @@ import java.util.Queue;
 public class Notices {
     //member id
     @Id
-    int id;
-    List<Notice> list;
+    private int id;
+    private List<Notice> list;
     @Getter
     @Setter
     public class Notice {
-        int type;
-        String name;
-        String content;
-        LocalDateTime time;
+        private int type;
+        private String name;
+        private String content;
+        private LocalDateTime time;
         public Notice(int type, String name, String content){
             this.type = type;
             this.name = name;
