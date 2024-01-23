@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ChatMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     public enum MessageType {
         ENTER, TALK

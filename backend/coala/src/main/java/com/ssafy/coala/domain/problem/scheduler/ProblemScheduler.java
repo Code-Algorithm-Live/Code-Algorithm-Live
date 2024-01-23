@@ -7,11 +7,8 @@ import com.ssafy.coala.domain.problem.domain.Tag;
 import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-@Component
+//@Component
 public class ProblemScheduler {
     @Autowired
     ProblemService problemService;
@@ -53,7 +50,7 @@ public class ProblemScheduler {
     //solved.ac api의 호출제한->15분당 256번ㄴ
     //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
     //분당 800개, 시간당 48000개의 문제를 얻는다.
-    @Scheduled(fixedRate = 7500)
+//    @Scheduled(fixedRate = 7500)
     public void saveProblem() {
         try {
             // API 호출 주소

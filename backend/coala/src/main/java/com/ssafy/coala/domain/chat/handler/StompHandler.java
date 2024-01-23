@@ -20,6 +20,7 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message); // 헤더의 세션 정보 가져옴?
         if(accessor.getCommand() == StompCommand.CONNECT) {
+            System.out.println("startStomp...");
 //            if(!jwtTokenProvider.validateToken(accessor.getFirstNativeHeader("token")))
 //                try {
 //                    throw new AccessDeniedException("");
