@@ -1,12 +1,11 @@
-package com.ssafy.coala.test.jwt;
+package com.ssafy.coala.domain.member.jwt;
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
-import com.ssafy.coala.test.entity.UserEntity;
+import com.ssafy.coala.domain.member.domain.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;

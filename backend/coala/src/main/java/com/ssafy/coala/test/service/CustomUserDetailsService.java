@@ -1,8 +1,8 @@
 package com.ssafy.coala.test.service;
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
-import com.ssafy.coala.test.entity.UserEntity;
-import com.ssafy.coala.test.repository.UserRepository;
+import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.dao.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

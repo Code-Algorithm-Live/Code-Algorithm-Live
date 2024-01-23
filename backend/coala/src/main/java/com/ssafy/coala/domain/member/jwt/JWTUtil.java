@@ -1,4 +1,4 @@
-package com.ssafy.coala.test.jwt;
+package com.ssafy.coala.domain.member.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

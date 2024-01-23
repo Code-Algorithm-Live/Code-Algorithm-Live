@@ -1,7 +1,6 @@
 package com.ssafy.coala.domain.member.dto;
 
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.test.entity.UserEntity;
+import com.ssafy.coala.domain.member.domain.UserEntity;
 import lombok.Data;
 
 @Data

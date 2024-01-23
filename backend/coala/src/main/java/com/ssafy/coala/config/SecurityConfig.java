@@ -1,23 +1,16 @@
-package com.ssafy.coala.test.config;
+package com.ssafy.coala.config;
 
-import com.ssafy.coala.test.jwt.JWTFilter;
-import com.ssafy.coala.test.jwt.JWTUtil;
-import com.ssafy.coala.test.jwt.LoginFilter;
-import com.ssafy.coala.test.service.CustomUserDetailsService;
+import com.ssafy.coala.domain.member.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.tomcat.util.file.ConfigurationSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -85,7 +78,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**", "/main", "/join","/**").permitAll()
+                        .requestMatchers("/login/**","/**").permitAll()
                         .anyRequest().authenticated());
 
 

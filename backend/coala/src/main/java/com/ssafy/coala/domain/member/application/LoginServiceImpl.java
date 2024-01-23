@@ -5,15 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
-import com.ssafy.coala.domain.member.dto.LoginResponseDto;
-import com.ssafy.coala.test.dto.UserSignUpDto;
-import com.ssafy.coala.test.entity.UserEntity;
-import com.ssafy.coala.test.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -21,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
 
 @Service
 @Transactional
@@ -137,18 +131,6 @@ public class LoginServiceImpl implements LoginService{
 
 
         return new KakaoUserDto(id, email, nickname,img_url);
-        // JSON Parsing (-> kakaoAccountDto)
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.registerModule(new JavaTimeModule());
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        KakaoUserDto kakaoUserDto = null;
-//        System.out.println(accountInfoResponse.getBody());
-//        try {
-//            kakaoUserDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoUserDto.class);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(kakaoUserDto);
-//        return kakaoUserDto;
+
     }
 }

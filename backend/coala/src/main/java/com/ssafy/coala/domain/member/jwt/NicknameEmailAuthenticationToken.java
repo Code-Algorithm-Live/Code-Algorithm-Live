@@ -1,4 +1,4 @@
-package com.ssafy.coala.test.jwt;
+package com.ssafy.coala.domain.member.jwt;
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

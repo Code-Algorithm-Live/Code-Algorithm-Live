@@ -1,10 +1,7 @@
 package com.ssafy.coala.test.service;
 
 import com.ssafy.coala.test.dto.JoinDto;
-import com.ssafy.coala.test.entity.UserEntity;
-import com.ssafy.coala.test.repository.UserRepository;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ssafy.coala.domain.member.dao.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

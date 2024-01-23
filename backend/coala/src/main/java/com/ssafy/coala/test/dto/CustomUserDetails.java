@@ -1,6 +1,6 @@
 package com.ssafy.coala.test.dto;
 
-import com.ssafy.coala.test.entity.UserEntity;
+import com.ssafy.coala.domain.member.domain.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

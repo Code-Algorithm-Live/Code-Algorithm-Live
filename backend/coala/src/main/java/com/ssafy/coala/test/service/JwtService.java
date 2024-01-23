@@ -2,11 +2,10 @@ package com.ssafy.coala.test.service;
 
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
-import com.ssafy.coala.test.entity.UserEntity;
-import com.ssafy.coala.test.jwt.JWTUtil;
-import com.ssafy.coala.test.jwt.NicknameEmailAuthenticationToken;
-import com.ssafy.coala.test.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
+import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.jwt.JWTUtil;
+import com.ssafy.coala.domain.member.jwt.NicknameEmailAuthenticationToken;
+import com.ssafy.coala.domain.member.dao.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;

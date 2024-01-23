@@ -2,8 +2,8 @@ package com.ssafy.coala.test.service;
 
 
 import com.ssafy.coala.test.dto.UserSignUpDto;
-import com.ssafy.coala.test.entity.UserEntity;
-import com.ssafy.coala.test.repository.UserRepository;
+import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

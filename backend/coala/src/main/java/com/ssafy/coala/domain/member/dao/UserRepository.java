@@ -1,8 +1,7 @@
-package com.ssafy.coala.test.repository;
+package com.ssafy.coala.domain.member.dao;
 
-import com.ssafy.coala.test.entity.UserEntity;
+import com.ssafy.coala.domain.member.domain.UserEntity;
 
-import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.ssafy.coala.test.entity;
+package com.ssafy.coala.domain.member.domain;
 
 import io.swagger.v3.oas.annotations.info.Contact;
 import jakarta.persistence.*;
