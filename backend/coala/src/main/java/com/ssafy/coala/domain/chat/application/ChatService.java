@@ -82,8 +82,6 @@ public class ChatService {
         // 메시지를 메시지레포지토리에 저장해줌
         chatMessageRepository.save(chatMessage);
         chatRoom.get().getMessages().add(chatMessage);
-        log.info("messages size = {}", chatRoom.get().getMessages().add(chatMessage));
-
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {
