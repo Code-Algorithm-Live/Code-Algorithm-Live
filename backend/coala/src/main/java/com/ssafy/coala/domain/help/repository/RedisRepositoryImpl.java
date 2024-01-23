@@ -23,6 +23,7 @@ public class RedisRepositoryImpl implements RedisRepository {
         return member;
     }
 
+
     @Override
     public Member findOne(Long memberId) {
         return em.find(Member.class, memberId);

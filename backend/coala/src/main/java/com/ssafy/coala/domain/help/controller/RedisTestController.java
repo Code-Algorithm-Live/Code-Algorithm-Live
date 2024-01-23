@@ -50,4 +50,18 @@ public class RedisTestController {
         redisService.removeMember(memberId);
         return ResponseEntity.ok("삭제 완료");
     }
+
+    @PostMapping("/queue")
+    public ResponseEntity<?> pushQueue(@RequestBody Map<String, String> memberInfo) {
+        Member member = new Member();
+        member.setName(memberInfo.get("name"));
+        redisService.addUser(member);
+        return ResponseEntity.ok("queue 푸쉬 완료");
+    }
+
+    @GetMapping("/queue")
+    public ResponseEntity<?> getQueue() {
+        return ResponseEntity.ok(redisService.getAllUsers());
+    }
+
 }
