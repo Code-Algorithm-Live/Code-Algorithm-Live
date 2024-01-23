@@ -1,58 +1,58 @@
-package com.ssafy.coala.domain.problem.scheduler;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.coala.domain.problem.application.ProblemService;
-import com.ssafy.coala.domain.problem.domain.Problem;
-import com.ssafy.coala.domain.problem.domain.Tag;
-import jakarta.annotation.PostConstruct;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-
-@Component
-public class ProblemScheduler {
-    @Autowired
-    ProblemService problemService;
-//    1초마다 실행
-//    @Scheduled(fixedRate = 1000)
-//    public void test(){
-//        System.out.println(1);
+//package com.ssafy.coala.domain.problem.scheduler;
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.ssafy.coala.domain.problem.application.ProblemService;
+//import com.ssafy.coala.domain.problem.domain.Problem;
+//import com.ssafy.coala.domain.problem.domain.Tag;
+//import jakarta.annotation.PostConstruct;
+//import org.jsoup.Jsoup;
+//import org.jsoup.nodes.Document;
+//import org.jsoup.nodes.Element;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.scheduling.annotation.EnableScheduling;
+//import org.springframework.scheduling.annotation.Scheduled;
+//import org.springframework.stereotype.Component;
+//
+//import java.io.IOException;
+//import java.net.URI;
+//import java.net.http.HttpClient;
+//import java.net.http.HttpRequest;
+//import java.net.http.HttpResponse;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Map;
+//import java.util.concurrent.ScheduledFuture;
+//
+//@Component
+//public class ProblemScheduler {
+//    @Autowired
+//    ProblemService problemService;
+////    1초마다 실행
+////    @Scheduled(fixedRate = 1000)
+////    public void test(){
+////        System.out.println(1);
+////    }
+//    private ScheduledFuture<?> scheduledFuture;
+//
+//    //최대로 저장할 문제 idx
+//    int maxId = 0;
+//    //다음 저장할 문제 idx
+//    int curId = 0;
+//
+//    @PostConstruct
+//    @Scheduled(cron = "0 0 0 * * *")
+//    public void setMaxId() throws IOException{
+//        String URL = "https://www.acmicpc.net/problem/added";
+//        Document doc = Jsoup.connect(URL).get();
+////        System.out.println(doc);
+////        Element element = doc.select(".list_problem_id").get(0);
+//        maxId = Integer.parseInt(doc.select(".list_problem_id").get(0).text());
+//        System.out.println("maxId:"+maxId);
 //    }
-    private ScheduledFuture<?> scheduledFuture;
-
-    //최대로 저장할 문제 idx
-    int maxId = 0;
-    //다음 저장할 문제 idx
-    int curId = 0;
-
-    @PostConstruct
-    @Scheduled(cron = "0 0 0 * * *")
-    public void setMaxId() throws IOException{
-        String URL = "https://www.acmicpc.net/problem/added";
-        Document doc = Jsoup.connect(URL).get();
-//        System.out.println(doc);
-//        Element element = doc.select(".list_problem_id").get(0);
-        maxId = Integer.parseInt(doc.select(".list_problem_id").get(0).text());
-        System.out.println("maxId:"+maxId);
-    }
-
-    //solved.ac api의 호출제한->15분당 256번ㄴ
-    //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
-    //분당 800개, 시간당 48000개의 문제를 얻는다.
+//
+//    //solved.ac api의 호출제한->15분당 256번ㄴ
+//    //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
+//    //분당 800개, 시간당 48000개의 문제를 얻는다.
 //    @Scheduled(fixedRate = 7500)
 //    public void saveProblem() {
 //        try {
@@ -130,5 +130,5 @@ public class ProblemScheduler {
 //            e.printStackTrace();
 //        }
 //    }
-
-}
+//
+//}

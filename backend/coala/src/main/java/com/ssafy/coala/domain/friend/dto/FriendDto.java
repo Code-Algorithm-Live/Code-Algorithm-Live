@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class FriendDto {
-
     private Long Id;
     private String fromNickname;
     private String toNickname;
