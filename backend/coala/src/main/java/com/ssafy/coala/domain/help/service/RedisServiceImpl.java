@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class RedisServiceImpl implements RedisService {
 
     private final RedisRepository redisRepository;
 
-    private static final String MATCH_QUEUE_KEY = "match_queue";
+    private static final String MATCH_QUEUE_KEY = "sorted_set";
 
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -60,15 +62,26 @@ public class RedisServiceImpl implements RedisService {
     @Override
     @Transactional
     public void addUser(Member member) {
-        redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, member);
+        redisTemplate.opsForZSet().add(MATCH_QUEUE_KEY, member,1);
+        String hashKey = Integer.toString(member.hashCode());
+        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10000));
     }
 
 
     @Override
-    public List<Object> getAllUsers() {
-        return redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
+    public Set<Object> getAllUsers() {
+        return redisTemplate.opsForZSet().range(MATCH_QUEUE_KEY, 0, -1);
     }
 
+    @Override
+    public boolean isMemberExpired(String key, Member member) {
+        String hashKey = Integer.toString(member.hashCode());
+        Long expirationTime = (Long) redisTemplate.opsForHash().get(MATCH_QUEUE_KEY + ":expiration", hashKey);
+        if (expirationTime != null) {
+            return expirationTime < System.currentTimeMillis();
+        }
+        return false;
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.ssafy.coala.domain.help.service;
 import com.ssafy.coala.domain.member.domain.Member;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RedisService {
     void joinMember(Member member);
@@ -13,6 +14,6 @@ public interface RedisService {
     void addUser(Member member);
 
 
-    List<Object> getAllUsers();
-
+    Set<Object> getAllUsers();
+    boolean isMemberExpired(String key, Member member);
 }
