@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { styled } from 'styled-components';
+import { Client } from '@stomp/stompjs';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
 import Input, { INPUT_HEIGHT } from '@/components/Chat/Chatting/Input';
@@ -54,9 +55,57 @@ const mockMessages = [
   { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
 ];
 
+const BASE_URL = 'localhost:8080';
+const brokerURL = `${BASE_URL}/ws/chat`;
+
 const Chatting = () => {
-  const [messages] = useState(mockMessages);
+  const roomId = 2;
   const userId = 'me';
+
+  const client = useRef(new Client({ brokerURL }));
+
+  const connect = () => {
+    console.log('connection 시작 ');
+
+    const destination = `${BASE_URL}/sub/channel/${roomId}`;
+
+    // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
+    // roomId 구독
+    client.current.onConnect = () => {
+      client.current.subscribe(destination, message => {
+        console.log(message);
+      });
+    };
+  };
+
+  const sendHandler = (message: string) => {
+    if (!message) return;
+
+    console.log('message 전송');
+
+    const destination = `${BASE_URL}/pub/chat/message`;
+    client.current.publish({
+      destination,
+      body: JSON.stringify({
+        type: 'MESSAGE',
+        roomId,
+        sender: userId,
+        message,
+      }),
+    });
+  };
+
+  const disconnect = () => {};
+
+  useEffect(() => {
+    connect();
+  }, []);
+
+  useEffect(() => {
+    return () => disconnect();
+  });
+
+  const [messages] = useState(mockMessages);
 
   return (
     <Container>
