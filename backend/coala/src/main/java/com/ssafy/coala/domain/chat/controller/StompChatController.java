@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -35,29 +36,22 @@ public class StompChatController {
 //        }
 
         System.out.println("enter()........");
-        log.info("roodID = {}", message.getRoomId());
+        log.info("roomID = {}", message.getRoomId());
 
-
-//        chatService.saveMessage(message.getRoomId(), message);
+        chatService.saveMessage(message.getRoomId(), message);
+        System.out.println("controller555");
         message.setMessage(message.getSender() + "님이 채팅방에 참여하였습니다.");
-        log.info("Message = {}", message.getMessage());
-        System.out.println("enter: " + message.getMessage());
+
         template.convertAndSend("/sub/channel/" + message.getRoomId(), message);
     }
 
     // /pub/chat/message 에 메세지가 오면 동작
-    @Operation(summary = "메세지 보내기", description = "api를 호출하면 /sub/channel/{roomId}에 메세지를 보냄")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @MessageMapping(value = "/chat/message")
-    public void message(MessageDto message){
-//        ChatMessage savedMessage = chatService.saveMessage(message.getRoomId(), message);
-//        System.out.println(savedMessage.getMessage());
+    @MessageMapping(value = "/chat/{roomId}/message")
+    public void message(@DestinationVariable(value = "roomId") Long roomId, MessageDto message){
+        chatService.saveMessage(message.getRoomId(), message);
+
+        System.out.println("roomId: " + roomId);
         System.out.println("message: " + message.getMessage());
-        template.convertAndSend("/sub/channel" + message.getRoomId(), message.getMessage());
+        template.convertAndSend("/sub/channel" + roomId, message);
     }
 }

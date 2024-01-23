@@ -8,6 +8,7 @@ import com.ssafy.coala.domain.chat.domain.ChatRoom;
 import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -61,16 +62,17 @@ public class ChatService {
     }
 
     // 메시지 저장
-    public ChatMessage saveMessage(Long roomId, MessageDto messageDto){
+    @Transactional
+    public void saveMessage(Long roomId, MessageDto messageDto){
         // id로 방을 찾아주고 그 방에 메세지를 전달해야겠지?
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId); // 방을 찾기
         if(chatRoom.isEmpty()){
-            return null;
+            System.out.println("empty");
         }
 
         // dto를 entity에 넣어줌
         ChatMessage chatMessage = ChatMessage.builder()
-//                .type(messageDto.getType())
+                .type(messageDto.getType())
                 .sender(messageDto.getSender())
                 .message(messageDto.getMessage())
                 .date(messageDto.getDate())
@@ -81,7 +83,7 @@ public class ChatService {
         chatMessageRepository.save(chatMessage);
         chatRoom.get().getMessages().add(chatMessage);
         log.info("messages size = {}", chatRoom.get().getMessages().add(chatMessage));
-        return chatMessage;
+
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {

@@ -1,6 +1,5 @@
 package com.ssafy.coala.domain.chat.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +22,6 @@ public class ChatRoom {
     private String receiver;
 
 
-    @JsonIgnore
     @OneToMany(mappedBy = "")
     private List<ChatMessage> messages = new ArrayList<>();
 }
