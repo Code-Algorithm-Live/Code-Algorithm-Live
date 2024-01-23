@@ -28,6 +28,16 @@ public class ProblemServiceImpl implements ProblemService {
         return problemRepository.findMaxId();
     }
 
+    @Override
+    public Optional<Problem> getProblem(int id) {
+        return problemRepository.findById(id);
+    }
+
+    @Override
+    public void updateDescriptionById(int id, String description) {
+        problemRepository.updateProblemDescription(id, description);
+    }
+
 
     @Override
     public RecentProblem updateRecentProblem(RecentProblem inputRP) {
