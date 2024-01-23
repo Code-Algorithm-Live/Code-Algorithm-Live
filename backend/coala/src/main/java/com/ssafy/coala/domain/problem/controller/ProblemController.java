@@ -3,6 +3,7 @@ package com.ssafy.coala.domain.problem.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
+import com.ssafy.coala.domain.problem.domain.RecentProblem;
 import com.ssafy.coala.domain.problem.domain.Tag;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,10 +23,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -102,11 +102,77 @@ public class ProblemController {
         return ResponseEntity.ok((list));
     }
 
-    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
+
+    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.(더미)")
     @GetMapping("{problemId}")
-    public ResponseEntity<Problem> getProblem(@Parameter(description = "problemId", required = true, example = "1000")
+    public ResponseEntity<String> getDummyProblem(@Parameter(description = "problemId", required = true, example = "1000")
                                                   @PathVariable int problemId){
-        return ResponseEntity.ok(new Problem());
+        return ResponseEntity.ok("{\n" +
+                "    \"id\": 1000,\n" +
+                "    \"title\": \"A+B\",\n" +
+                "    \"accepted_user_count\": 276511,\n" +
+                "    \"level\": 1,\n" +
+                "    \"give_no_rating\": false,\n" +
+                "    \"average_tries\": 2.5356,\n" +
+                "    \"description\": \"두 정수 A와 B를 입력받은 다음, A+B를 출력하는 프로그램을 작성하시오.\",\n" +
+                "    \"tags\": [\n" +
+                "        \"구현\",\n" +
+                "        \"사칙연산\",\n" +
+                "        \"수학\"\n" +
+                "    ]\n" +
+                "}");
+    }
+//    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
+//    @GetMapping("{problemId}")
+    public ResponseEntity<ProblemDto> getProblem(@Parameter(description = "problemId", required = true, example = "1000")
+                                                  @PathVariable int problemId){
+        Optional<Problem> option = problemService.getProblem(problemId);
+        if (option.isPresent()){
+            Problem problem = option.get();
+            if (problem.getDescription()==null){
+                try {
+                    String URL = "https://www.acmicpc.net/problem/"+problemId;
+                    Document doc = Jsoup.connect(URL).get();
+                    String desc = doc.select("#problem_description").text();
+                    if (desc.length()>100) desc = desc.substring(0,100);
+                    problemService.updateDescriptionById(problemId, desc);
+                    problem.setDescription(desc);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return ResponseEntity.ok(new ProblemDto(problem));
+        }
+
+        return ResponseEntity.ok(new ProblemDto());
+    }
+
+    private RecentProblem updateRecentProblem(String bojId){ //크롤링한 정보로 업데이트 요청한다.
+//        doc.select(".problem_title")
+        RecentProblem result = new RecentProblem();
+//        https://www.acmicpc.net/status?problem_id=&user_id=col016&language_id=-1&result_id=4
+        String URL = "https://www.acmicpc.net/status?problem_id=&user_id="+bojId+"&language_id=-1&result_id=4";
+        try {
+            Document doc = Jsoup.connect(URL).get();
+            String[] problem = doc.select(".problem_title").text().split(" ");
+            List<Integer> list = new ArrayList<>();//중복가능한 리스트, 순서를 유지하기 위해서 set는 쓰지 않는다.
+
+            for (String p:problem){//5개가 될때까지 센다.
+                int pid = Integer.parseInt(p);
+                if (!list.contains(pid)){
+                    list.add(pid);
+                    if (list.size()==5) break;;
+                }
+            }
+
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
 }

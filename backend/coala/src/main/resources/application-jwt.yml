@@ -1,0 +1,8 @@
+jwt:
+  secretKey: 251e8480011cc0dea7af04fdfe3f4cb5de358f76aa4e3675051ddd3a4e050b2e
+  access:
+    expiration: 3600000
+    header: Authorization
+  refresh:
+    expiration: 1209600000
+    header: Authorization-refresh

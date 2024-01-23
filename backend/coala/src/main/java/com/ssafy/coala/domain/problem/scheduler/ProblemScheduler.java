@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledFuture;
 public class ProblemScheduler {
     @Autowired
     ProblemService problemService;
-//    1초마다 실행
+    //    1초마다 실행
 //    @Scheduled(fixedRate = 1000)
 //    public void test(){
 //        System.out.println(1);
@@ -50,12 +50,12 @@ public class ProblemScheduler {
     //solved.ac api의 호출제한->15분당 256번ㄴ
     //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
     //분당 800개, 시간당 48000개의 문제를 얻는다.
-//    @Scheduled(fixedRate = 7500)
+    @Scheduled(fixedRate = 7500)
     public void saveProblem() {
         try {
             // API 호출 주소
             if (curId == 0){ //초깃값이면 db에서 가져온다.
-                curId = problemService.MaxId();
+                curId = problemService.maxId();
             }
             if (curId>=maxId) {
                 System.out.println("save end!");
@@ -108,7 +108,7 @@ public class ProblemScheduler {
                         problem.setTags(tagList);//tags 객체 추가
                         input.add(problem); //query 보낼 리스트에 추가
                     }
-                    input = problemService.InsertProblem(input);
+                    input = problemService.insertProblem(input);
 
 //                    List<ProblemDto> result = new ArrayList<>();
 //                    for (int i=0; i<input.size(); i++){
