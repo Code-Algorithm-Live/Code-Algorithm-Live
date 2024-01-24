@@ -86,7 +86,7 @@ const Chatting = () => {
 
     console.log('message 전송');
 
-    const destination = `${BASE_URL}/pub/chat/message`;
+    const destination = `${BASE_URL}/pub/chat/${roomId}/message`;
     client.current.publish({
       destination,
       body: JSON.stringify({
