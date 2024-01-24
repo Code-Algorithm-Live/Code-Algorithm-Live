@@ -55,19 +55,20 @@ const mockMessages = [
   { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
 ];
 
-const BASE_URL = 'localhost:8080';
+const BASE_URL = 'ws://localhost:8080';
 const brokerURL = `${BASE_URL}/ws/chat`;
 
 const Chatting = () => {
   const roomId = 2;
   const userId = 'me';
+  const [input, setInput] = useState('');
 
   const client = useRef(new Client({ brokerURL }));
 
   const connect = () => {
     console.log('connection 시작 ');
 
-    const destination = `${BASE_URL}/sub/channel/${roomId}`;
+    const destination = 'ws://localhost:8080/ws/chat'; //`${BASE_URL}/sub/channel/${roomId}`;
 
     // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
     // roomId 구독
@@ -76,9 +77,11 @@ const Chatting = () => {
         console.log(message);
       });
     };
+
+    client.current.activate();
   };
 
-  const sendHandler = (message: string) => {
+  const sendMessage = (message: string) => {
     if (!message) return;
 
     console.log('message 전송');
@@ -107,6 +110,17 @@ const Chatting = () => {
 
   const [messages] = useState(mockMessages);
 
+  const handleSubmit = () => {
+    const message = input || '';
+    sendMessage(message);
+    setInput('');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setInput(value);
+  };
+
   return (
     <Container>
       <MessageContainer>
@@ -127,7 +141,7 @@ const Chatting = () => {
         })}
       </MessageContainer>
 
-      <Input onSubmit={() => {}} />
+      <Input value={input} onChange={handleChange} onSubmit={handleSubmit} />
     </Container>
   );
 };
