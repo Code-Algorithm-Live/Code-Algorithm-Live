@@ -14,21 +14,21 @@ import java.util.List;
 //@Entity
 @Entity
 @Getter
+@Setter
 public class Problem {
     @Id
     private Integer id;
     private String title;
     private int accepted_user_count;
     private int level;
+    private String description;
+
     private boolean give_no_rating;
     private float average_tries;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.JOIN)
     private List<Tag> tags = new ArrayList<>();
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
     public Problem(){};
 
     public Problem(Integer id, String title, int accepted_user_count,

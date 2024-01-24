@@ -7,11 +7,8 @@ import com.ssafy.coala.domain.problem.domain.Tag;
 import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-@Component
+//@Component
 public class ProblemScheduler {
     @Autowired
     ProblemService problemService;
-//    1초마다 실행
+    //    1초마다 실행
 //    @Scheduled(fixedRate = 1000)
 //    public void test(){
 //        System.out.println(1);
@@ -42,7 +39,7 @@ public class ProblemScheduler {
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * *")
     public void setMaxId() throws IOException{
-        String URL = "https://www.acmicpc.net/problemset?sort=no_desc";
+        String URL = "https://www.acmicpc.net/problem/added";
         Document doc = Jsoup.connect(URL).get();
 //        System.out.println(doc);
 //        Element element = doc.select(".list_problem_id").get(0);
