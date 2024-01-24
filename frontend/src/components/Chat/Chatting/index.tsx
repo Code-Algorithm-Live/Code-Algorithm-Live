@@ -68,7 +68,7 @@ const Chatting = () => {
   const connect = () => {
     console.log('connection 시작 ');
 
-    const destination = 'ws://localhost:8080/ws/chat'; //`${BASE_URL}/sub/channel/${roomId}`;
+    const destination = `${BASE_URL}/sub/channel/${roomId}`;
 
     // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
     // roomId 구독
