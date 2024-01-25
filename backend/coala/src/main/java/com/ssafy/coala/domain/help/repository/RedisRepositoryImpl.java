@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class RedisRepositoryImpl implements RedisRepository {
@@ -25,7 +27,7 @@ public class RedisRepositoryImpl implements RedisRepository {
 
 
     @Override
-    public Member findOne(Long memberId) {
+    public Member findOne(UUID memberId) {
         return em.find(Member.class, memberId);
     }
 
