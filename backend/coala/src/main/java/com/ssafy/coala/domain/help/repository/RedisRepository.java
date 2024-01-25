@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public interface RedisRepository {
     Member save(Member member);
-    Member findOne(UUID memberId);
+    Member findOne(String solvedId);
     void remove(Member member);
 }

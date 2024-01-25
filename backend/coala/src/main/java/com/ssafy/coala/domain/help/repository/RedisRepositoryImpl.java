@@ -27,8 +27,8 @@ public class RedisRepositoryImpl implements RedisRepository {
 
 
     @Override
-    public Member findOne(UUID memberId) {
-        return em.find(Member.class, memberId);
+    public Member findOne(String solvedId) {
+        return em.find(Member.class, solvedId);
     }
 
     @Override

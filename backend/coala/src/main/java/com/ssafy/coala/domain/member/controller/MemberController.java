@@ -2,6 +2,8 @@ package com.ssafy.coala.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import com.ssafy.coala.domain.problem.domain.Problem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,9 +38,9 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
 
-    @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@RequestBody Member member){
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity<?> signUp(@RequestBody MemberDto member){
+        return new ResponseEntity<MemberDto>(member,HttpStatus.OK);
     }
 
 
