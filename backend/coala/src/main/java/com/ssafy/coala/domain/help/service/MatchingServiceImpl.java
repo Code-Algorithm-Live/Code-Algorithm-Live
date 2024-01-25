@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MatchingServiceImpl implements MatchingService{
@@ -14,7 +15,7 @@ public class MatchingServiceImpl implements MatchingService{
 
     @Override
     public void performMatching() {
-        List<Object> waitingUsers = redisService.getAllUsers();
+        Set<Object> waitingUsers = redisService.getAllUsers();
 
         // Implement your matching logic here based on waitingUsers
         // ...

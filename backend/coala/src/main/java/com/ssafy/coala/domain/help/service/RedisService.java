@@ -4,12 +4,13 @@ import com.ssafy.coala.domain.member.domain.Member;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public interface RedisService {
     void joinMember(Member member);
-    Member updateMember(Member member, Long memberId);
-    Member getMemberInfo(Long memberId);
-    void removeMember(Long memberId);
+    Member updateMember(Member member, UUID memberId);
+    Member getMemberInfo(UUID memberId);
+    void removeMember(UUID memberId);
 
     void addUser(Member member);
 

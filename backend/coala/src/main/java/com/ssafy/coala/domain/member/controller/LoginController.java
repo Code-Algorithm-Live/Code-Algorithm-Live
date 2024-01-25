@@ -37,13 +37,13 @@ public class LoginController {
     @Autowired
     JwtService jwtService;
 
-//    @Operation(summary = "Oauth2", description = "kakao 인가코드를 인자로 받아 kakao accesstoken 발급")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK !!"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-//    })
+    @Operation(summary = "Oauth2", description = "kakao 인가코드를 인자로 받아 jwt accesstoken 발급")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
 
     @GetMapping("/oauth2/callback/kakao")
     public ResponseEntity<Object> kakaoLogin(@Parameter(description = "code", required = true) @RequestParam String code, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {

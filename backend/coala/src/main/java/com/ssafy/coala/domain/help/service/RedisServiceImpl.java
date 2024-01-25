@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -41,20 +42,20 @@ public class RedisServiceImpl implements RedisService {
     @Override
     @CachePut(value = "Member", key = "#memberId", cacheManager = "cacheManager")
     @Transactional
-    public Member updateMember(Member member, Long memberId) {
+    public Member updateMember(Member member, UUID memberId) {
         return redisRepository.save(member);
     }
 
     @Override
     @Cacheable(value = "Member", key = "#memberId", cacheManager = "cacheManager", unless = "#result == null")
-    public Member getMemberInfo(Long memberId) {
+    public Member getMemberInfo(UUID memberId) {
         return redisRepository.findOne(memberId);
     }
 
     @Override
     @CacheEvict(value = "Member", key = MATCH_QUEUE_KEY, cacheManager = "cacheManager")
     @Transactional
-    public void removeMember(Long memberId) {
+    public void removeMember(UUID memberId) {
         Member member = redisRepository.findOne(memberId);
         redisRepository.remove(member);
     }

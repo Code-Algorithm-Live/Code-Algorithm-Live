@@ -2,6 +2,8 @@ package com.ssafy.coala.domain.help.controller;
 
 
 import java.util.Map;
+import java.util.UUID;
+
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.help.service.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ public class RedisTestController {
     private final RedisService redisService;
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<?> getMemberInfo(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<?> getMemberInfo(@PathVariable("memberId") UUID memberId) {
         return ResponseEntity.ok(redisService.getMemberInfo(memberId));
     }
 
@@ -39,14 +41,14 @@ public class RedisTestController {
     public ResponseEntity<?> updateMember(@RequestBody Map<String, String> memberInfo) {
         System.out.println(memberInfo);
         Member member = new Member();
-        member.setId(Long.parseLong(memberInfo.get("id")));
+        member.setId(UUID.fromString((memberInfo.get("id"))));
         member.setName(memberInfo.get("name"));
         redisService.updateMember(member, member.getId());
         return ResponseEntity.ok("수정 완료");
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<?> deleteMember(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<?> deleteMember(@PathVariable("memberId") UUID memberId) {
         redisService.removeMember(memberId);
         return ResponseEntity.ok("삭제 완료");
     }
