@@ -68,12 +68,15 @@ const Chatting = () => {
   const connect = () => {
     console.log('connection 시작 ');
 
-    const destination = `${BASE_URL}/sub/channel/${roomId}`;
+    // const destination = `${BASE_URL}/sub/channel/${roomId}`;
+    const destination = `/sub/channel/${roomId}`;
 
     // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
     // roomId 구독
     client.current.onConnect = () => {
+      console.log(destination);
       client.current.subscribe(destination, message => {
+        console.log('메시지용');
         console.log(message);
       });
     };
@@ -86,11 +89,13 @@ const Chatting = () => {
 
     console.log('message 전송');
 
-    const destination = `${BASE_URL}/pub/chat/${roomId}/message`;
+    // const destination = `${BASE_URL}/pub/chat/${roomId}/message`;
+    const destination = `/pub/chat/${roomId}/message`;
+    console.log(message, destination);
     client.current.publish({
       destination,
       body: JSON.stringify({
-        type: 'MESSAGE',
+        type: 'TALK',
         roomId,
         sender: userId,
         message,
