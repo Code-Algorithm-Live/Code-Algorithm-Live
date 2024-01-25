@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class MemberDto {
 
-    private long id;
     private String email;
-    private String nickname;
+    private String image;
+    private String name;
 }
