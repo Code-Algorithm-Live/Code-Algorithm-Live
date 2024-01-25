@@ -33,9 +33,6 @@ public class Member implements Serializable {
     @Column(name = "member_exp")
     private Integer exp;
 
-    @Column(name = "last_updated")
-    private LocalDateTime lastupdated;
-
     @Column(name = "solved_id")
     private String solvedId;
 }
