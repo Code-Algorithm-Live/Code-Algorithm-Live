@@ -8,22 +8,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member implements Serializable {
 
-    @Id
-    @Column(name = "member_id")
-    private String Id;
+    @Id @GeneratedValue
+    @Column(name = "id")
+    private Long Id;
 
     @Column(name = "member_name")
     private String name;
 
-    private LocalDateTime date;
+    @Column(name = "regist_date")
+    private LocalDateTime registDate;
 
     @Column(name = "member_nickname")
     private String nickname;
@@ -31,6 +33,6 @@ public class Member {
     @Column(name = "member_exp")
     private Integer exp;
 
-
-
+    @Column(name = "solved_id")
+    private String solvedId;
 }

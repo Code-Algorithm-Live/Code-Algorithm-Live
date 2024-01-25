@@ -3,7 +3,7 @@ package com.ssafy.coala.domain.member.domain;
 import io.swagger.v3.oas.annotations.info.Contact;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
