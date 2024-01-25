@@ -1,10 +1,14 @@
-import { IconNext } from '@assets/svgs';
+'use client';
+
 import '@/styles/reset.css';
+import Nav from '@/components/Common/Header';
+import { signOut } from 'next-auth/react';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <IconNext width={120} height={32} />
-    </main>
+    <>
+      <Nav />
+      <button onClick={() => signOut('kakao')}>로그아웃</button>
+    </>
   );
 }
