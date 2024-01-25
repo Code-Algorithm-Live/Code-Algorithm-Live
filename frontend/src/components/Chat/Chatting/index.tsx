@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { styled } from 'styled-components';
 import { Client } from '@stomp/stompjs';
@@ -55,29 +56,34 @@ const mockMessages = [
   { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
 ];
 
+interface TMessage {
+  chatRoomId: string;
+  type: string;
+  sender: string;
+  date: string;
+}
+
 const BASE_URL = 'ws://localhost:8080';
 const brokerURL = `${BASE_URL}/ws/chat`;
+const userId = Math.random().toString();
 
 const Chatting = () => {
   const roomId = 2;
-  const userId = 'me';
   const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<TMessage[]>([]);
 
   const client = useRef(new Client({ brokerURL }));
 
   const connect = () => {
-    console.log('connection 시작 ');
-
-    // const destination = `${BASE_URL}/sub/channel/${roomId}`;
     const destination = `/sub/channel/${roomId}`;
 
-    // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
-    // roomId 구독
+    /** roomId 구독를 구독합니다.  */
     client.current.onConnect = () => {
-      console.log(destination);
       client.current.subscribe(destination, message => {
-        console.log('메시지용');
-        console.log(message);
+        console.log('메시지용', message);
+      });
+      client.current.publish({
+        destination: `/pub/chat/${roomId}/message`,
       });
     };
 
@@ -87,11 +93,8 @@ const Chatting = () => {
   const sendMessage = (message: string) => {
     if (!message) return;
 
-    console.log('message 전송');
-
-    // const destination = `${BASE_URL}/pub/chat/${roomId}/message`;
     const destination = `/pub/chat/${roomId}/message`;
-    console.log(message, destination);
+    console.log(message, userId);
     client.current.publish({
       destination,
       body: JSON.stringify({
@@ -103,6 +106,19 @@ const Chatting = () => {
     });
   };
 
+  const onMessageReceived = () => {
+    const message = '';
+    setMessages(prev => [
+      ...prev,
+      {
+        chatRoomId: roomId.toString(),
+        sender: userId,
+        type: message,
+        date: '',
+      },
+    ]);
+  };
+
   const disconnect = () => {};
 
   useEffect(() => {
@@ -112,8 +128,6 @@ const Chatting = () => {
   useEffect(() => {
     return () => disconnect();
   });
-
-  const [messages] = useState(mockMessages);
 
   const handleSubmit = () => {
     const message = input || '';
