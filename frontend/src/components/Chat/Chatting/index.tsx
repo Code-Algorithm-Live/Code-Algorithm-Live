@@ -66,24 +66,31 @@ interface TMessage {
 const BASE_URL = 'ws://localhost:8080';
 const brokerURL = `${BASE_URL}/ws/chat`;
 const userId = Math.random().toString();
+const roomId = 2;
+const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
+const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
+const pubDestination = `/pub/chat/${roomId}/message`; // 채팅방 메세지 전송
 
 const Chatting = () => {
-  const roomId = 2;
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<TMessage[]>([]);
 
   const client = useRef(new Client({ brokerURL }));
 
   const connect = () => {
-    const destination = `/sub/channel/${roomId}`;
-
-    /** roomId 구독를 구독합니다.  */
     client.current.onConnect = () => {
-      client.current.subscribe(destination, message => {
-        console.log('메시지용', message);
-      });
+      /** roomId에 참가합니다. */
       client.current.publish({
-        destination: `/pub/chat/${roomId}/message`,
+        destination: enterDestination,
+        body: JSON.stringify({
+          type: 'ENTER',
+          roomId,
+          sender: userId,
+        }),
+      });
+      /** roomId 구독를 구독합니다.  */
+      client.current.subscribe(subDestination, message => {
+        console.log('메시지용', message);
       });
     };
 
@@ -105,11 +112,9 @@ const Chatting = () => {
   const sendMessage = (message: string) => {
     if (!message) return;
 
-    const destination = `/pub/chat/${roomId}/message`;
-    console.log(message, userId);
     onMessageReceived(message);
     client.current.publish({
-      destination,
+      destination: pubDestination,
       body: JSON.stringify({
         type: 'TALK',
         roomId,
