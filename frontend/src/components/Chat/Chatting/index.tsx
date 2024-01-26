@@ -69,7 +69,7 @@ const userId = Math.random().toString();
 const roomId = 2;
 const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
 const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
-const pubDestination = `/sub/channel/${roomId}`;  // 채팅방 메세지 전송
+const pubDestination = `/pub/chat/${roomId}/message`; // 채팅방 메세지 전송
 
 const Chatting = () => {
   const [input, setInput] = useState('');
@@ -88,7 +88,7 @@ const Chatting = () => {
           sender: userId,
         }),
       });
-      /** roomId 구독를 구독합니다.  */
+      /** roomId를 구독합니다.  */
       client.current.subscribe(subDestination, message => {
         console.log('메시지용', message);
       });
