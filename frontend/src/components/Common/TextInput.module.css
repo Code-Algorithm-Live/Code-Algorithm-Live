@@ -1,0 +1,43 @@
+.helpform {
+  margin-bottom: 22px;
+  /* margin-left: 112px; */
+  height: 70px;
+  width: 460px;
+}
+a.star {
+  color: red;
+}
+
+p.formSort {
+  font-size: 16px;
+  width: 460px;
+  height: 24px;
+  line-height: 144%;
+  font-weight: 400;
+  color: rgb(111, 116, 130);
+  margin-bottom: 2px;
+}
+
+input.formContents {
+  background-color: rgb(248, 250, 252);
+  font-size: 16px;
+  border-color: rgb(180, 176, 176);
+  border-radius: 4px;
+  padding: 12px;
+  gap: 10px;
+  width: 460px;
+  height: 44px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+}
+input.formContents::placeholder {
+  color: rgb(184, 188, 202);
+}
+
+#content {
+  text-align: left; /* 우측 정렬 */
+  vertical-align: top; /* 상단 정렬 */
+  position: relative;
+  height: 309px;
+}
