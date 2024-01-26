@@ -4,7 +4,7 @@ package com.ssafy.coala.test.service;
 import com.ssafy.coala.test.dto.CustomUserDetails;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
-import com.ssafy.coala.domain.member.dao.MemberRepository;
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -45,7 +45,7 @@ public class JwtService {
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER = "Bearer ";
 
-    private final MemberRepository memberRepository;
+    private final MemberProfileRepository memberProfileRepository;
 
     public String createAccessToken(Long id, String email) {
         Date now = new Date();

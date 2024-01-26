@@ -1,6 +1,8 @@
 package com.ssafy.coala.domain.member.controller;
 
 import com.ssafy.coala.domain.member.application.LoginService;
+import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -44,6 +48,18 @@ public class MemberController {
         System.out.println(solvedId);
         loginService.signUp(memberDto, solvedId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/{uuid}")
+    public ResponseEntity<?> getMemberProfile(@PathVariable UUID uuid){
+        MemberProfile memberProfile = loginService.getMemberProfile(uuid);
+        return new ResponseEntity<MemberProfile>(memberProfile,HttpStatus.OK);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<?> getMember(@PathVariable UUID uuid){
+        Member member = loginService.getMember(uuid);
+        return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 
     @GetMapping("/signIn")
