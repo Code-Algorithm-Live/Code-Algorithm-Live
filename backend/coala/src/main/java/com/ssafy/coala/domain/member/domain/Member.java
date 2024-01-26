@@ -24,18 +24,15 @@ public class Member implements Serializable {
     @Column(name = "id", columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "member_name")
-    private String name;
-
     @Column(name = "regist_date")
     private LocalDateTime registDate;
-
-    @Column(name = "member_nickname")
-    private String nickname;
 
     @Column(name = "member_exp")
     private Integer exp;
 
     @Column(name = "solved_id")
     private String solvedId;
+
+    @Column(name = "email")
+    private String email;
 }

@@ -1,6 +1,6 @@
 package com.ssafy.coala.test.dto;
 
-import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,10 +9,10 @@ import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final MemberProfile memberProfile;
 
-    public CustomUserDetails(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public CustomUserDetails(MemberProfile memberProfile) {
+        this.memberProfile = memberProfile;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return userEntity.getRole();
+                return memberProfile.getRole();
             }
         });
 
@@ -37,12 +37,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userEntity.getNickname();
+        return memberProfile.getNickname();
     }
 
-    public String getEmail(){return userEntity.getEmail();}
+    public String getEmail(){return memberProfile.getEmail();}
 
-    public Long getId(){return userEntity.getId();}
+    public Long getId(){return memberProfile.getId();}
 
     @Override
     public boolean isAccountNonExpired() {

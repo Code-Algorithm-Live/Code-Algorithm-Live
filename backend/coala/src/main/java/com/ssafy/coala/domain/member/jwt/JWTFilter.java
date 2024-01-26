@@ -1,7 +1,7 @@
 package com.ssafy.coala.domain.member.jwt;
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
-import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,11 +57,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //userEntity를 생성하여 값 set
 
-        UserEntity userEntity = UserEntity.builder()
+        MemberProfile memberProfile = MemberProfile.builder()
 //                .nickname(nickname)
-                .id(id)
+//                .id(id)
                 .email(email)
-                .role(role)
+//                .role(role)
 //                .password("tmp")
                 .build();
 
@@ -72,7 +72,7 @@ public class JWTFilter extends OncePerRequestFilter {
 //        userEntity.setRole(role);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+        CustomUserDetails customUserDetails = new CustomUserDetails(memberProfile);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new NicknameEmailAuthenticationToken(customUserDetails.getEmail(), customUserDetails.getId(), customUserDetails.getAuthorities());

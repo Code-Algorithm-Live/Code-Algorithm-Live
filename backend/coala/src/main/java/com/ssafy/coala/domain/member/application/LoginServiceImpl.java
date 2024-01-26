@@ -8,7 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
-import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -89,14 +89,14 @@ public class LoginServiceImpl implements LoginService{
             System.out.println("기존 회원임 로그인 진행");
         }else{
             System.out.println("기존 회원이 아니므로 회원정보 저장");
-            UserEntity userEntity = UserEntity.builder()
+            MemberProfile memberProfile = MemberProfile.builder()
                     .id(user.getId())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .imageUrl(user.getImg_url())
                     .build();
 
-            userRepository.save(userEntity);
+            userRepository.save(memberProfile);
         }
         return user;
     }

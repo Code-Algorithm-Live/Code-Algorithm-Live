@@ -2,7 +2,7 @@ package com.ssafy.coala.test.service;
 
 
 import com.ssafy.coala.test.dto.UserSignUpDto;
-import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +27,10 @@ public class UserService {
         }
         log.info("[UserService signUp userSignUpDto : {}]", userSignUpDto);
 
-        UserEntity user = UserEntity.builder()
+        MemberProfile user = MemberProfile.builder()
                 .email(userSignUpDto.getEmail())
 //                .password(userSignUpDto.getPassword())
                 .nickname(userSignUpDto.getNickname())
-                .age(userSignUpDto.getAge())
-                .role("ROLE_USER")
                 .build();
 
 //        user.passwordEncode(passwordEncoder);
