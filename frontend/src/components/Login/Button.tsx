@@ -15,7 +15,7 @@ const Button = () => {
       if (session) {
         try {
           const { user: userDate } = session;
-          if (isPetch) {
+          if (isFetching) {
             return;
           }
           setIsPetch(true);
