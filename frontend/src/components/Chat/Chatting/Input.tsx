@@ -1,7 +1,5 @@
 import { styled } from 'styled-components';
 
-const INPUT_HEIGHT = '80px';
-
 const InputForm = styled.form`
   position: absolute;
   left: 0;
@@ -9,7 +7,7 @@ const InputForm = styled.form`
   bottom: 0;
 
   padding: 12px 22px 14px;
-  height: ${INPUT_HEIGHT};
+  height: 80px;
 
   box-sizing: border-box;
 
@@ -60,4 +58,3 @@ const Input = ({
 };
 
 export default Input;
-export { INPUT_HEIGHT };
