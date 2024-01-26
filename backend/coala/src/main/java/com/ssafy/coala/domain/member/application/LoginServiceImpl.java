@@ -90,7 +90,6 @@ public class LoginServiceImpl implements LoginService{
         }else{
             System.out.println("기존 회원이 아니므로 회원정보 저장");
             MemberProfile memberProfile = MemberProfile.builder()
-                    .id(user.getId())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .imageUrl(user.getImg_url())

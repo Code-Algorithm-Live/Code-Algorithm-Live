@@ -23,7 +23,8 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return memberProfile.getRole();
+//                return memberProfile.getRole();
+                return null;
             }
         });
 
@@ -42,7 +43,7 @@ public class CustomUserDetails implements UserDetails {
 
     public String getEmail(){return memberProfile.getEmail();}
 
-    public Long getId(){return memberProfile.getId();}
+//    public Long getId(){return memberProfile.getId();}
 
     @Override
     public boolean isAccountNonExpired() {
