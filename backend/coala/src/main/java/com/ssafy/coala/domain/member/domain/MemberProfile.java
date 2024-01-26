@@ -8,7 +8,7 @@ import java.util.UUID;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @Table(name = "member_profile")

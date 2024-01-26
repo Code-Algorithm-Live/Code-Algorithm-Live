@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ssafy.coala.domain.member.dao.MemberRepository;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
-import com.ssafy.coala.domain.member.dao.MemberRepository;
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -20,11 +21,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 public class LoginServiceImpl implements LoginService{
 
 
+    private final MemberProfileRepository memberProfileRepository;
     private final MemberRepository memberRepository;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
@@ -39,7 +43,8 @@ public class LoginServiceImpl implements LoginService{
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String KAKAO_USER_INFO_URI;
 
-    public LoginServiceImpl(MemberRepository memberRepository) {
+    public LoginServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository) {
+        this.memberProfileRepository = memberProfileRepository;
         this.memberRepository = memberRepository;
     }
 
@@ -87,7 +92,7 @@ public class LoginServiceImpl implements LoginService{
     public KakaoUserDto kakaoLogin(String kakaoAccessToken) throws Exception {
         KakaoUserDto user = getKakaoInfo(kakaoAccessToken);
 
-        if (memberRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (memberProfileRepository.findByEmail(user.getEmail()).isPresent()) {
             System.out.println("기존 회원임 로그인 진행");
         }else{
             System.out.println("기존 회원이 아니므로 회원정보 저장");
@@ -97,7 +102,7 @@ public class LoginServiceImpl implements LoginService{
                     .imageUrl(user.getImg_url())
                     .build();
 
-            memberRepository.save(memberProfile);
+            memberProfileRepository.save(memberProfile);
         }
         return user;
     }
@@ -138,7 +143,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public boolean check(MemberDto member) {
 
-        return memberRepository.existsByEmail(member.getEmail());
+        return memberProfileRepository.existsByEmail(member.getEmail());
     }
 
     @Override
@@ -150,8 +155,8 @@ public class LoginServiceImpl implements LoginService{
                 .imageUrl(memberDto.getImage())
                 .build();
 
-        memberRepository.save(memberProfile);
-        MemberProfile tmpmember = memberRepository.findBySolvedId(solvedId);
+        memberProfileRepository.save(memberProfile);
+        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(solvedId);
 
 
         Member member = Member.builder()
@@ -159,6 +164,16 @@ public class LoginServiceImpl implements LoginService{
                 .email(tmpmember.getEmail())
                 .solvedId(solvedId)
                 .build();
+        memberRepository.save(member);
+    }
 
+    @Override
+    public MemberProfile getMemberProfile(UUID uuid) {
+        return memberProfileRepository.findById(uuid);
+    }
+
+    @Override
+    public Member getMember(UUID uuid) {
+        return memberRepository.findById(uuid);
     }
 }

@@ -2,9 +2,13 @@ package com.ssafy.coala.domain.member.application;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
 import com.ssafy.coala.domain.member.dto.MemberDto;
+
+import java.util.UUID;
 
 public interface LoginService {
     public KakaoTokenDto getKakaoAccessToken(String code);
@@ -15,4 +19,8 @@ public interface LoginService {
     boolean check(MemberDto member);
 
     void signUp(MemberDto memberDto, String solvedId);
+
+    MemberProfile getMemberProfile(UUID uuid);
+
+    Member getMember(UUID uuid);
 }
