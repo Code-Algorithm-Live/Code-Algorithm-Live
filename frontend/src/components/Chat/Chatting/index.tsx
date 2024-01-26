@@ -55,42 +55,67 @@ const mockMessages = [
   { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
 ];
 
+interface TMessage {
+  chatRoomId: string;
+  type: string;
+  sender: string;
+  date: string;
+}
+
 const BASE_URL = 'ws://localhost:8080';
 const brokerURL = `${BASE_URL}/ws/chat`;
+const userId = Math.random().toString();
+const roomId = 2;
+const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
+const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
+const pubDestination = `/pub/chat/${roomId}/message`; // 채팅방 메세지 전송
 
 const Chatting = () => {
-  const roomId = 2;
-  const userId = 'me';
   const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<TMessage[]>([]);
 
   const client = useRef(new Client({ brokerURL }));
 
   const connect = () => {
-    console.log('connection 시작 ');
-
-    const destination = `${BASE_URL}/sub/channel/${roomId}`;
-
-    // "type" : "ENTER",     "roomId" : 2,     "sender" : "차승윤"
-    // roomId 구독
     client.current.onConnect = () => {
-      client.current.subscribe(destination, message => {
-        console.log(message);
+      /** roomId에 참가합니다. */
+      client.current.publish({
+        destination: enterDestination,
+        body: JSON.stringify({
+          type: 'ENTER',
+          roomId,
+          sender: userId,
+        }),
+      });
+      /** roomId를 구독합니다.  */
+      client.current.subscribe(subDestination, message => {
+        console.log('메시지용', message);
       });
     };
 
     client.current.activate();
   };
 
+  const onMessageReceived = (message: string) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        chatRoomId: roomId.toString(),
+        sender: userId,
+        type: message,
+        date: '',
+      },
+    ]);
+  };
+
   const sendMessage = (message: string) => {
     if (!message) return;
 
-    console.log('message 전송');
-
-    const destination = `${BASE_URL}/pub/chat/${roomId}/message`;
+    onMessageReceived(message);
     client.current.publish({
-      destination,
+      destination: pubDestination,
       body: JSON.stringify({
-        type: 'MESSAGE',
+        type: 'TALK',
         roomId,
         sender: userId,
         message,
@@ -107,8 +132,6 @@ const Chatting = () => {
   useEffect(() => {
     return () => disconnect();
   });
-
-  const [messages] = useState(mockMessages);
 
   const handleSubmit = () => {
     const message = input || '';
