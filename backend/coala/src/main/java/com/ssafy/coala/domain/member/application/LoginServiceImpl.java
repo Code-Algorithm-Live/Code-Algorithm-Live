@@ -10,6 +10,7 @@ import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dao.UserRepository;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -131,5 +132,11 @@ public class LoginServiceImpl implements LoginService{
 
         return new KakaoUserDto(id, email, nickname,img_url);
 
+    }
+
+    @Override
+    public boolean check(MemberDto member) {
+
+        return userRepository.existsByEmail(member.getEmail());
     }
 }
