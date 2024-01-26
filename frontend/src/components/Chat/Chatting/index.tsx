@@ -90,24 +90,7 @@ const Chatting = () => {
     client.current.activate();
   };
 
-  const sendMessage = (message: string) => {
-    if (!message) return;
-
-    const destination = `/pub/chat/${roomId}/message`;
-    console.log(message, userId);
-    client.current.publish({
-      destination,
-      body: JSON.stringify({
-        type: 'TALK',
-        roomId,
-        sender: userId,
-        message,
-      }),
-    });
-  };
-
-  const onMessageReceived = () => {
-    const message = '';
+  const onMessageReceived = (message: string) => {
     setMessages(prev => [
       ...prev,
       {
@@ -117,6 +100,23 @@ const Chatting = () => {
         date: '',
       },
     ]);
+  };
+
+  const sendMessage = (message: string) => {
+    if (!message) return;
+
+    const destination = `/pub/chat/${roomId}/message`;
+    console.log(message, userId);
+    onMessageReceived(message);
+    client.current.publish({
+      destination,
+      body: JSON.stringify({
+        type: 'TALK',
+        roomId,
+        sender: userId,
+        message,
+      }),
+    });
   };
 
   const disconnect = () => {};
