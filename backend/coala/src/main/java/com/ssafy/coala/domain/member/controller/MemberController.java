@@ -1,10 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.domain.member.domain.UserEntity;
 import com.ssafy.coala.domain.member.dto.MemberDto;
-import com.ssafy.coala.domain.problem.domain.Problem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,15 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
