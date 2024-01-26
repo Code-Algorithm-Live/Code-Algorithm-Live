@@ -5,12 +5,11 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-import Input, { INPUT_HEIGHT } from '@/components/Chat/Chatting/Input';
+import Input from '@/components/Chat/Chatting/Input';
 
 const Container = styled.div`
   position: relative;
-  height: 100dvh;
-
+  height: 100%;
   background: var(--editorBlack, #282a36);
 `;
 
@@ -20,7 +19,6 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
-  height: calc(100dvh - ${INPUT_HEIGHT});
   padding: 7px;
   overflow-y: scroll;
 
