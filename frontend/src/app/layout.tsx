@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
-import Provider from '@/utils/Provider';
-import Nav from '@/components/Common/Header';
+import Provider from '@/utils/providers/Provider';
+import AuthSession from '@/utils/providers/session-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,8 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <Nav /> */}
-        <Provider>{children}</Provider>
+        <AuthSession>
+          <Provider>{children}</Provider>
+        </AuthSession>
       </body>
     </html>
   );
