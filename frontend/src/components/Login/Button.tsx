@@ -18,7 +18,7 @@ const Button = () => {
           if (isFetching) {
             return;
           }
-          setIsPetch(true);
+          setIsFetching(true);
           await axios({
             method: 'POST',
             url: 'http://localhost:8080/member/login',
