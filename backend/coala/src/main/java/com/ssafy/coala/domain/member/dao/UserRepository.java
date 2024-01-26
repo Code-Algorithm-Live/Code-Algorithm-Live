@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<MemberProfile, Integer> {
 
 //    UserEntity findByNickname(String nickname);
 
-    MemberProfile findById(Long id);
+    MemberProfile findBySolvedId(String solveid);
 
     Optional<Object> findByEmail(String email);
 

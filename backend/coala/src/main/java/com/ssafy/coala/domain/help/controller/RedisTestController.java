@@ -32,7 +32,7 @@ public class RedisTestController {
     @PostMapping("")
     public ResponseEntity<?> joinMember(@RequestBody Map<String, String> memberInfo) {
         Member member = new Member();
-        member.setName(memberInfo.get("name"));
+        member.setEmail(memberInfo.get("email"));
         redisService.joinMember(member);
         return ResponseEntity.ok("가입 완료");
     }
@@ -42,7 +42,7 @@ public class RedisTestController {
         System.out.println(memberInfo);
         Member member = new Member();
         member.setId(UUID.fromString((memberInfo.get("id"))));
-        member.setName(memberInfo.get("name"));
+        member.setEmail(memberInfo.get("email"));
         redisService.updateMember(member, member.getSolvedId());
         return ResponseEntity.ok("수정 완료");
     }

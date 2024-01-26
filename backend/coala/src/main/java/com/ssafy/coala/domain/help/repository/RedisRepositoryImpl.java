@@ -19,7 +19,7 @@ public class RedisRepositoryImpl implements RedisRepository {
             em.persist(member);
         } else {
             Member findMember = em.find(Member.class, member.getId());
-            findMember.setName(member.getName());
+            findMember.setEmail(member.getEmail());
         }
 
         return member;

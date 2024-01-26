@@ -54,7 +54,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //UserDetailsS
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Long id = customUserDetails.getId();;
+//        Long id = customUserDetails.getId();;
 //        String nickname = customUserDetails.getUsername();
         String email = customUserDetails.getEmail();
 
@@ -64,9 +64,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(id, email, role, Duration.ofMinutes(30).toMillis());
+//        String token = jwtUtil.createJwt(id, email, role, Duration.ofMinutes(30).toMillis());
 
-        response.addHeader("Authorization", "Bearer " + token);
+//        response.addHeader("Authorization", "Bearer " + token);
     }
 
     //로그인 실패시 실행하는 메소드
