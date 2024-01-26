@@ -1,29 +1,29 @@
 package com.ssafy.coala.domain.problem.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(TagId.class)
 public class Tag {
-    public Problem getProblem_id() {
-        return problem;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     @Id
     @ManyToOne
+    @JoinColumn(name = "problem_id")
     private Problem problem;
+
     @Id
     private String name;
 
-    public Tag(Problem problem_id, String name) {
-        this.problem = problem_id;
-        this.name = name;
-    }
+    // getters, setters, and other properties
 }
+
+
+
+
+
+

@@ -1,30 +1,25 @@
 package com.ssafy.coala.domain.problem.domain;
 
-import jakarta.persistence.OneToOne;
+import com.ssafy.coala.domain.problem.dto.ProblemDto;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Document
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class RecentMember {
 
     @Id
-    private Integer id; //problem_id
-    private List<String> members;
+    Integer id;
 
-    public List<String> add(String memberId){
-        if (members.size()>4){
-            members.remove(0);
-        }
-        members.add(memberId);
 
-        return members;
-    }
+
 }

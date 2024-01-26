@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-//@Component
+@Component
 public class ProblemScheduler {
     @Autowired
     ProblemService problemService;
@@ -47,10 +48,10 @@ public class ProblemScheduler {
         System.out.println("maxId:"+maxId);
     }
 
-    //solved.ac api의 호출제한->15분당 256번ㄴ
+    //solved.ac api의 호출제한->15분당 256번
     //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
     //분당 800개, 시간당 48000개의 문제를 얻는다.
-    @Scheduled(fixedRate = 7500)
+    @Scheduled(fixedRate = 60000)
     public void saveProblem() {
         try {
             // API 호출 주소
@@ -62,53 +63,57 @@ public class ProblemScheduler {
                 return;
             }
 
-            StringBuilder apiUrl = new StringBuilder("https://solved.ac/api/v3/problem/lookup?problemIds=");
+            int curIter = Math.min(8,(maxId-curId)/100+1);
 
-            apiUrl.append(++curId);
+            for (int iter=0; iter<curIter; iter++) {
 
-            for (int i = 1; i < 100 && maxId>curId; i++) {
-                apiUrl.append("%2C").append(++curId);
-            }
+                StringBuilder apiUrl = new StringBuilder("https://solved.ac/api/v3/problem/lookup?problemIds=");
+
+                apiUrl.append(++curId);
+
+                for (int i = 1; i < 100 && maxId > curId; i++) {
+                    apiUrl.append("%2C").append(++curId);
+                }
 //            System.out.println(apiUrl);
-            // HttpClient 객체 생성
-            HttpClient client = HttpClient.newHttpClient();
+                // HttpClient 객체 생성
+                HttpClient client = HttpClient.newHttpClient();
 
-            // HttpRequest 객체 생성
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl.toString()))
-                    .build();
+                // HttpRequest 객체 생성
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(apiUrl.toString()))
+                        .build();
 
-            // 응답 데이터 읽기
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                // 응답 데이터 읽기
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // 응답 코드 확인
-            int statusCode = response.statusCode();
+                // 응답 코드 확인
+                int statusCode = response.statusCode();
 //            System.out.println("Status Code: " + statusCode);
-            List<Problem> input = new ArrayList<>();
+                List<Problem> input = new ArrayList<>();
 
-            if (statusCode == 200) {//문제 리스트 solved.ac에서 가져옴
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    List list = mapper.readValue(response.body(), List.class);//json 파싱
+                if (statusCode == 200) {//문제 리스트 solved.ac에서 가져옴
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        List list = mapper.readValue(response.body(), List.class);//json 파싱
 
-                    for (Object o : list) {//문제 리스트 순회
-                        Map map = (Map) o;
-                        List tags = (List) map.get("tags"); //tags 순회 변수
+                        for (Object o : list) {//문제 리스트 순회
+                            Map map = (Map) o;
+                            List tags = (List) map.get("tags"); //tags 순회 변수
 
-                        Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
-                                (int) map.get("acceptedUserCount"), (int) map.get("level"),
-                                (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue(),
-                                null);//tags가 없는 problem 객체 생성
-                        List<Tag> tagList = new ArrayList<>();
+                            Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
+                                    (int) map.get("acceptedUserCount"), (int) map.get("level"),
+                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue(),
+                                    null);//tags가 없는 problem 객체 생성
+                            List<Tag> tagList = new ArrayList<>();
 
-                        for (Object tag : tags) {//tags 순회
-                            tagList.add(new Tag(problem, (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                            for (Object tag : tags) {//tags 순회
+                                tagList.add(new Tag(problem, (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                            }
+
+                            problem.setTags(tagList);//tags 객체 추가
+                            input.add(problem); //query 보낼 리스트에 추가
                         }
-
-                        problem.setTags(tagList);//tags 객체 추가
-                        input.add(problem); //query 보낼 리스트에 추가
-                    }
-                    input = problemService.insertProblem(input);
+                        input = problemService.insertProblem(input);
 
 //                    List<ProblemDto> result = new ArrayList<>();
 //                    for (int i=0; i<input.size(); i++){
@@ -116,16 +121,14 @@ public class ProblemScheduler {
 //                    }// dto로 변환
 //
 //                    System.out.println(result);
-                    System.out.println("Problem saved. "+curId+":"+maxId);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        System.out.println("Problem saved. " + curId + ":" + maxId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            // 응답 데이터 출력
-//            System.out.println("Response Data: " + response.body());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

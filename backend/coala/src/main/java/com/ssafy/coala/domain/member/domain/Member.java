@@ -36,6 +36,6 @@ public class Member implements Serializable {
     @Column(name = "member_exp")
     private Integer exp;
 
-    @Column(name = "solved_id")
+    @Column(name = "solved_id", unique = true)
     private String solvedId;
 }

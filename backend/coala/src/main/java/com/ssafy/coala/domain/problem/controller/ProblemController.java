@@ -1,28 +1,21 @@
 package com.ssafy.coala.domain.problem.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
-import com.ssafy.coala.domain.problem.domain.RecentProblem;
-import com.ssafy.coala.domain.problem.domain.Tag;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -33,17 +26,80 @@ public class ProblemController {
     @Autowired
     ProblemService problemService;
 
-    @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
-    @GetMapping("recent/{bojId}")
-    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "bojId", required = true, example = "col016")
-                                                              @PathVariable String bojId){
-        List<Problem> list = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            list.add(new Problem());
+    public List<Integer> getProblem(String solvedId){
+        List<Integer> result = new ArrayList<>();
+//        String solvedId = "col016";
+        String URL = "https://www.acmicpc.net/user/"+solvedId;
+        try {
+            Document doc = Jsoup.connect(URL).get();
+            String[] id_arr = doc.select(".problem-list").get(0).text().split(" ");
+
+            for (String id : id_arr){
+                if (!id.isEmpty()){
+                    result.add(Integer.parseInt(id));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        System.out.println(bojId + 1);
-        return ResponseEntity.ok((list));
+
+        return result;
     }
+    public List<String[]> getRecentProblem(String solvedId) {
+        List<String[]> result = new ArrayList<>();
+//        String solvedId = "col016";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        try {
+            String URL = "https://www.acmicpc.net/status?problem_id=&user_id="
+                    + solvedId + "&language_id=-1&result_id=4";
+
+            Document doc = Jsoup.connect(URL).get();
+
+            Elements idElem = doc.select(".problem_title");
+            Elements timeElem = doc.select(".real-time-update");
+
+            for (int i = 0; i < idElem.size(); i++) {
+                String problemId = idElem.get(i).text();
+
+                boolean flag = false;
+                for (String[] elem : result) {
+                    if (elem[0].equals(problemId)) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) continue;
+                result.add(new String[]{problemId, timeElem.get(i).attr("title")});
+            }
+        } catch(IOException e){
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    @GetMapping("recent/{solvedId}")
+    public void udpateMemberProblem(@PathVariable String solvedId){
+
+        List<String[]> recentProblem = getRecentProblem(solvedId);
+        List<Integer> problem = getProblem(solvedId);
+
+        problemService.getCurateProblem(problem, recentProblem, solvedId);
+
+    }
+
+//    @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
+//    @GetMapping("recent/{solvedId}")
+//    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "solvedId", required = true, example = "col016")
+//                                                              @PathVariable String solvedId){
+//        List<Problem> list = new ArrayList<>();
+//        for (int i=0; i<10; i++){
+//            list.add(new Problem());
+//        }
+//        System.out.println(solvedId + 1);
+//        return ResponseEntity.ok((list));
+//    }
 
     @Operation(summary = "추천 문제 리스트", description = "해당 유저의 추천 푼 문제 리스트를 가져온다.")
     @GetMapping("curate/{bojId}")
@@ -147,32 +203,32 @@ public class ProblemController {
         return ResponseEntity.ok(new ProblemDto());
     }
 
-    private RecentProblem updateRecentProblem(String bojId){ //크롤링한 정보로 업데이트 요청한다.
-//        doc.select(".problem_title")
-        RecentProblem result = new RecentProblem();
-//        https://www.acmicpc.net/status?problem_id=&user_id=col016&language_id=-1&result_id=4
-        String URL = "https://www.acmicpc.net/status?problem_id=&user_id="+bojId+"&language_id=-1&result_id=4";
-        try {
-            Document doc = Jsoup.connect(URL).get();
-            String[] problem = doc.select(".problem_title").text().split(" ");
-            List<Integer> list = new ArrayList<>();//중복가능한 리스트, 순서를 유지하기 위해서 set는 쓰지 않는다.
-
-            for (String p:problem){//5개가 될때까지 센다.
-                int pid = Integer.parseInt(p);
-                if (!list.contains(pid)){
-                    list.add(pid);
-                    if (list.size()==5) break;;
-                }
-            }
-
-
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
-    }
+//    private RecentProblem updateRecentProblem(String bojId){ //크롤링한 정보로 업데이트 요청한다.
+////        doc.select(".problem_title")
+//        RecentProblem result = new RecentProblem();
+////        https://www.acmicpc.net/status?problem_id=&user_id=col016&language_id=-1&result_id=4
+//        String URL = "https://www.acmicpc.net/status?problem_id=&user_id="+bojId+"&language_id=-1&result_id=4";
+//        try {
+//            Document doc = Jsoup.connect(URL).get();
+//            String[] problem = doc.select(".problem_title").text().split(" ");
+//            List<Integer> list = new ArrayList<>();//중복가능한 리스트, 순서를 유지하기 위해서 set는 쓰지 않는다.
+//
+//            for (String p:problem){//5개가 될때까지 센다.
+//                int pid = Integer.parseInt(p);
+//                if (!list.contains(pid)){
+//                    list.add(pid);
+//                    if (list.size()==5) break;;
+//                }
+//            }
+//
+//
+//
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        return result;
+//    }
 
 }
