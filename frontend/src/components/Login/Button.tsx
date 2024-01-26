@@ -9,16 +9,16 @@ import Image from 'next/image';
 const Button = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const [isPetch, setIsPetch] = useState();
+  const [isFetching, setIsFetching] = useState();
   useEffect(() => {
     const kakaoLogin = async () => {
       if (session) {
         try {
           const { user: userDate } = session;
-          if (isPetch) {
+          if (isFetching) {
             return;
           }
-          setIsPetch(true);
+          setIsFetching(true);
           await axios({
             method: 'POST',
             url: 'http://localhost:8080/member/login',
