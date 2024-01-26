@@ -1,10 +1,23 @@
 package com.ssafy.coala.domain.member.dao;
 
-import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+import java.util.Optional;
 
+public interface MemberRepository extends JpaRepository<MemberProfile, Integer> {
+
+
+    Boolean existsByNickname(String nickname);
+
+//    UserEntity findByNickname(String nickname);
+
+    MemberProfile findBySolvedId(String solveid);
+
+    Optional<Object> findByEmail(String email);
+
+    Optional<MemberProfile> findByNickname(String nickname);
+
+    boolean existsByEmail(String email);
 }
