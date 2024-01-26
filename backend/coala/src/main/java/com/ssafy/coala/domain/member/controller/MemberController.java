@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
+import com.ssafy.coala.domain.member.application.LoginService;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/member")
 public class MemberController {
 
+    private final LoginService loginService;
+
     @Operation(summary = "member", description = "member api")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
@@ -27,7 +30,13 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<?> signUp(@RequestBody MemberDto member){
-        return new ResponseEntity<MemberDto>(member,HttpStatus.OK);
+        System.out.println(member);
+        boolean isMember = loginService.check(member);
+        System.out.println(isMember);
+        if(isMember){
+            return new ResponseEntity<Boolean>(isMember,HttpStatus.FOUND);
+        }
+        return new ResponseEntity<Boolean>(isMember,HttpStatus.OK);
     }
 
 
