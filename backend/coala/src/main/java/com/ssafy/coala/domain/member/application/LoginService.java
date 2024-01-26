@@ -13,4 +13,6 @@ public interface LoginService {
     public KakaoUserDto getKakaoInfo(String kakaoAccessToken) throws JsonProcessingException;
 
     boolean check(MemberDto member);
+
+    void signUp(MemberDto memberDto, String solvedId);
 }

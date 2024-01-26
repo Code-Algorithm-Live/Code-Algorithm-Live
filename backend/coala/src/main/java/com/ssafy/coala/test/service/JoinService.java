@@ -1,7 +1,7 @@
 package com.ssafy.coala.test.service;
 
 import com.ssafy.coala.test.dto.JoinDto;
-import com.ssafy.coala.domain.member.dao.UserRepository;
+import com.ssafy.coala.domain.member.dao.MemberRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 public class JoinService {
 
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public JoinService(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.memberRepository = memberRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -23,7 +23,7 @@ public class JoinService {
         String username = joinDto.getUsername();
         String password = joinDto.getPassword();
 
-        Boolean isExist = userRepository.existsByNickname(username);
+        Boolean isExist = memberRepository.existsByNickname(username);
 
         if(isExist){
 

@@ -29,9 +29,9 @@ public class MemberController {
     })
 
     @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody MemberDto member){
-        System.out.println(member);
-        boolean isMember = loginService.check(member);
+    public ResponseEntity<?> logincheck(@RequestBody MemberDto memberDto){
+        System.out.println(memberDto);
+        boolean isMember = loginService.check(memberDto);
         System.out.println(isMember);
         if(isMember){
             return new ResponseEntity<Boolean>(isMember,HttpStatus.FOUND);
@@ -39,6 +39,12 @@ public class MemberController {
         return new ResponseEntity<Boolean>(isMember,HttpStatus.OK);
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto,@RequestBody String solvedId){
+        System.out.println(solvedId);
+        loginService.signUp(memberDto, solvedId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("/signIn")
     public ResponseEntity<String> signIn(@Parameter(description = "로그인", required = true, example = "reqMember") @RequestParam String reqMember) {
