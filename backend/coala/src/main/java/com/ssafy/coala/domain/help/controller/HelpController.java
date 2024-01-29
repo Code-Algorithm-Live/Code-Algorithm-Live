@@ -1,8 +1,13 @@
 package com.ssafy.coala.domain.help.controller;
 
 
+import com.ssafy.coala.domain.help.dto.WaitDto;
+import com.ssafy.coala.domain.help.service.MatchingService;
 import com.ssafy.coala.domain.help.service.RedisService;
+import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,12 +16,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RequestMapping("/help")
 @RestController
 public class HelpController {
 
     private final RedisService redisService;
+    private final MatchingService matchingService;
 
 
     @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성")
@@ -83,21 +91,6 @@ public class HelpController {
         return ResponseEntity.ok("아이디 " + id);
     }
 
-    @Operation(summary = "도움 요청 대기열 등록", description = "요청 대기열에 등록합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @PostMapping("/waitqueue/add/{id}/{probid}")
-    public ResponseEntity<String> waitqueue(@Parameter(description = "유저 아이디", required = true, example = "test") @PathVariable String id,
-                                            @Parameter(description = "문제번호", required = true, example = "12233") @PathVariable int probid) {
-        Member member = new Member();
-        member.setSolvedId(id);
-        redisService.addUser(probid,member);
-        return ResponseEntity.ok("queue 푸쉬 완료");
-    }
 
     @Operation(summary = "도움 요청 대기열 문제 별 리스트 반환", description = "요청 대기열의 문제 별 리스트를 반환합니다.")
     @ApiResponses({
@@ -106,12 +99,32 @@ public class HelpController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping("/waitqueue/list/{probid}")
+    @GetMapping("/waitqueue/{probid}")
     public ResponseEntity<?> waitqueuelistbyprobid(@Parameter(description = "문제번호", required = true, example = "12233") @PathVariable int probid) {
         return ResponseEntity.ok(redisService.getProbUsers(probid));
     }
 
-    @GetMapping("/waitqueue/list")
+    @Operation(summary = "도움 요청 대기열 등록", description = "요청 대기열에 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @PostMapping("/waitqueue")
+    public ResponseEntity<String> waitqueue(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+        redisService.addUser(waitDto);
+        return ResponseEntity.ok("queue 푸쉬 완료");
+    }
+
+    @Operation(summary = "도움 요청 대기열 전체 리스트", description = "도움 요청 전체 대기열을 반환")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @GetMapping("/waitqueue")
     public ResponseEntity<?> waitqueuelist() {
         return ResponseEntity.ok(redisService.getAllUsers());
     }
@@ -124,9 +137,23 @@ public class HelpController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    @DeleteMapping("/waitqueue/{id}")
-    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "유저 아이디", required = true, example = "test") @PathVariable String id) {
-        redisService.removeMember(id);
-        return ResponseEntity.ok("아이디 " + id);
+    @DeleteMapping("/waitqueue")
+    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+        redisService.removeUser(waitDto);
+
+        return ResponseEntity.ok("아이디 " + waitDto);
+    }
+
+    @Operation(summary = "도움 요청 보내기", description = "멘토에게 도움 요청을 보낸다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @PostMapping("/send")
+    public ResponseEntity<String> send(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+        matchingService.sendHelp(waitDto);
+        return ResponseEntity.ok("queue 푸쉬 완료");
     }
 }

@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class LoginServiceImpl implements LoginService{
+public class MemberServiceImpl implements MemberService {
 
 
     private final MemberProfileRepository memberProfileRepository;
@@ -43,7 +43,7 @@ public class LoginServiceImpl implements LoginService{
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String KAKAO_USER_INFO_URI;
 
-    public LoginServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository) {
         this.memberProfileRepository = memberProfileRepository;
         this.memberRepository = memberRepository;
     }

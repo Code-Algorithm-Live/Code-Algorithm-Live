@@ -1,6 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
-import com.ssafy.coala.domain.member.application.LoginService;
+import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dto.MemberDto;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/member")
 public class MemberController {
 
-    private final LoginService loginService;
+    private final MemberService memberService;
 
     @Operation(summary = "member", description = "member api")
     @ApiResponses({
@@ -35,7 +35,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> logincheck(@RequestBody MemberDto memberDto){
         System.out.println(memberDto);
-        boolean isMember = loginService.check(memberDto);
+        boolean isMember = memberService.check(memberDto);
         System.out.println(isMember);
         if(isMember){
             return new ResponseEntity<Boolean>(isMember,HttpStatus.FOUND);
@@ -46,19 +46,19 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto,@RequestBody String solvedId){
         System.out.println(solvedId);
-        loginService.signUp(memberDto, solvedId);
+        memberService.signUp(memberDto, solvedId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profile/{uuid}")
     public ResponseEntity<?> getMemberProfile(@PathVariable UUID uuid){
-        MemberProfile memberProfile = loginService.getMemberProfile(uuid);
+        MemberProfile memberProfile = memberService.getMemberProfile(uuid);
         return new ResponseEntity<MemberProfile>(memberProfile,HttpStatus.OK);
     }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<?> getMember(@PathVariable UUID uuid){
-        Member member = loginService.getMember(uuid);
+        Member member = memberService.getMember(uuid);
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 

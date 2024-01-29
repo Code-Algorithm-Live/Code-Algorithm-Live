@@ -10,7 +10,7 @@ import com.ssafy.coala.domain.member.dto.MemberDto;
 
 import java.util.UUID;
 
-public interface LoginService {
+public interface MemberService {
     public KakaoTokenDto getKakaoAccessToken(String code);
     public KakaoUserDto kakaoLogin(String kakaoAccessToken)throws Exception;
 
