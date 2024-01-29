@@ -176,4 +176,9 @@ public class MemberServiceImpl implements MemberService {
     public Member getMember(UUID uuid) {
         return memberRepository.findById(uuid);
     }
+
+    @Override
+    public boolean dupCheck(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }
