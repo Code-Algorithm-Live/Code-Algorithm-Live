@@ -154,6 +154,6 @@ public class HelpController {
     @PostMapping("/send")
     public ResponseEntity<String> send(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.sendHelp(waitDto);
-        return ResponseEntity.ok("queue 푸쉬 완료");
+        return ResponseEntity.ok("메시지 전달 완료");
     }
 }
