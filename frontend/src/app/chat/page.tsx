@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import Chatting from '@/components/Chat/Chatting';
+import InputOutput from '@/components/Chat/InputOutput';
 
 const Container = styled.div`
   display: flex;
@@ -140,70 +141,6 @@ const CodeEditorContainer = styled.div`
     width: 100%;
     height: 100%;
   }
-
-  .runContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-
-    padding: 0 14px;
-    width: 100%;
-    height: 120px;
-
-    background: var(--editorSub, #343746);
-    color: var(--editorTypo, #e2e1e1);
-
-    .Box {
-      flex: 1;
-
-      min-width: 252px;
-      width: 100%;
-
-      .textContainer {
-        margin-bottom: 4px;
-      }
-      .content {
-        width: 100%;
-        height: 72px;
-
-        background: var(--editorBlack, #282a36);
-
-        font-size: 16px;
-        font-weight: 500;
-      }
-
-      &.inputBox {
-        .textContainer {
-          display: flex;
-          justify-content: space-between;
-
-          .menu {
-            display: flex;
-            gap: 4px;
-
-            button {
-              display: inline-flex;
-              padding: 2px 4px;
-              justify-content: center;
-              align-items: center;
-              gap: 12px;
-
-              border-radius: 4px;
-              background: var(--editorBlack, #282a36);
-
-              color: var(--, #f5f5f5);
-              font-size: 12px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: normal;
-              letter-spacing: -0.18px;
-            }
-          }
-        }
-      }
-    }
-  }
 `;
 
 const QuestionBannerContainer = styled.div`
@@ -303,23 +240,7 @@ export default function Chat() {
           </LeftContainer>
           <CodeEditorContainer>
             <div className="codeEditore"></div>
-            <div className="runContainer">
-              <div className="Box inputBox">
-                <div className="textContainer">
-                  <p className="text">입력</p>
-                  <div className="menu">
-                    <button className="clear">초기화</button>
-                    <button className="run">실행</button>
-                  </div>
-                </div>
-
-                <textarea className="content"></textarea>
-              </div>
-              <div className="Box">
-                <p className="textContainer">실행결과</p>
-                <div className="content output"></div>
-              </div>
-            </div>
+            <InputOutput />
           </CodeEditorContainer>
         </MainContainer>
       </PairProgrammingContainer>
