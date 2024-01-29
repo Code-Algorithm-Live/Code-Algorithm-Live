@@ -31,7 +31,7 @@ public class ChatRoomController {
         ChatRoom chatRoom = chatService.createRoom(makeRoomDto);
         return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
-    
+     
     
     @Operation(summary = "특정 채팅 방 조회", description = "방 번호로 채팅 방 조회 ")
     @ApiResponses({
