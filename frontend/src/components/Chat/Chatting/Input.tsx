@@ -32,8 +32,12 @@ const InputForm = styled.form`
 `;
 
 const Input = ({
+  value,
+  onChange,
   onSubmit,
 }: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,6 +54,8 @@ const Input = ({
           id="chat"
           placeholder="메세지를 입력하세요..."
           autoComplete="false"
+          value={value}
+          onChange={onChange}
         />
         <button type="submit">전송</button>
       </InputForm>

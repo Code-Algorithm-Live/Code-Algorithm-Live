@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { styled } from 'styled-components';
+import { Client } from '@stomp/stompjs';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
 import Input from '@/components/Chat/Chatting/Input';
@@ -34,32 +35,123 @@ const MessageContainer = styled.div`
   }
 `;
 
-const mockMessages = [
-  { chatRoomId: 5, type: '안녕하세요~~', sender: 'me', date: '2024/01/22' },
-  {
-    chatRoomId: 5,
-    type: '안녕하세요!!',
-    sender: 'hamster',
-    date: '2024/01/22',
-  },
-  {
-    chatRoomId: 5,
-    type: '시작해볼까요',
-    sender: 'hamster',
-    date: '2024/01/22',
-  },
-  { chatRoomId: 5, type: '넵', sender: 'me', date: '2024/01/22' },
-  { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
-];
+enum MessageType {
+  ENTER = 'Enter',
+  TALK = 'TALK',
+}
+
+interface IMessage {
+  chatId: string;
+  type: MessageType;
+  sender: string;
+  message: string;
+  date: string;
+}
+
+const BASE_URL = 'ws://localhost:8080';
+const brokerURL = `${BASE_URL}/ws/chat`;
+const userId = Math.random().toString();
+const roomId = 2;
+const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
+const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
+const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+
+const generateUUID = () => crypto.randomUUID();
+
+/**
+ * {hour}:{minutes}로 포맷팅합니다.
+ */
+const getHourMinutes = (timeStamp: Date) => {
+  return `${timeStamp.getHours()}:${timeStamp.getMinutes()}`;
+};
 
 const Chatting = () => {
-  const [messages] = useState(mockMessages);
-  const userId = 'me';
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<IMessage[]>([]);
+
+  /** 메세지를 수신했을 때 호출 */
+  const onMessageReceived = ({ message, type, sender }: IMessage) => {
+    const msgTime = getHourMinutes(new Date());
+    const chatId = generateUUID();
+
+    setMessages(prev => [
+      ...prev,
+      {
+        chatId,
+        sender,
+        type,
+        message,
+        date: msgTime,
+      },
+    ]);
+  };
+
+  const client = useRef(
+    new Client({
+      brokerURL,
+      onConnect: () => {
+        /** roomId에 참가합니다. */
+        client.current.publish({
+          destination: enterDestination,
+          body: JSON.stringify({
+            type: MessageType.ENTER,
+            roomId,
+            sender: userId,
+          }),
+        });
+        /** roomId를 구독합니다.  */
+        client.current.subscribe(subDestination, msg => {
+          const message = JSON.parse(msg.body) as IMessage;
+          onMessageReceived(message);
+        });
+      },
+    }),
+  );
+
+  const sendMessage = (message: string) => {
+    if (!message) return;
+
+    client.current.publish({
+      destination: pubDestination,
+      body: JSON.stringify({
+        type: MessageType.TALK,
+        roomId,
+        sender: userId,
+        message,
+      }),
+    });
+  };
+
+  useEffect(() => {
+    client.current.activate();
+  }, []);
+
+  useEffect(() => {
+    const disconnect = () => {
+      // FIXME 채팅방 종료가 되는지 확인
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      client.current.deactivate();
+    };
+    return () => disconnect();
+  }, []);
+
+  const handleSubmit = () => {
+    const message = input || '';
+    sendMessage(message);
+    setInput('');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setInput(value);
+  };
 
   return (
     <Container>
       <MessageContainer>
-        {messages.map(({ type, sender, date }, idx) => {
+        {messages.map(({ chatId, type, sender, date, message }, idx) => {
+          if (type !== MessageType.TALK) return <></>;
+
           const isCurrentUser = userId === sender;
           const isFirst = idx > 0 && sender !== messages[idx - 1].sender;
 
@@ -67,16 +159,16 @@ const Chatting = () => {
 
           return (
             <MessageComponent
-              key={date + type}
+              key={chatId}
               first={isFirst}
-              message={type}
+              message={message}
               date={date}
             />
           );
         })}
       </MessageContainer>
 
-      <Input onSubmit={() => {}} />
+      <Input value={input} onChange={handleChange} onSubmit={handleSubmit} />
     </Container>
   );
 };
