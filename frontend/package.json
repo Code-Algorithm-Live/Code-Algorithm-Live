@@ -13,6 +13,7 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-query": "^5.17.15",
     "@types/jest": "^29.5.11",
