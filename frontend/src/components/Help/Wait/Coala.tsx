@@ -15,7 +15,7 @@ const Coala = () => {
     <div>
       <Image
         src={`/images/wait/${imgNumber}.png`}
-        alt={`${imgNumber}`}
+        alt="imgNumber"
         width={230}
         height={343}
       ></Image>

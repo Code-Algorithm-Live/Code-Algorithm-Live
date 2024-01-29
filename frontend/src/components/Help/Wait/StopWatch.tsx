@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import style from './StopWatch.module.scss';
+import style from '@/components/Help/Wait/StopWatch.module.scss';
 
 const StopWatch = () => {
   // 시작시간 기록(받기) - 2024-01-27 15:20:31
@@ -14,9 +14,9 @@ const StopWatch = () => {
   const start: string = '2024-01-27 15:20:31';
   const startTime: Date = new Date(start);
   // 1초마다 업데이트
-  //   setInterval(() => {
-  //     setTimeLap(Date.now() - startTime.getTime());
-  //   }, 1000);
+  setInterval(() => {
+    setTimeLap(Date.now() - startTime.getTime());
+  }, 1000);
   const hour = Math.floor(timeLap / 1000 / 60 / 60);
   const minute = Math.floor((timeLap / 1000 / 60) % 60);
   const second = Math.floor((timeLap / 1000) % 60);

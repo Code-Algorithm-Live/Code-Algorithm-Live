@@ -1,15 +1,16 @@
 import { useRef } from 'react';
-import TextInput from '../TextInput';
-import QuillEditor from '../QuillEditor';
-import LinkPreview from '../LinkPreview';
-import styles from './Form.module.scss';
+import Link from 'next/link';
+import TextInput from '@/components/Common/TextInput';
+import QuillEditor from '@/components/Common/QuillEditor';
+import LinkPreview from '@/components/Help/Wait/LinkPreview';
+import styles from '@/components/Help/index.module.scss';
 
 function Form() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
     if (inputRef.current) {
-      //   console.log(inputRef.current.value);
+      // post로 서버에 전송 & 주스탠드 저장
     }
   };
 
@@ -26,13 +27,15 @@ function Form() {
           </TextInput>
           <QuillEditor />
           <div className={styles.buttonCon}>
-            <button
-              className={styles.helpSubmitButton}
-              type="submit"
-              onClick={handleSubmit}
-            >
-              제출
-            </button>
+            <Link href={`/help/wait`}>
+              <button
+                className={styles.helpSubmitButton}
+                type="submit"
+                onClick={handleSubmit}
+              >
+                제출
+              </button>
+            </Link>
           </div>
         </div>
         <div className={styles.linkForm}>

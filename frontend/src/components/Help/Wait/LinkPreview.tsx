@@ -58,8 +58,8 @@ function LinkPreview() {
             />
           </div>
           <p className={styles.sorting}>
-            {data.tags.map((tag, index) => (
-              <span key={index}> #{sorts.split(',')[index]}&nbsp;&nbsp; </span>
+            {sorts.split(',').map((tag, index) => (
+              <span key={index}> #{tag}&nbsp;&nbsp; </span>
             ))}
           </p>
         </div>

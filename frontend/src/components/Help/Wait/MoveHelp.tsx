@@ -1,17 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import style from './MoveHelp.module.scss';
+import style from '@/components/Help/Wait/MoveHelp.module.scss';
 
 type MoveProps = {
-  children: string;
+  text: string;
 };
-const MoveHelp = ({ children }: MoveProps) => {
+const MoveHelp = ({ text }: MoveProps) => {
   // 문제 번호 받기
   const problemNumber: number = 1533;
   let move: string;
-  if (children === '도움 요청하기') {
+  if (text === '도움 요청하기') {
     move = 'user-list';
-  } else if (children === '질문 히스토리 보기') {
+  } else if (text === '질문 히스토리 보기') {
     move = 'question-list';
   } else {
     move = 'hint';
@@ -21,11 +21,11 @@ const MoveHelp = ({ children }: MoveProps) => {
     <Link href={`/help/${move}`}>
       <div className={style.form}>
         <p className={style.number}>{problemNumber}</p>
-        <p className={style.sort}>{children}</p>
+        <p className={style.sort}>{text}</p>
         <Image
           className={style.moveImage}
-          src={`/images/waitPageMove/${children}.png`}
-          alt={`${children}`}
+          src={`/images/waitPageMove/${text}.png`}
+          alt={`${text}`}
           width={118}
           height={118}
         ></Image>
