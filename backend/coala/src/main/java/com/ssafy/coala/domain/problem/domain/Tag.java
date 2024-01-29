@@ -18,8 +18,6 @@ public class Tag {
 
     @Id
     private String name;
-
-    // getters, setters, and other properties
 }
 
 

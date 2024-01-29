@@ -2,6 +2,7 @@ package com.ssafy.coala.domain.problem.controller;
 
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.application.ProblemService;
+import com.ssafy.coala.domain.problem.domain.CurateInfo;
 import com.ssafy.coala.domain.problem.domain.Problem;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -48,8 +50,6 @@ public class ProblemController {
     public List<String[]> getRecentProblem(String solvedId) {
         List<String[]> result = new ArrayList<>();
 //        String solvedId = "col016";
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
             String URL = "https://www.acmicpc.net/status?problem_id=&user_id="
                     + solvedId + "&language_id=-1&result_id=4";
@@ -80,13 +80,14 @@ public class ProblemController {
     }
 
     @GetMapping("recent/{solvedId}")
-    public void udpateMemberProblem(@PathVariable String solvedId){
+    public ResponseEntity<CurateInfo> udpateMemberProblem(@PathVariable String solvedId){
 
         List<String[]> recentProblem = getRecentProblem(solvedId);
         List<Integer> problem = getProblem(solvedId);
 
-        problemService.getCurateProblem(problem, recentProblem, solvedId);
+        CurateInfo result = problemService.getCurateProblem(problem, recentProblem, solvedId);
 
+        return ResponseEntity.ok(result);
     }
 
 //    @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
@@ -202,6 +203,23 @@ public class ProblemController {
 
         return ResponseEntity.ok(new ProblemDto());
     }
+
+    @GetMapping("auth/{solvedId}")
+    private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
+        String Auth = generateRandomString(12);
+
+        return ResponseEntity.ok(Auth);
+    }
+
+    private static String generateRandomString(int length) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] randomBytes = new byte[length];
+        secureRandom.nextBytes(randomBytes);
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+    }
+
+
 
 //    private RecentProblem updateRecentProblem(String bojId){ //크롤링한 정보로 업데이트 요청한다.
 ////        doc.select(".problem_title")

@@ -1,6 +1,7 @@
 package com.ssafy.coala.domain.problem.application;
 
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.problem.domain.CurateInfo;
 import com.ssafy.coala.domain.problem.domain.Problem;
 
 import java.util.List;
@@ -11,6 +12,6 @@ public interface ProblemService {
     public Integer maxId();
     public Optional<Problem> getProblem(int id);
     public  void updateDescriptionById(int id, String description);
-    List<Problem> getCurateProblem(List<Integer> problem, List<String[]> recentProblem, String solvedId);
+    CurateInfo getCurateProblem(List<Integer> problem, List<String[]> recentProblem, String solvedId);
 
 }

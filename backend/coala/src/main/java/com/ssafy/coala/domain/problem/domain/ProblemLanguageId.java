@@ -11,8 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagId implements Serializable {
-
-    private Integer problem;
-    private String name;
+public class ProblemLanguageId implements Serializable {
+    Integer problem;
+    String language;
 }

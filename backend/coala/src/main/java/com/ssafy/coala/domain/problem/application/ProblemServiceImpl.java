@@ -3,18 +3,23 @@ package com.ssafy.coala.domain.problem.application;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import com.ssafy.coala.domain.problem.dao.ProblemRepository;
+import com.ssafy.coala.domain.problem.dao.RecentMemberRepository;
+import com.ssafy.coala.domain.problem.dao.CurateInfoRepository;
 import com.ssafy.coala.domain.problem.domain.MemberProblem;
 import com.ssafy.coala.domain.problem.domain.Problem;
+import com.ssafy.coala.domain.problem.domain.CurateInfo;
 import com.ssafy.coala.domain.problem.domain.Tag;
+import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -22,6 +27,11 @@ public class ProblemServiceImpl implements ProblemService {
     ProblemRepository problemRepository;
     @Autowired
     MemberProblemRepository memberProblemRepository;
+    @Autowired
+    CurateInfoRepository curateInfoRepository;
+    @Autowired
+    RecentMemberRepository recentMemberRepository;
+
     @Override
     public List<Problem> insertProblem(List<Problem> list) {
         return problemRepository.saveAll(list);
@@ -45,18 +55,41 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     @Transactional
-    public List<Problem> getCurateProblem(List<Integer> problems, List<String[]> recentProblemStr, String solvedId) {
+    public CurateInfo getCurateProblem(List<Integer> problems, List<String[]> recentProblemStr, String solvedId) {
+        //get solvedId
         Member member = new Member();
         member.setSolvedId(solvedId);
         member.setId(memberProblemRepository.findUUIDBySolveId(solvedId));
-        System.out.println(member.getId()+" "+member.getSolvedId());
+
+        //check updateTime
+        CurateInfo curateInfo = curateInfoRepository.findById(solvedId).orElse(null);
+        if (curateInfo != null && Duration.between(curateInfo.getLastUpdate(), LocalDateTime.now()).toSeconds()<5){
+            return null;
+        }
+
+        //update MemberProblem data
         if (member.getId()==null) return null;
         updateMemberProblem(problems, recentProblemStr, member);
+
         //curating
         List<Integer> recentId = new ArrayList<>();
-        for (String[] s: recentProblemStr){
-            recentId.add(Integer.parseInt(s[0]));
+        for (int i=0; i<Math.min(5, recentProblemStr.size()); i++){
+            recentId.add(Integer.parseInt(recentProblemStr.get(i)[0]));
         }
+
+//
+//        //recentId prepare
+//        if (curateInfo!=null && curateInfo.getRecentId().size() == recentId.size()){
+//            boolean flag = true;
+//            for (int i=0; i<recentId.size(); i++){
+//                if (!curateInfo.getRecentId().contains(recentId.get(i))){
+//                    flag = false;
+//                    break;
+//                }
+//            }
+//            if (flag) return null;//return old curatedata
+//        }
+
 
         List<Problem> recentProblem = problemRepository.findAllById(recentId);
 
@@ -66,11 +99,9 @@ public class ProblemServiceImpl implements ProblemService {
         for (Problem p: recentProblem){
             maxLV = Math.max(maxLV, p.getLevel());
             for (Tag t:p.getTags()){
-                if (recentTag.containsKey(t.getName())){
-                    recentTag.put(t.getName(), recentTag.get(t.getName())+1);
-                } else {
-                    recentTag.put(t.getName(), 1);
-                }
+                if (recentTag.containsKey(t.getName())) continue;;
+                recentTag.put(t.getName(), 1);
+
             }
         }
 
@@ -87,19 +118,44 @@ public class ProblemServiceImpl implements ProblemService {
         //이미 푼 문제 제거
         rangedProblem = rangedProblemFiltering(rangedProblem, problems);
 
-        List<ProblemSimilarity> listPS = new ArrayList<>();
+        List<ProblemSimilarity> listPS = new ArrayList<>();//유사도 리스트
 
         for (Problem p: rangedProblem){
             Map<String, Integer> tag = new HashMap<>();
             for (Tag t: p.getTags()){
                 tag.put(t.getName(), 1);
             }
-            listPS.add(new ProblemSimilarity(p.getId(), calculateCosineSimilarity(tag, recentTag)));
-        }
-        //유사도 높은 순으로 sort
-        listPS.sort(Comparator.comparingDouble(x -> x.value));
+            double similarity = calculateCosineSimilarity(tag, recentTag);
+            if (similarity>0) listPS.add(new ProblemSimilarity(p.getId(), similarity));
 
-        return null;
+        }
+
+        //유사도 높은 순으로 sort
+        //유사도 같다면...?
+        //정해진 구간에서 랜덤하게
+        listPS.sort(Comparator.comparingDouble(x -> x.value));
+        //filtering
+        listPS = listPS.stream().
+                filter(x -> x.value>0).
+                collect(Collectors.toList());
+
+        List<ProblemDto> curateProblem = new ArrayList<>();
+
+        for (int i=0; i<Math.min(20, listPS.size()); i++){
+            int idx = binarySearchProblem(rangedProblem, listPS.get(i).id);
+            curateProblem.add(new ProblemDto(rangedProblem.get(idx)));
+        }
+
+        CurateInfo result = new CurateInfo(solvedId, LocalDateTime.now(), curateProblem);
+        curateInfoRepository.save(result);
+
+        //return 확인
+        //re-filtering후 counting data 주기
+        //친구가 푼 문제 확인
+        //recentMember 갱신
+        //list 구현체
+        //responce보내주고 함수 실행하기
+        return result;
     }
 
     List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> problems){

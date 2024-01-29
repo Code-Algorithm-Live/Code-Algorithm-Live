@@ -3,6 +3,7 @@ package com.ssafy.coala.domain.problem.scheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
+import com.ssafy.coala.domain.problem.domain.ProblemLanguage;
 import com.ssafy.coala.domain.problem.domain.Tag;
 import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
@@ -99,18 +100,26 @@ public class ProblemScheduler {
                         for (Object o : list) {//문제 리스트 순회
                             Map map = (Map) o;
                             List tags = (List) map.get("tags"); //tags 순회 변수
+                            List titles = (List) map.get("titles");
 
                             Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
                                     (int) map.get("acceptedUserCount"), (int) map.get("level"),
-                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue(),
-                                    null);//tags가 없는 problem 객체 생성
-                            List<Tag> tagList = new ArrayList<>();
+                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue());//tags가 없는 problem 객체 생성
 
+                            List<Tag> tagList = new ArrayList<>();
+                            List<ProblemLanguage> problemLanguages = new ArrayList<>();
                             for (Object tag : tags) {//tags 순회
-                                tagList.add(new Tag(problem, (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                                tagList.add(new Tag(problem,
+                                        (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                            }
+
+                            for (Object title : titles){
+                                problemLanguages.add(new ProblemLanguage(problem,
+                                        (String) ((Map<?, ?>)title).get("language"), (String) ((Map<?, ?>)title).get("title")));
                             }
 
                             problem.setTags(tagList);//tags 객체 추가
+                            problem.setLanguages(problemLanguages);
                             input.add(problem); //query 보낼 리스트에 추가
                         }
                         input = problemService.insertProblem(input);

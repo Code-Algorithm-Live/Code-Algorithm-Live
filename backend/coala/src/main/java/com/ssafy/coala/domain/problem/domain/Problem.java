@@ -31,15 +31,18 @@ public class Problem {
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Fetch(value = FetchMode.JOIN)
     private List<Tag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Fetch(value = FetchMode.JOIN)
+    private List<ProblemLanguage> languages = new ArrayList<>();
     public Problem(Integer id, String title, int accepted_user_count,
-                   int level, boolean give_no_rating, float average_tries, List<Tag> tags) {
+                   int level, boolean give_no_rating, float average_tries) {
         this.id = id;
         this.title = title;
         this.accepted_user_count = accepted_user_count;
         this.level = level;
         this.give_no_rating = give_no_rating;
         this.average_tries = average_tries;
-        this.tags = tags;
     }
 }
 
