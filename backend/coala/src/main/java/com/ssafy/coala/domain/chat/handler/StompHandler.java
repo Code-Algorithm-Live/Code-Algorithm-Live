@@ -25,9 +25,7 @@ public class StompHandler implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        System.out.println("StompHandler Aceess");
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message); // 헤더의 세션 정보 가져옴?
-        System.out.println("StompHandler Aceess");
         if(accessor.getCommand() == StompCommand.CONNECT) {
             System.out.println("startStomp...");
         }
