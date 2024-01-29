@@ -5,32 +5,40 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+@Builder
+public class Member implements Serializable {
 
-    @Id
-    @Column(name = "member_id")
-    private String Id;
+    @Id @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name="uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
-    @Column(name = "member_name")
-    private String name;
+    @Column(name = "regist_date")
+    @CreatedDate
+    private LocalDateTime registDate;
 
-    private LocalDateTime date;
-
-    @Column(name = "member_nickname")
-    private String nickname;
-
+    @ColumnDefault("0")
     @Column(name = "member_exp")
     private Integer exp;
 
+    @Column(name = "solved_id")
+    private String solvedId;
 
-
+    @Column(name = "email")
+    private String email;
 }

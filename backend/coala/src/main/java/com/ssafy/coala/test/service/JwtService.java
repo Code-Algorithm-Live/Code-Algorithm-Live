@@ -2,17 +2,15 @@ package com.ssafy.coala.test.service;
 
 
 import com.ssafy.coala.test.dto.CustomUserDetails;
-import com.ssafy.coala.domain.member.domain.UserEntity;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
-import com.ssafy.coala.domain.member.jwt.NicknameEmailAuthenticationToken;
-import com.ssafy.coala.domain.member.dao.UserRepository;
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +45,7 @@ public class JwtService {
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER = "Bearer ";
 
-    private final UserRepository userRepository;
+    private final MemberProfileRepository memberProfileRepository;
 
     public String createAccessToken(Long id, String email) {
         Date now = new Date();
@@ -158,21 +156,19 @@ public class JwtService {
 
         //userEntity를 생성하여 값 set
 
-        UserEntity userEntity = UserEntity.builder()
+        MemberProfile memberProfile = MemberProfile.builder()
 //                .nickname(nickname)
-                .id(id)
                 .email(email)
-                .role(role)
                 .build();
 
 
         //UserDetails에 회원 정보 객체 담기
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+        CustomUserDetails customUserDetails = new CustomUserDetails(memberProfile);
 
         //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new NicknameEmailAuthenticationToken(customUserDetails.getEmail(), customUserDetails.getId(), customUserDetails.getAuthorities());
+//        Authentication authToken = new NicknameEmailAuthenticationToken(customUserDetails.getEmail(), customUserDetails.get, customUserDetails.getAuthorities());
         //세션에 사용자 등록
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+//        SecurityContextHolder.getContext().setAuthentication(authToken);
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 //        filterChain.doFilter(request, response);
     }

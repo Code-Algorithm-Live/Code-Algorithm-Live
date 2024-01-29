@@ -5,7 +5,7 @@ import com.ssafy.coala.domain.chat.dao.ChatMessageRepository;
 import com.ssafy.coala.domain.chat.dao.ChatRoomRepository;
 import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
-import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
+//import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
 import jakarta.transaction.Transactional;
@@ -27,7 +27,7 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
 
-    private Map<String, ChatRoomDto> chatRooms;
+//    private Map<String, ChatRoomDto> chatRooms;
 
     // 채팅 생성
     public ChatMessage createChat(Long roomId, String sender, String message){

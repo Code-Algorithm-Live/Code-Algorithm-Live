@@ -24,5 +24,7 @@ public class ChatRoom {
 
     @JsonIgnore
     @OneToMany(mappedBy = "")
-    private final List<ChatMessage> messages = new ArrayList<>();
+    @Builder.Default
+    private List<ChatMessage> messages = new ArrayList<>();
+    
 }
