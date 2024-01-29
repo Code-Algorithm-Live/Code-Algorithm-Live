@@ -1,6 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
-import com.ssafy.coala.domain.member.application.LoginService;
+import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
 import com.ssafy.coala.test.service.JwtService;
@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
-import org.springframework.web.servlet.view.RedirectView;
-
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +25,7 @@ import java.util.Objects;
 public class LoginController {
 
     @Autowired
-    LoginService service;
+    MemberService service;
     @Autowired
     JwtService jwtService;
 

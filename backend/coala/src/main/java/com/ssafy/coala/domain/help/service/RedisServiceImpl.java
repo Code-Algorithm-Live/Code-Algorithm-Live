@@ -1,7 +1,10 @@
 package com.ssafy.coala.domain.help.service;
 
+import com.ssafy.coala.domain.help.dto.HelpDto;
+import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.repository.RedisRepository;
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.h2.command.dml.Help;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,7 +24,7 @@ public class RedisServiceImpl implements RedisService {
 
     private final RedisRepository redisRepository;
 
-    private static final String MATCH_QUEUE_KEY = "sorted_set";
+    private static final String MATCH_QUEUE_KEY = "waiting_queue";
 
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -32,85 +35,112 @@ public class RedisServiceImpl implements RedisService {
 //        this.redisTemplate = redisTemplate;
 //    }
 
+//    @Override
+//    @Transactional
+//    public void joinMember(Member member) {
+//        redisRepository.save(member);
+//    }
+//
+//    @Override
+//    @CachePut(value = "Member", key = "#memberId", cacheManager = "cacheManager")
+//    @Transactional
+//    public Member updateMember(Member member, String id) {
+//        return redisRepository.save(member);
+//    }
+//
+//    @Override
+//    @Cacheable(value = "Member", key = "#memberId", cacheManager = "cacheManager", unless = "#result == null")
+//    public Member getMemberInfo(String id) {
+//        return redisRepository.findOne(id);
+//    }
+//
+//    @Override
+//    @CacheEvict(value = "Member", key = MATCH_QUEUE_KEY, cacheManager = "cacheManager")
+//    @Transactional
+//    public void removeMember(String id) {
+//        Member member = redisRepository.findOne(id);
+//        redisRepository.remove(member);
+//    }
+
+    @Override
+    public void removeUser(WaitDto waitDto) {
+        if(isExist(waitDto)){
+            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY,1,waitDto);
+            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,waitDto);
+        }else{
+            System.out.println("삭제할 데이터가 없습니다!!!!");
+        }
+        
+    }
+
+    @Override
+    public void expiredRemove() {
+        List<Object> elements = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
+
+        if (elements != null) {
+            for (Object element : elements) {
+                // element에 대한 만료 여부를 확인하고 만료된 경우 삭제
+                if (isMemberExpired((WaitDto)element)) {
+                    redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, element);
+                }
+            }
+        }
+    }
+
     @Override
     @Transactional
-    public void joinMember(Member member) {
-        redisRepository.save(member);
+    public void addUser(WaitDto waitDto) {
+        redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, waitDto);
+        redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
+        String hashKey = Integer.toString(waitDto.hashCode());
+        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(100));
     }
 
-    @Override
-    @CachePut(value = "Member", key = "#memberId", cacheManager = "cacheManager")
-    @Transactional
-    public Member updateMember(Member member, String id) {
-        return redisRepository.save(member);
-    }
+    public boolean isExist(WaitDto waitDto){
+        List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
 
-    @Override
-    @Cacheable(value = "Member", key = "#memberId", cacheManager = "cacheManager", unless = "#result == null")
-    public Member getMemberInfo(String id) {
-        return redisRepository.findOne(id);
-    }
-
-    @Override
-    @CacheEvict(value = "Member", key = MATCH_QUEUE_KEY, cacheManager = "cacheManager")
-    @Transactional
-    public void removeMember(String id) {
-        Member member = redisRepository.findOne(id);
-        redisRepository.remove(member);
-    }
-
-    @Override
-    @Transactional
-    public void addUser(int probId, Member member) {
-        redisTemplate.opsForZSet().add(MATCH_QUEUE_KEY, member,1);
-        redisTemplate.opsForZSet().add(Integer.toString(probId), member,1);
-        String hashKey = Integer.toString(member.hashCode());
-        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10000));
-    }
-
-    public boolean isExist(Member member){
-        Double score = redisTemplate.opsForZSet().score(MATCH_QUEUE_KEY,member);
-        if(score!=null){
+        if (list != null && list.contains(waitDto)) {
             return true;
         }
+
         return false;
     }
 
     @Override
-    public Set<Object> getAllUsers() {
-        Set<Object> list = redisTemplate.opsForZSet().range(MATCH_QUEUE_KEY, 0, -1);
-
+    public List<Object> getAllUsers() {
+        List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
 
         return list;
     }
 
     @Override
-    public boolean isMemberExpired(String key, Member member) {
-        String hashKey = Integer.toString(member.hashCode());
+    public boolean isMemberExpired(WaitDto waitDto) {
+        String hashKey = Integer.toString(waitDto.hashCode());
         Long expirationTime = (Long) redisTemplate.opsForHash().get(MATCH_QUEUE_KEY + ":expiration", hashKey);
+        System.out.println(expirationTime);
         if (expirationTime != null) {
+            System.out.println(expirationTime+","+System.currentTimeMillis()+"만료 검사");
             return expirationTime < System.currentTimeMillis();
         }
         return false;
     }
 
     @Override
-    public Set<Object> getProbUsers(int probid) {
-        Set<Object> list = redisTemplate.opsForZSet().range(Integer.toString(probid), 0, -1);
-
+    public List<Object> getProbUsers(int probid) {
+        List<Object> list = redisTemplate.opsForList().range(Integer.toString(probid), 0, -1);
 
         return list;
     }
 
     @Override
-    @CachePut(value = "Help", key = "#solvedId", cacheManager = "cacheManager")
-    public Help saveHelp(Help help,String solvedId) {
-        return help;
+    @CachePut(value = "HelpDto", key = "#solvedId", cacheManager = "cacheManager")
+    public HelpDto saveHelp(HelpDto helpDto, String solvedId) {
+        return helpDto;
     }
 
     @Override
-    @Cacheable(value = "Help", key = "#solvedId", cacheManager = "cacheManager")
-    public Help getHelp(String solvedId) {
+    @Cacheable(value = "HelpDto", key = "#solvedId", cacheManager = "cacheManager")
+    public HelpDto getHelp(String solvedId) {
         return null;
     }
 
