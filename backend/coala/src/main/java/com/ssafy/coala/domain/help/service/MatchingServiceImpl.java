@@ -27,6 +27,6 @@ public class MatchingServiceImpl implements MatchingService{
 
     @Override
     public void sendHelp(WaitDto waitDto) { //수신자 이메일
-        messagingTemplate.convertAndSendToUser(waitDto.getPair(), "/queue/match", "도움 요청이 도착했습니다.");
+        messagingTemplate.convertAndSendToUser(waitDto.getPair(), "user/queue/match", "도움 요청이 도착했습니다.");
     }
 }
