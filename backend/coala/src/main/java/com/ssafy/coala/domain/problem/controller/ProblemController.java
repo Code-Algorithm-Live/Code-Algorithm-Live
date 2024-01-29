@@ -79,7 +79,7 @@ public class ProblemController {
         return result;
     }
 
-    @GetMapping("recent/{solvedId}")
+    @GetMapping("curate/{solvedId}")
     public ResponseEntity<CurateInfo> udpateMemberProblem(@PathVariable String solvedId){
 
         List<String[]> recentProblem = getRecentProblem(solvedId);
@@ -102,8 +102,8 @@ public class ProblemController {
 //        return ResponseEntity.ok((list));
 //    }
 
-    @Operation(summary = "추천 문제 리스트", description = "해당 유저의 추천 푼 문제 리스트를 가져온다.")
-    @GetMapping("curate/{bojId}")
+//    @Operation(summary = "추천 문제 리스트", description = "해당 유저의 추천 푼 문제 리스트를 가져온다.")
+//    @GetMapping("curate/{bojId}")
     public ResponseEntity<List<Problem>> getCurateProblem(@Parameter(description = "bojId", required = true, example = "shiftpsh")
                                                               @PathVariable String bojId){
         List<Problem> list = new ArrayList<>();
@@ -126,8 +126,8 @@ public class ProblemController {
         return ResponseEntity.ok((list));
     }
 
-    @Operation(summary = "유저 문제 갱신", description = "유저가 푼 문제 리스트를 갱신하고 가져온다. 성공시 유저의 최근 푼 문제, 추천문제도 갱신한다")
-    @PutMapping("{bojId}")
+//    @Operation(summary = "유저 문제 갱신", description = "유저가 푼 문제 리스트를 갱신하고 가져온다. 성공시 유저의 최근 푼 문제, 추천문제도 갱신한다")
+//    @PutMapping("{bojId}")
     public ResponseEntity<List<Problem>> updateUserProblem(@Parameter(description = "bojId", required = true, example = "col016")
                                                                @PathVariable String bojId){
         List<Problem> list = new ArrayList<>();
@@ -183,9 +183,8 @@ public class ProblemController {
 //    @GetMapping("{problemId}")
     public ResponseEntity<ProblemDto> getProblem(@Parameter(description = "problemId", required = true, example = "1000")
                                                   @PathVariable int problemId){
-        Optional<Problem> option = problemService.getProblem(problemId);
-        if (option.isPresent()){
-            Problem problem = option.get();
+        Problem problem = problemService.getProblem(problemId);
+        if (problem!=null){
             if (problem.getDescription()==null){
                 try {
                     String URL = "https://www.acmicpc.net/problem/"+problemId;
@@ -201,7 +200,7 @@ public class ProblemController {
             return ResponseEntity.ok(new ProblemDto(problem));
         }
 
-        return ResponseEntity.ok(new ProblemDto());
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("auth/{solvedId}")

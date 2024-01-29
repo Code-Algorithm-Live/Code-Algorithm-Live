@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ProblemService {
     public List<Problem> insertProblem(List<Problem> list);
     public Integer maxId();
-    public Optional<Problem> getProblem(int id);
+    public Problem getProblem(int id);
     public  void updateDescriptionById(int id, String description);
     CurateInfo getCurateProblem(List<Integer> problem, List<String[]> recentProblem, String solvedId);
 
