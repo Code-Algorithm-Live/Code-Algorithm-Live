@@ -21,5 +21,6 @@ public class CurateInfo {
     @Id
     String id;//memberId
 //    List<Integer> recentId;
-    List<ProblemDto> curateFromRecentProblem;
+    List<ProblemDto> curateFromRecent;
+    List<ProblemDto> curateFromQuestionCnt;
 }

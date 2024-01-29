@@ -90,6 +90,19 @@ public class ProblemController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("crawl/{solvedId}")
+    public ResponseEntity<Document> crawlingHtml(@PathVariable String solvedId){
+        String URL = "https://www.acmicpc.net/problem/"+solvedId;
+
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(URL).get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.ok(doc);
+    }
 //    @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
 //    @GetMapping("recent/{solvedId}")
 //    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "solvedId", required = true, example = "col016")

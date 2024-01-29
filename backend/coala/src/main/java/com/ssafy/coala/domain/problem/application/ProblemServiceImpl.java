@@ -48,7 +48,7 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     @Transactional
-    public CurateInfo getCurateProblem(List<Integer> problems, List<String[]> recentProblemStr, String solvedId) {
+    public CurateInfo getCurateProblem(List<Integer> problemIds, List<String[]> recentProblemStr, String solvedId) {
         //get solvedId
         Member member = new Member();
         member.setSolvedId(solvedId);
@@ -61,7 +61,7 @@ public class ProblemServiceImpl implements ProblemService {
         }
         //update MemberProblem data
         if (member.getId()==null) return null;
-        updateMemberProblem(problems, recentProblemStr, member);
+        updateMemberProblem(problemIds, recentProblemStr, member);
 
         //curating
         List<Integer> recentId = new ArrayList<>();
@@ -105,11 +105,10 @@ public class ProblemServiceImpl implements ProblemService {
             rangedProblem = problemRepository.findProblemsByLevelRange(maxLV-3, maxLV+1);
         }
 
-//        sort되어있나?
-        rangedProblem.sort(Comparator.comparingInt(Problem::getId));
-
         rangedProblem = rangedProblem.
                 stream().filter(x->{
+                    if (x.isGive_no_rating()) return false;
+
                     for (ProblemLanguage language:x.getLanguages()){
                         if (language.getLanguage().equals("ko")) return true;
                     }
@@ -117,8 +116,11 @@ public class ProblemServiceImpl implements ProblemService {
                 }).
                 collect(Collectors.toList());
 
+        //        sort되어있나?
+        rangedProblem.sort(Comparator.comparingInt(Problem::getId));
+
         //이미 푼 문제 제거
-        rangedProblem = rangedProblemFiltering(rangedProblem, problems);
+        rangedProblem = rangedProblemFiltering(rangedProblem, problemIds);
 
         List<ProblemSimilarity> listPS = new ArrayList<>();//유사도 리스트
 
@@ -142,32 +144,51 @@ public class ProblemServiceImpl implements ProblemService {
                 filter(x -> x.value>0).
                 collect(Collectors.toList());
 
-        List<ProblemDto> curateProblem = new ArrayList<>();
+        List<ProblemDto> curateFromRecent = new ArrayList<>();
+        List<Integer> curateFromRecentIds = new ArrayList<>();
 
         for (int i=0; i<Math.min(20, listPS.size()); i++){
             int idx = binarySearchProblem(rangedProblem, listPS.get(i).id);
-            curateProblem.add(new ProblemDto(rangedProblem.get(idx)));
+            curateFromRecentIds.add(idx);
+            curateFromRecent.add(new ProblemDto(rangedProblem.get(idx)));
         }
 
-        CurateInfo result = new CurateInfo(solvedId, curateProblem);
-        customCurateInfoRepository.saveWithTTL(result, 5);
+        CurateInfo result = new CurateInfo();
+        result.setId(solvedId);
+        result.setCurateFromRecent(curateFromRecent);
 
-        //차후 구현
-        //re-filtering 후 counting data 주기
-        //친구가 푼 문제 확인
+        curateFromRecentIds.sort(Comparator.naturalOrder());
+
+        //친구가 푼 문제 확인 -> 차후 구현
+
+
+        //filtering 후 counting data 주기
+        rangedProblem = rangedProblemFiltering(rangedProblem, curateFromRecentIds);
+        rangedProblem = rangedProblem.
+                stream().filter(x -> x.getQuestion_cnt()>0).
+                collect(Collectors.toList());
+        rangedProblem.sort(Comparator.comparingInt(Problem::getQuestion_cnt));
+
+        List<ProblemDto> curateFromQuestionCnt = new ArrayList<>();
+        for (int i=0; i<Math.min(20, rangedProblem.size()); i++){
+            curateFromQuestionCnt.add(new ProblemDto(rangedProblem.get(i)));
+        }
+        result.setCurateFromQuestionCnt(curateFromQuestionCnt);
+
+        customCurateInfoRepository.saveWithTTL(result, 5);
 
         return result;
     }
 
-    List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> problems){
+    List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> ids){
         List<Problem> result = new ArrayList<>();
 
         int i=0;
         int j=0;
-        while (i<problems.size() && j<rangedProblem.size()){
-            if (problems.get(i)>rangedProblem.get(j).getId()){
+        while (i<ids.size() && j<rangedProblem.size()){
+            if (ids.get(i)>rangedProblem.get(j).getId()){
                 result.add(rangedProblem.get(j++));
-            } else if (problems.get(i)<rangedProblem.get(j).getId()) {
+            } else if (ids.get(i)<rangedProblem.get(j).getId()) {
                 i++;
             } else {
                 i++;
