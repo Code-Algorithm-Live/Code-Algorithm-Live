@@ -38,7 +38,7 @@ public class ChatRoomController {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
         return new ResponseEntity<ChatRoomDto>(chatRoomDto, HttpStatus.OK);
     }
-
+ 
     @Operation(summary = "채팅방 입장~", description = "사용자 2명이 채팅방에 입장한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
