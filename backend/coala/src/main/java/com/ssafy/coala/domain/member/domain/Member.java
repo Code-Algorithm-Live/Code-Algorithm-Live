@@ -41,4 +41,7 @@ public class Member implements Serializable {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "nick_name")
+    private String nickname;
 }

@@ -62,9 +62,11 @@ public class MemberController {
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 
-    @GetMapping("/signIn")
-    public ResponseEntity<String> signIn(@Parameter(description = "로그인", required = true, example = "reqMember") @RequestParam String reqMember) {
-        return ResponseEntity.ok("hello " + reqMember);
+
+    @GetMapping("/dupcheck/{nickname}")
+    public ResponseEntity<?> dupcheck(@PathVariable String nickname){
+        boolean isDup = memberService.dupCheck(nickname);
+        return new ResponseEntity<Boolean>(isDup,HttpStatus.OK);
     }
 
 //    @Operation(summary = "백준 연동 시도", description = "해당 id에 대한 solved 자기소개 프로필 확인후 문자연 일치하면 id반환")

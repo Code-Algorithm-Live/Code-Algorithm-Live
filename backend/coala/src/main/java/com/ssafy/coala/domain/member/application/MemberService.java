@@ -23,4 +23,6 @@ public interface MemberService {
     MemberProfile getMemberProfile(UUID uuid);
 
     Member getMember(UUID uuid);
+
+    boolean dupCheck(String nickname);
 }
