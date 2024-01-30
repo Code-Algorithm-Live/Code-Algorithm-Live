@@ -65,8 +65,22 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void removeUser(WaitDto waitDto) {
         if(isExist(waitDto)){
-            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY,1,waitDto);
-            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,waitDto);
+            List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
+            if (list != null) {
+                for (Object obj : list) {
+                    if (obj instanceof WaitDto) {
+                        WaitDto dtoInList = (WaitDto) obj;
+                        if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
+                            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, obj);
+                            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,obj);
+                            break;
+                        }
+                    }
+                }
+            }
+            System.out.println("대기열에서 삭제");
+//            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY,1,waitDto);
+//            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,waitDto);
         }else{
             System.out.println("삭제할 데이터가 없습니다!!!!");
         }
@@ -90,17 +104,25 @@ public class RedisServiceImpl implements RedisService {
     @Override
     @Transactional
     public void addUser(WaitDto waitDto) {
+        removeUser(waitDto);
         redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, waitDto);
         redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
-        String hashKey = Integer.toString(waitDto.hashCode());
+        String hashKey = Integer.toString(waitDto.getSender().hashCode());
         redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(100));
     }
-
+    @Override
     public boolean isExist(WaitDto waitDto){
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
 
-        if (list != null && list.contains(waitDto)) {
-            return true;
+        if (list != null) {
+            for (Object obj : list) {
+                if (obj instanceof WaitDto) {
+                    WaitDto dtoInList = (WaitDto) obj;
+                    if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
@@ -115,11 +137,11 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public boolean isMemberExpired(WaitDto waitDto) {
-        String hashKey = Integer.toString(waitDto.hashCode());
+        String hashKey = Integer.toString(waitDto.getSender().hashCode());
         Long expirationTime = (Long) redisTemplate.opsForHash().get(MATCH_QUEUE_KEY + ":expiration", hashKey);
         System.out.println(expirationTime);
         if (expirationTime != null) {
-            System.out.println(expirationTime+","+System.currentTimeMillis()+"만료 검사");
+//            System.out.println(expirationTime+","+System.currentTimeMillis()+"만료 검사");
             return expirationTime < System.currentTimeMillis();
         }
         return false;

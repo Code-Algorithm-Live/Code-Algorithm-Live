@@ -152,8 +152,21 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/send")
-    public ResponseEntity<String> send(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> send(@Parameter(description = "도움 요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.sendHelp(waitDto);
+        return ResponseEntity.ok("알림 전달 완료");
+    }
+
+    @Operation(summary = "도움 요청 수락", description = "멘티에게 받은 요청을 수락, 방 입장을 위한 방 번호를 리턴한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @PostMapping("/accept")
+    public ResponseEntity<String> accept(@Parameter(description = "요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
+        matchingService.notifyMatching(waitDto);
         return ResponseEntity.ok("메시지 전달 완료");
     }
 }

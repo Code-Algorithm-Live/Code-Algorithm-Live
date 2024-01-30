@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -13,8 +14,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 public class WaitDto {
-    private MemberDto memberDto;
+    private MemberDto sender;
+    private MemberDto receiver;
     private HelpDto helpDto;
     private UUID roomUuid;
-    private String pair;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WaitDto waitDto = (WaitDto) o;
+        return Objects.equals(sender, waitDto.sender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender);
+    }
 }
