@@ -7,6 +7,7 @@ export default function CoalaImg() {
       width={300}
       height={300}
       alt="coala smile image"
+      priority
     />
   );
 }
