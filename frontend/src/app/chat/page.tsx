@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import Chatting from '@/components/Chat/Chatting';
 import InputOutput from '@/components/Chat/InputOutput';
+import CodeEditor from '@/components/Chat/CodeEditor';
 
 const Container = styled.div`
   display: flex;
@@ -135,12 +136,6 @@ const CodeEditorContainer = styled.div`
   flex-direction: column;
 
   width: 100%;
-
-  .codeEditore {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-  }
 `;
 
 const QuestionBannerContainer = styled.div`
@@ -239,7 +234,7 @@ export default function Chat() {
             </div>
           </LeftContainer>
           <CodeEditorContainer>
-            <div className="codeEditore"></div>
+            <CodeEditor />
             <InputOutput />
           </CodeEditorContainer>
         </MainContainer>
