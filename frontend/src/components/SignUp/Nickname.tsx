@@ -66,9 +66,8 @@ const Nickname: React.FC<UserNameProps> = ({ userName }) => {
         handleInputChange={handleInputChange}
         inputRef={inputRef}
         fetchResult={fetchResult}
-      >
-        닉네임*
-      </NicknameInput>
+        text="닉네임*"
+      />
     </>
   );
 };
