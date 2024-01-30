@@ -52,6 +52,7 @@ public class ProblemScheduler {
     //solved.ac api의 호출제한->15분당 256번
     //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
     //분당 800개, 시간당 48000개의 문제를 얻는다.
+    //주기적인 갱신 필요
     @Scheduled(fixedRate = 60000)
     public void saveProblem() {
         try {

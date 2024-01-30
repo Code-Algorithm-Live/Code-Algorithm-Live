@@ -7,10 +7,14 @@ import com.ssafy.coala.domain.problem.dao.ProblemRepository;
 import com.ssafy.coala.domain.problem.domain.*;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import lombok.AllArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,9 +50,62 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
 
+    public List<Integer> getProblem(String solvedId){
+        List<Integer> result = new ArrayList<>();
+//        String solvedId = "col016";
+        String URL = "https://www.acmicpc.net/user/"+solvedId;
+        try {
+            Document doc = Jsoup.connect(URL).get();
+            String[] id_arr = doc.select(".problem-list").get(0).text().split(" ");
+
+            for (String id : id_arr){
+                if (!id.isEmpty()){
+                    result.add(Integer.parseInt(id));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+    public List<String[]> getRecentProblem(String solvedId) {
+        List<String[]> result = new ArrayList<>();
+//        String solvedId = "col016";
+        try {
+            String URL = "https://www.acmicpc.net/status?problem_id=&user_id="
+                    + solvedId + "&language_id=-1&result_id=4";
+
+            Document doc = Jsoup.connect(URL).get();
+
+            Elements idElem = doc.select(".problem_title");
+            Elements timeElem = doc.select(".real-time-update");
+
+            for (int i = 0; i < idElem.size(); i++) {
+                String problemId = idElem.get(i).text();
+
+                boolean flag = false;
+                for (String[] elem : result) {
+                    if (elem[0].equals(problemId)) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) continue;
+                result.add(new String[]{problemId, timeElem.get(i).attr("title")});
+            }
+        } catch(IOException e){
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
     @Override
     @Transactional
-    public CurateInfo getCurateProblem(List<Integer> problemIds, List<String[]> recentProblemStr, String solvedId) {
+    public CurateInfo getCurateProblem(String solvedId) {
+
+        List<String[]> recentProblemStr = getRecentProblem(solvedId);
+        List<Integer> problemIds = getProblem(solvedId);
         //get solvedId
         Member member = new Member();
         member.setSolvedId(solvedId);

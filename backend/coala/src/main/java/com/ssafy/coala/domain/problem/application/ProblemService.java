@@ -12,6 +12,6 @@ public interface ProblemService {
     public Integer maxId();
     public Problem getProblem(int id);
     public  void updateDescriptionById(int id, String description);
-    CurateInfo getCurateProblem(List<Integer> problem, List<String[]> recentProblem, String solvedId);
+    CurateInfo getCurateProblem(String solvedId);
 
 }
