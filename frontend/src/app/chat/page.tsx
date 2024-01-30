@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import Chatting from '@/components/Chat/Chatting';
+import Timer from '@/components/Chat/Timer';
 import InputOutput from '@/components/Chat/InputOutput';
 import CodeEditor from '@/components/Chat/CodeEditor';
 
@@ -38,38 +39,6 @@ const HeaderContainer = styled.div`
   .menu {
     display: flex;
     gap: 14px;
-
-    .timer-container {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: normal;
-      letter-spacing: -0.24px;
-      color: var(--editorTypo, #e2e1e1);
-
-      .timer {
-        & > span {
-          margin-right: 4px;
-        }
-      }
-
-      button {
-        width: 86px;
-        height: 34px;
-
-        background: var(--editorPoint, #6072a3);
-        color: var(--editorSub, #343746);
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: -0.21px;
-      }
-    }
 
     .lang {
       select {
@@ -210,13 +179,7 @@ export default function Chat() {
           </p>
 
           <div className="menu">
-            <div className="timer-container">
-              <div className="timer">
-                <span>남은시간</span>
-                <span>49:57</span>
-              </div>
-              <button>연장하기</button>
-            </div>
+            <Timer />
 
             <div className="lang">
               <select name="" id="">
