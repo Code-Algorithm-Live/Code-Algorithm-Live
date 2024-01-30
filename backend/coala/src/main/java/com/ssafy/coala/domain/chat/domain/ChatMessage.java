@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Builder
@@ -31,7 +33,7 @@ public class ChatMessage {
     //내용
     private String message;
 
-    private String date;
+    private LocalDateTime date;
 
     // 채팅생성
 }

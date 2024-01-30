@@ -24,42 +24,42 @@ public class RedisTestController {
 
     private final RedisService redisService;
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> getMemberInfo(@PathVariable("memberId") UUID memberId) {
-        return ResponseEntity.ok(redisService.getMemberInfo(memberId));
-    }
+//    @GetMapping("/{memberId}")
+//    public ResponseEntity<?> getMemberInfo(@PathVariable("memberId") String id) {
+//        return ResponseEntity.ok(redisService.getMemberInfo(id));
+//    }
+//
+//    @PostMapping("")
+//    public ResponseEntity<?> joinMember(@RequestBody Map<String, String> memberInfo) {
+//        Member member = new Member();
+//        member.setEmail(memberInfo.get("email"));
+//        redisService.joinMember(member);
+//        return ResponseEntity.ok("가입 완료");
+//    }
+//
+//    @PutMapping("")
+//    public ResponseEntity<?> updateMember(@RequestBody Map<String, String> memberInfo) {
+//        System.out.println(memberInfo);
+//        Member member = new Member();
+//        member.setId(UUID.fromString((memberInfo.get("id"))));
+//        member.setEmail(memberInfo.get("email"));
+//        redisService.updateMember(member, member.getSolvedId());
+//        return ResponseEntity.ok("수정 완료");
+//    }
 
-    @PostMapping("")
-    public ResponseEntity<?> joinMember(@RequestBody Map<String, String> memberInfo) {
-        Member member = new Member();
-        member.setName(memberInfo.get("name"));
-        redisService.joinMember(member);
-        return ResponseEntity.ok("가입 완료");
-    }
+//    @DeleteMapping("/{memberId}")
+//    public ResponseEntity<?> deleteMember(@PathVariable("memberId") String id) {
+//        redisService.removeMember(id);
+//        return ResponseEntity.ok("삭제 완료");
+//    }
 
-    @PutMapping("")
-    public ResponseEntity<?> updateMember(@RequestBody Map<String, String> memberInfo) {
-        System.out.println(memberInfo);
-        Member member = new Member();
-        member.setId(UUID.fromString((memberInfo.get("id"))));
-        member.setName(memberInfo.get("name"));
-        redisService.updateMember(member, member.getId());
-        return ResponseEntity.ok("수정 완료");
-    }
-
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<?> deleteMember(@PathVariable("memberId") UUID memberId) {
-        redisService.removeMember(memberId);
-        return ResponseEntity.ok("삭제 완료");
-    }
-
-    @PostMapping("/queue")
-    public ResponseEntity<?> pushQueue(@RequestBody Map<String, String> memberInfo) {
-        Member member = new Member();
-        member.setName(memberInfo.get("name"));
-        redisService.addUser(member);
-        return ResponseEntity.ok("queue 푸쉬 완료");
-    }
+//    @PostMapping("/queue")
+//    public ResponseEntity<?> pushQueue(@RequestBody Map<String, String> memberInfo) {
+//        Member member = new Member();
+//        member.setName(memberInfo.get("name"));
+//        redisService.addUser(member);
+//        return ResponseEntity.ok("queue 푸쉬 완료");
+//    }
 
     @GetMapping("/queue")
     public ResponseEntity<?> getQueue() {

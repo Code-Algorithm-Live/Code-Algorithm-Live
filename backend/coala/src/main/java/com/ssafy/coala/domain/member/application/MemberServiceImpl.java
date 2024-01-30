@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ssafy.coala.domain.member.dao.MemberRepository;
+import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
-import com.ssafy.coala.domain.member.domain.UserEntity;
-import com.ssafy.coala.domain.member.dao.UserRepository;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @Service
 @Transactional
-public class LoginServiceImpl implements LoginService{
+public class MemberServiceImpl implements MemberService {
 
 
-    private final UserRepository userRepository;
+    private final MemberProfileRepository memberProfileRepository;
+    private final MemberRepository memberRepository;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -37,8 +43,9 @@ public class LoginServiceImpl implements LoginService{
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String KAKAO_USER_INFO_URI;
 
-    public LoginServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MemberServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository) {
+        this.memberProfileRepository = memberProfileRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -85,18 +92,17 @@ public class LoginServiceImpl implements LoginService{
     public KakaoUserDto kakaoLogin(String kakaoAccessToken) throws Exception {
         KakaoUserDto user = getKakaoInfo(kakaoAccessToken);
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (memberProfileRepository.findByEmail(user.getEmail()).isPresent()) {
             System.out.println("기존 회원임 로그인 진행");
         }else{
             System.out.println("기존 회원이 아니므로 회원정보 저장");
-            UserEntity userEntity = UserEntity.builder()
-                    .id(user.getId())
+            MemberProfile memberProfile = MemberProfile.builder()
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .imageUrl(user.getImg_url())
                     .build();
 
-            userRepository.save(userEntity);
+            memberProfileRepository.save(memberProfile);
         }
         return user;
     }
@@ -132,5 +138,47 @@ public class LoginServiceImpl implements LoginService{
 
         return new KakaoUserDto(id, email, nickname,img_url);
 
+    }
+
+    @Override
+    public boolean check(MemberDto member) {
+
+        return memberProfileRepository.existsByEmail(member.getEmail());
+    }
+
+    @Override
+    public void signUp(MemberDto memberDto, String solvedId) {
+        MemberProfile memberProfile = MemberProfile.builder()
+                .nickname(memberDto.getName())
+                .email(memberDto.getEmail())
+                .solvedId(solvedId)
+                .imageUrl(memberDto.getImage())
+                .build();
+
+        memberProfileRepository.save(memberProfile);
+        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(solvedId);
+
+
+        Member member = Member.builder()
+                .id(tmpmember.getId())
+                .email(tmpmember.getEmail())
+                .solvedId(solvedId)
+                .build();
+        memberRepository.save(member);
+    }
+
+    @Override
+    public MemberProfile getMemberProfile(UUID uuid) {
+        return memberProfileRepository.findById(uuid);
+    }
+
+    @Override
+    public Member getMember(UUID uuid) {
+        return memberRepository.findById(uuid);
+    }
+
+    @Override
+    public boolean dupCheck(String nickname) {
+        return memberRepository.existsByNickname(nickname);
     }
 }

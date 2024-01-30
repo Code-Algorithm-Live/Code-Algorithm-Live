@@ -19,7 +19,7 @@ public class RedisRepositoryImpl implements RedisRepository {
             em.persist(member);
         } else {
             Member findMember = em.find(Member.class, member.getId());
-            findMember.setName(member.getName());
+            findMember.setEmail(member.getEmail());
         }
 
         return member;
@@ -27,8 +27,8 @@ public class RedisRepositoryImpl implements RedisRepository {
 
 
     @Override
-    public Member findOne(UUID memberId) {
-        return em.find(Member.class, memberId);
+    public Member findOne(String solvedId) {
+        return em.find(Member.class, solvedId);
     }
 
     @Override
