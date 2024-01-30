@@ -13,12 +13,14 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@codemirror/lang-java": "^6.0.1",
     "@stomp/stompjs": "^7.0.0",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-query": "^5.17.15",
     "@types/jest": "^29.5.11",
     "@types/stompjs": "^2.3.9",
     "@types/styled-components": "^5.1.34",
+    "@uiw/codemirror-theme-atomone": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",
     "axios": "^1.6.5",
     "next": "14.0.4",
