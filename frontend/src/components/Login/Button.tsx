@@ -19,7 +19,7 @@ const Button = () => {
             return;
           }
           setIsFetching(true);
-          await axios({
+          const response = await axios({
             method: 'POST',
             url: 'http://localhost:8080/member/login',
             headers: {
@@ -27,9 +27,13 @@ const Button = () => {
             },
             data: userDate,
           });
-          console.log(session.user);
+          if (response.data === true) {
+            router.push('/');
+          } else {
+            router.push('/signup');
+          }
         } catch (error) {
-          console.error(error);
+          console.error('error', error);
         }
       }
     };
@@ -46,7 +50,7 @@ const Button = () => {
           width={300}
           height={300}
           alt="kakao login button"
-          priority={false}
+          priority
         />
       </button>
       <button onClick={() => signOut()} style={{ zIndex: 1 }}>

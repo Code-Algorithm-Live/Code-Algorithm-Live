@@ -8,13 +8,12 @@ export async function middleware(req: NextRequest) {
   const session = await getToken({ req, secret, raw: true });
   const { pathname } = req.nextUrl;
 
-  // if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
-  //   if (session) {
-  //     return NextResponse.redirect(new URL('/', req.url));
-  //   }
-  // } else if (!session) {
-  //   return NextResponse.redirect(new URL('/login', req.url));
-  // }
+  // 로그인 페이지가 아닌데 세션이 없으면 로그인 페이지로
+  if (!pathname.startsWith('/login')) {
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
 }
 
 export const config = {
