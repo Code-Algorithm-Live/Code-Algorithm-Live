@@ -1,9 +1,13 @@
 package com.ssafy.coala.config;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ssafy.coala.domain.member.domain.Member;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +21,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 @EnableCaching
@@ -27,7 +32,13 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
-
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+        return builder -> {
+            builder.serializerByType(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
+            builder.deserializerByType(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
+        };
+    }
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(host, port);
@@ -38,12 +49,15 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        jsonCustomizer().customize(builder);
+
         // String Serializer 설정
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
         // JSON Serializer 설정
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(builder.build()));
         template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         template.afterPropertiesSet();
