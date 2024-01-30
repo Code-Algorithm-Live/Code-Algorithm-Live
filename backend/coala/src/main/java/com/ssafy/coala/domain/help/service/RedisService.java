@@ -23,6 +23,7 @@ public interface RedisService {
 
     void addUser(WaitDto waitDto);
 
+    boolean isExist(WaitDto waitDto);
 
     List<Object> getAllUsers();
     boolean isMemberExpired(WaitDto waitDto);

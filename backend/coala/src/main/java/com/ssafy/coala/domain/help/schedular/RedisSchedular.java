@@ -27,7 +27,7 @@ public class RedisSchedular {
     public void cleanExpiredUsers() {
         // Redis Sorted Set에서 모든 객체 조회
         List<Object> allObjects = redisService.getAllUsers();
-        System.out.println("만료 스케쥴러 작동");
+//        System.out.println("만료 스케쥴러 작동");
         // 만료된 유저를 삭제
         for (Object object : allObjects) {
             if (redisService.isMemberExpired((WaitDto) object)) {
