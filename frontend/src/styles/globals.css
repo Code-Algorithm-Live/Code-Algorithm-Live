@@ -4,15 +4,15 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: rgb(0, 0, 0);
+  --background-start-rgb: rgb(214, 219, 220);
+  --background-end-rgb: rgb(255, 255, 255);
   --main-color: #5471a5;
   --main-hover-color: #2c4572;
   --sub-color: #69c7e0;
   --sub-hover-color: #1e8daa;
   --point-color: #bc56c1;
-  --point-color: #903e93;
+  --point-hover-color: #903e93;
   --important-color: #ff0000;
   --important-hover-color: #c90000;
   --white-color: #ffffff;
@@ -26,6 +26,12 @@
   --main-font-color: #090909;
   --sub-font-color: #999999;
   --link-font-color: #0395ff;
+  --toggle-background-color: #7d7d7d;
+  --toggle-background-switch-color: #c8d1d6;
+  --textInput-sort-color: #6f7482;
+  --textInput-placeholder-color: #b8bcca;
+  --textInput-background-color: #f8fafc;
+  --box-shadow-color: rgba(0, 0, 0, 0.25);
   --pretendard: 'pretendard';
 }
 
