@@ -23,8 +23,9 @@ import java.util.UUID;
 @Builder
 public class Member implements Serializable {
 
-    @Id @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name="uuid2", strategy = "uuid2")
+//    @Id @GeneratedValue(generator = "uuid2")
+//    @GenericGenerator(name="uuid2", strategy = "uuid2")
+    @Id
     @Column(name = "id", columnDefinition = "BINARY(16)")
     private UUID id;
 
@@ -34,7 +35,7 @@ public class Member implements Serializable {
 
     @ColumnDefault("0")
     @Column(name = "member_exp")
-    private Integer exp;
+    private int exp;
 
     @Column(name = "solved_id")
     private String solvedId;

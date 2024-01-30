@@ -1,13 +1,11 @@
 package com.ssafy.coala.domain.member.jwt;
 
-import com.ssafy.coala.test.dto.CustomUserDetails;
+import com.ssafy.coala.domain.member.dto.CustomUserDetails;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -72,7 +70,7 @@ public class JWTFilter extends OncePerRequestFilter {
 //        userEntity.setRole(role);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomUserDetails customUserDetails = new CustomUserDetails(memberProfile);
+//        CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
         //스프링 시큐리티 인증 토큰 생성
 //        Authentication authToken = new NicknameEmailAuthenticationToken(customUserDetails.getEmail(), customUserDetails.getId(), customUserDetails.getAuthorities());

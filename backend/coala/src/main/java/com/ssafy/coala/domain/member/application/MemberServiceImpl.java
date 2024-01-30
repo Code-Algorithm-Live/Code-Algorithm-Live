@@ -147,22 +147,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void signUp(MemberDto memberDto, String solvedId) {
+    public void signUp(MemberDto memberDto) {
         MemberProfile memberProfile = MemberProfile.builder()
                 .nickname(memberDto.getName())
                 .email(memberDto.getEmail())
-                .solvedId(solvedId)
+                .solvedId(memberDto.getSolvedId())
                 .imageUrl(memberDto.getImage())
                 .build();
 
         memberProfileRepository.save(memberProfile);
-        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(solvedId);
+        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(memberDto.getSolvedId());
 
 
         Member member = Member.builder()
                 .id(tmpmember.getId())
                 .email(tmpmember.getEmail())
-                .solvedId(solvedId)
+                .solvedId(tmpmember.getSolvedId())
                 .build();
         memberRepository.save(member);
     }

@@ -1,6 +1,7 @@
 package com.ssafy.coala.config;
 
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
+import com.ssafy.coala.domain.member.jwt.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -78,13 +80,13 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login/**","/**").permitAll()
+                        .requestMatchers("/login","/member/login","/member/signup", "/v3/api-docs", "/swagger-ui/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
 
-//        http
-//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
-//
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
 //        http
 //                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
 

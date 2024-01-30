@@ -18,7 +18,7 @@ public interface MemberService {
 
     boolean check(MemberDto member);
 
-    void signUp(MemberDto memberDto, String solvedId);
+    void signUp(MemberDto memberDto);
 
     MemberProfile getMemberProfile(UUID uuid);
 

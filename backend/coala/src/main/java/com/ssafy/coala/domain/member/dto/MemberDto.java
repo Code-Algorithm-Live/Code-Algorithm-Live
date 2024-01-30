@@ -8,4 +8,5 @@ public class MemberDto {
     private String email;
     private String image;
     private String name;
+    private String solvedId;
 }

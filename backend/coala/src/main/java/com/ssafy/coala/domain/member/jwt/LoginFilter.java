@@ -1,6 +1,6 @@
 package com.ssafy.coala.domain.member.jwt;
 
-import com.ssafy.coala.test.dto.CustomUserDetails;
+import com.ssafy.coala.domain.member.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -30,19 +29,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("Login Filter");
         //클라이언트 요청에서 username, password 추출
-//        String authorization= request.getHeader("Authorization");
-//        String token = authorization.split(" ")[1];
-//
-        Long id = Long.parseLong(request.getParameter("id"));
-        String email = (String) request.getParameter("email");
-//        String email = jwtUtil.getEmail(token);
-//        String role = jwtUtil.getRole(token);
-//        String password = obtainPassword(request);
+        String username = obtainUsername(request);
+        String password = obtainPassword(request);
 
-        System.out.println(email);
+        System.out.println(username+","+password);
 
         //스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
-        UsernamePasswordAuthenticationToken authToken = new NicknameEmailAuthenticationToken(email, id, null);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
         //token에 담은 검증을 위한 AuthenticationManager로 전달
         return authenticationManager.authenticate(authToken);
@@ -54,19 +47,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //UserDetailsS
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-//        Long id = customUserDetails.getId();;
-//        String nickname = customUserDetails.getUsername();
-        String email = customUserDetails.getEmail();
+        String username = customUserDetails.getUsername();
+        String email = customUserDetails.getPassword();
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+//        GrantedAuthority auth = iterator.next();
+//
+//        String role = auth.getAuthority();
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
+        String token = jwtUtil.createJwt(username, email, 60*60*10L);
 
-        String role = auth.getAuthority();
-
-//        String token = jwtUtil.createJwt(id, email, role, Duration.ofMinutes(30).toMillis());
-
-//        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", "Bearer " + token);
     }
 
     //로그인 실패시 실행하는 메소드

@@ -44,9 +44,8 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto,@RequestBody String solvedId){
-        System.out.println(solvedId);
-        memberService.signUp(memberDto, solvedId);
+    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto){
+        memberService.signUp(memberDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
