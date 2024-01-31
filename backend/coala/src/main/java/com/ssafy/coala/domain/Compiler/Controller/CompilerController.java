@@ -22,8 +22,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/compiler")
 public class CompilerController {
-
-    int numOfDirectory = 4;
+    int numOfDirectory = 20;
     Queue<Integer> directoryPool;
     @PostConstruct
     private void construct(){
@@ -34,8 +33,10 @@ public class CompilerController {
     }
 
     private int take(){
-        if (directoryPool.isEmpty())
-            return numOfDirectory++;
+        if (directoryPool.isEmpty()){
+            ++numOfDirectory;
+            return numOfDirectory-1;
+        }
         return directoryPool.poll();
     }
 
@@ -43,9 +44,13 @@ public class CompilerController {
         directoryPool.add(i);
     }
 
+    //test 필요
     @PostMapping("")
     private ResponseEntity<String> compile(@RequestBody CompileRequest compileRequest){
-        String result = compileAndExecute(compileRequest.getCode(), compileRequest.getInput(), take());
+        int num = take();
+        String result = compileAndExecute(compileRequest.getCode(), compileRequest.getInput(), num);
+        release(num);
+        System.out.println(result);
         return ResponseEntity.ok(result);
     }
 
@@ -129,8 +134,7 @@ public class CompilerController {
             String line;
             StringBuilder error = new StringBuilder();
 
-            boolean exitCode;
-            exitCode = process.waitFor(3, TimeUnit.SECONDS);
+            boolean exitCode = process.waitFor(2, TimeUnit.SECONDS);
             if (process.isAlive()) {
                 //Time Over
                 process.destroyForcibly();

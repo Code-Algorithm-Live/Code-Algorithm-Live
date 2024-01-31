@@ -31,12 +31,13 @@ public class ProblemScheduler {
 //    public void test(){
 //        System.out.println(1);
 //    }
-    private ScheduledFuture<?> scheduledFuture;
+//    private ScheduledFuture<?> scheduledFuture;
 
     //최대로 저장할 문제 idx
     int maxId = 0;
     //다음 저장할 문제 idx
     int curId = 0;
+    boolean isSaved = false;
 
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * *")
@@ -50,10 +51,9 @@ public class ProblemScheduler {
     }
 
     //solved.ac api의 호출제한->15분당 256번
-    //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
-    //분당 800개, 시간당 48000개의 문제를 얻는다.
-    //주기적인 갱신 필요
-    @Scheduled(fixedRate = 60000)
+    //15분당225번 문제데이터를 solved.ac api에서 가져온다.
+    //분당 1500개, 15분동안 22500개의 문제를 얻는다.
+//    @Scheduled(fixedRate = 60000)
     public void saveProblem() {
         try {
             // API 호출 주소
@@ -61,11 +61,15 @@ public class ProblemScheduler {
                 curId = problemService.maxId();
             }
             if (curId>=maxId) {
+                isSaved = true;
+                curId = 999;
                 System.out.println("save end!");
-                return;
             }
 
-            int curIter = Math.min(8,(maxId-curId)/100+1);
+
+            int curIter = Math.min((isSaved)?5:15,(maxId-curId)/100+1);
+
+            List<Problem> input = new ArrayList<>();
 
             for (int iter=0; iter<curIter; iter++) {
 
@@ -91,7 +95,6 @@ public class ProblemScheduler {
                 // 응답 코드 확인
                 int statusCode = response.statusCode();
 //            System.out.println("Status Code: " + statusCode);
-                List<Problem> input = new ArrayList<>();
 
                 if (statusCode == 200) {//문제 리스트 solved.ac에서 가져옴
                     try {
@@ -105,7 +108,7 @@ public class ProblemScheduler {
 
                             Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
                                     (int) map.get("acceptedUserCount"), (int) map.get("level"),
-                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue());//tags가 없는 problem 객체 생성
+                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue(), null);//tags가 없는 problem 객체 생성
 
                             List<Tag> tagList = new ArrayList<>();
                             List<ProblemLanguage> problemLanguages = new ArrayList<>();
@@ -123,7 +126,6 @@ public class ProblemScheduler {
                             problem.setLanguages(problemLanguages);
                             input.add(problem); //query 보낼 리스트에 추가
                         }
-                        input = problemService.insertProblem(input);
 
 //                    List<ProblemDto> result = new ArrayList<>();
 //                    for (int i=0; i<input.size(); i++){
@@ -137,6 +139,8 @@ public class ProblemScheduler {
                     }
                 }
             }
+            input = problemService.insertProblem(input);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

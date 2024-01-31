@@ -217,7 +217,7 @@ public class ProblemServiceImpl implements ProblemService {
         curateFromRecentIds.sort(Comparator.naturalOrder());
 
         //친구가 푼 문제 확인 -> 차후 구현
-
+        //join 많이 필요.. 버리자!
 
         //filtering 후 counting data 주기
         rangedProblem = rangedProblemFiltering(rangedProblem, curateFromRecentIds);
@@ -235,6 +235,21 @@ public class ProblemServiceImpl implements ProblemService {
         customCurateInfoRepository.saveWithTTL(result, 5);
 
         return result;
+    }
+
+    @Override
+    public List<Integer> getProblemByMember(String solvedId) {
+        return memberProblemRepository.findProblemIdBySolvedId(solvedId);
+    }
+
+    @Override
+    public List<String> getSolvedIdByProblem(int problemId) {
+        return memberProblemRepository.findSolveIdByProblemId(problemId);
+    }
+
+    @Override
+    public List<MemberProblem> getRecentMemberProblem(int problemId) {
+        return null;
     }
 
     List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> ids){
@@ -265,7 +280,7 @@ public class ProblemServiceImpl implements ProblemService {
         //problem에 있지만 preProblem에 없다면 save
 
 
-        List<MemberProblem> preProblem = memberProblemRepository.selectByMemberId(member.getId());
+        List<MemberProblem> preProblem = memberProblemRepository.findByMemberId(member.getId());
         List<MemberProblem> saveProblem = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        DB는 sort되어있나?

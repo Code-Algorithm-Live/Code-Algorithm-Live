@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.problem.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.CurateInfo;
@@ -16,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.SecureRandom;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -24,11 +29,11 @@ import java.util.*;
 @RestController
 @RequestMapping("/problem")
 public class ProblemController {
-
     @Autowired
     ProblemService problemService;
 
-
+    @Operation(summary = "문제 추천", description = "해당 유저의 정보를 기반으로 문제를 추천한다." +
+            " 5분에 한번 호출가능. 약 5초정도 대기 필요")
     @GetMapping("curate/{solvedId}")
     public ResponseEntity<CurateInfo> udpateMemberProblem(@PathVariable String solvedId){
 
@@ -37,9 +42,10 @@ public class ProblemController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("crawl/{solvedId}")
-    public ResponseEntity<Document> crawlingHtml(@PathVariable String solvedId){
-        String URL = "https://www.acmicpc.net/problem/"+solvedId;
+    @Operation(summary = "문제 크롤링", description = "해당 문제에 대한 백준 사이트 html을 크롤링한다. !!호출횟수 줄일 것!!")
+    @GetMapping("crawl/{problemId}")
+    public ResponseEntity<String> crawlingHtml(@PathVariable String problemId){
+        String URL = "https://www.acmicpc.net/problem/"+problemId;
 
         Document doc = null;
         try {
@@ -48,66 +54,22 @@ public class ProblemController {
             throw new RuntimeException(e);
         }
 
-        return ResponseEntity.ok(doc);
+        return ResponseEntity.ok(doc.toString());
     }
-//    @Operation(summary = "최근 문제 리스트", description = "해당 유저가 최근 푼 문제 리스트를 가져온다.")
-//    @GetMapping("recent/{solvedId}")
-//    public ResponseEntity<List<Problem>> getRecentProblem(@Parameter(description = "solvedId", required = true, example = "col016")
-//                                                              @PathVariable String solvedId){
-//        List<Problem> list = new ArrayList<>();
-//        for (int i=0; i<10; i++){
-//            list.add(new Problem());
-//        }
-//        System.out.println(solvedId + 1);
-//        return ResponseEntity.ok((list));
+
+    @Operation(summary = "푼 문제 리스트", description = "해당 유저가 푼 전체 문제번호리스트를 가져온다.")
+    @GetMapping("problem/{solvedId}")
+    public ResponseEntity<List<Integer>> getProblemByMember(@Parameter(description = "solvedId", required = true, example = "col016")
+                                                            @PathVariable String solvedId){
+        return ResponseEntity.ok((problemService.getProblemByMember(solvedId)));
+    }
+
+//    @Operation(summary = "문제를 푼 유저 리스트", description = "문제를 푼 유저 리스트를 시간순으로 가져온다.")
+//    @GetMapping("member/{problemId}")
+//    public ResponseEntity<List<String>> getMemberByProblem(@Parameter(description = "problemId", required = true, example = "1000")
+//                                                            @PathVariable int problemId){
+//        return ResponseEntity.ok((problemService.getRecentMemberProblem(problemId)));
 //    }
-
-//    @Operation(summary = "추천 문제 리스트", description = "해당 유저의 추천 푼 문제 리스트를 가져온다.")
-//    @GetMapping("curate/{bojId}")
-    public ResponseEntity<List<Problem>> getCurateProblem(@Parameter(description = "bojId", required = true, example = "shiftpsh")
-                                                              @PathVariable String bojId){
-        List<Problem> list = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            list.add(new Problem());
-        }
-        System.out.println(bojId + 2);
-        return ResponseEntity.ok((list));
-    }
-
-    @Operation(summary = "푼 문제 리스트", description = "해당 유저가 푼 전체 리스트를 가져온다.")
-    @GetMapping("problem/{bojId}")
-    public ResponseEntity<List<Problem>> getUserProblem(@Parameter(description = "bojId", required = true, example = "col016")
-                                                            @PathVariable String bojId){
-        List<Problem> list = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            list.add(new Problem());
-        }
-        System.out.println(bojId + 2);
-        return ResponseEntity.ok((list));
-    }
-
-//    @Operation(summary = "유저 문제 갱신", description = "유저가 푼 문제 리스트를 갱신하고 가져온다. 성공시 유저의 최근 푼 문제, 추천문제도 갱신한다")
-//    @PutMapping("{bojId}")
-    public ResponseEntity<List<Problem>> updateUserProblem(@Parameter(description = "bojId", required = true, example = "col016")
-                                                               @PathVariable String bojId){
-        List<Problem> list = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            list.add(new Problem());
-        }
-        System.out.println(bojId + 3);
-        return ResponseEntity.ok((list));
-    }
-
-    @Operation(summary = "문제를 푼 유저 리스트", description = "문제를 문 유저 리스트를 시간순으로 가져온다.")
-    @GetMapping("user/{problemId}")
-    public ResponseEntity<List<Problem>> getProblemUser(@Parameter(description = "problemId", required = true, example = "1000")
-                                                            @PathVariable int problemId){
-        List<Problem> list = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            list.add(new Problem());
-        }
-        return ResponseEntity.ok((list));
-    }
 
     @Operation(summary = "모든 문제 리스트", description = "모든 문제에 대한 정보를 가져온다.")
     @GetMapping("")
@@ -163,11 +125,26 @@ public class ProblemController {
         return ResponseEntity.ok(null);
     }
 
+    @Operation(summary = "유저 정보 조회", description = "유저의 자기소개 데이터를 보여준다.")
     @GetMapping("auth/{solvedId}")
     private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
-        String Auth = generateRandomString(12);
+        // 응답 데이터 읽기
+        try {
+            String apiUrl = "https://solved.ac/api/v3/user/show?handle="+solvedId;
+            HttpClient client = HttpClient.newHttpClient();
+            // HttpRequest 객체 생성
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(apiUrl.toString()))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return ResponseEntity.ok(Auth);
+            ObjectMapper mapper = new ObjectMapper();
+            Map map = mapper.readValue(response.body(), Map.class);//json 파싱
+
+            return ResponseEntity.ok((String) map.get("bio"));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String generateRandomString(int length) {
