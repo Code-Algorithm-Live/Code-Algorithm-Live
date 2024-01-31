@@ -3,13 +3,12 @@ package com.ssafy.coala.domain.problem.scheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.Problem;
+import com.ssafy.coala.domain.problem.domain.ProblemLanguage;
 import com.ssafy.coala.domain.problem.domain.Tag;
 import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 public class ProblemScheduler {
     @Autowired
     ProblemService problemService;
-//    1초마다 실행
+    //    1초마다 실행
 //    @Scheduled(fixedRate = 1000)
 //    public void test(){
 //        System.out.println(1);
@@ -42,7 +41,7 @@ public class ProblemScheduler {
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * *")
     public void setMaxId() throws IOException{
-        String URL = "https://www.acmicpc.net/problemset?sort=no_desc";
+        String URL = "https://www.acmicpc.net/problem/added";
         Document doc = Jsoup.connect(URL).get();
 //        System.out.println(doc);
 //        Element element = doc.select(".list_problem_id").get(0);
@@ -50,10 +49,10 @@ public class ProblemScheduler {
         System.out.println("maxId:"+maxId);
     }
 
-    //solved.ac api의 호출제한->15분당 256번ㄴ
+    //solved.ac api의 호출제한->15분당 256번
     //15분당120번 (1/8분==7.5초마다) 문제데이터를 solved.ac api에서 가져온다.
     //분당 800개, 시간당 48000개의 문제를 얻는다.
-//    @Scheduled(fixedRate = 7500)
+    @Scheduled(fixedRate = 60000)
     public void saveProblem() {
         try {
             // API 호출 주소
@@ -65,53 +64,65 @@ public class ProblemScheduler {
                 return;
             }
 
-            StringBuilder apiUrl = new StringBuilder("https://solved.ac/api/v3/problem/lookup?problemIds=");
+            int curIter = Math.min(8,(maxId-curId)/100+1);
 
-            apiUrl.append(++curId);
+            for (int iter=0; iter<curIter; iter++) {
 
-            for (int i = 1; i < 100 && maxId>curId; i++) {
-                apiUrl.append("%2C").append(++curId);
-            }
+                StringBuilder apiUrl = new StringBuilder("https://solved.ac/api/v3/problem/lookup?problemIds=");
+
+                apiUrl.append(++curId);
+
+                for (int i = 1; i < 100 && maxId > curId; i++) {
+                    apiUrl.append("%2C").append(++curId);
+                }
 //            System.out.println(apiUrl);
-            // HttpClient 객체 생성
-            HttpClient client = HttpClient.newHttpClient();
+                // HttpClient 객체 생성
+                HttpClient client = HttpClient.newHttpClient();
 
-            // HttpRequest 객체 생성
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl.toString()))
-                    .build();
+                // HttpRequest 객체 생성
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(apiUrl.toString()))
+                        .build();
 
-            // 응답 데이터 읽기
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                // 응답 데이터 읽기
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // 응답 코드 확인
-            int statusCode = response.statusCode();
+                // 응답 코드 확인
+                int statusCode = response.statusCode();
 //            System.out.println("Status Code: " + statusCode);
-            List<Problem> input = new ArrayList<>();
+                List<Problem> input = new ArrayList<>();
 
-            if (statusCode == 200) {//문제 리스트 solved.ac에서 가져옴
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    List list = mapper.readValue(response.body(), List.class);//json 파싱
+                if (statusCode == 200) {//문제 리스트 solved.ac에서 가져옴
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        List list = mapper.readValue(response.body(), List.class);//json 파싱
 
-                    for (Object o : list) {//문제 리스트 순회
-                        Map map = (Map) o;
-                        List tags = (List) map.get("tags"); //tags 순회 변수
+                        for (Object o : list) {//문제 리스트 순회
+                            Map map = (Map) o;
+                            List tags = (List) map.get("tags"); //tags 순회 변수
+                            List titles = (List) map.get("titles");
 
-                        Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
-                                (int) map.get("acceptedUserCount"), (int) map.get("level"),
-                                (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue(),
-                                null);//tags가 없는 problem 객체 생성
-                        List<Tag> tagList = new ArrayList<>();
+                            Problem problem = new Problem((Integer) map.get("problemId"), (String) map.get("titleKo"),
+                                    (int) map.get("acceptedUserCount"), (int) map.get("level"),
+                                    (boolean) map.get("givesNoRating"), ((Number) map.get("averageTries")).floatValue());//tags가 없는 problem 객체 생성
 
-                        for (Object tag : tags) {//tags 순회
-                            tagList.add(new Tag(problem, (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                            List<Tag> tagList = new ArrayList<>();
+                            List<ProblemLanguage> problemLanguages = new ArrayList<>();
+                            for (Object tag : tags) {//tags 순회
+                                tagList.add(new Tag(problem,
+                                        (String) ((Map<?, ?>) ((List<?>) ((Map<?, ?>) tag).get("displayNames")).get(0)).get("name")));
+                            }
+
+                            for (Object title : titles){
+                                problemLanguages.add(new ProblemLanguage(problem,
+                                        (String) ((Map<?, ?>)title).get("language"), (String) ((Map<?, ?>)title).get("title")));
+                            }
+
+                            problem.setTags(tagList);//tags 객체 추가
+                            problem.setLanguages(problemLanguages);
+                            input.add(problem); //query 보낼 리스트에 추가
                         }
-
-                        problem.setTags(tagList);//tags 객체 추가
-                        input.add(problem); //query 보낼 리스트에 추가
-                    }
-                    input = problemService.insertProblem(input);
+                        input = problemService.insertProblem(input);
 
 //                    List<ProblemDto> result = new ArrayList<>();
 //                    for (int i=0; i<input.size(); i++){
@@ -119,16 +130,14 @@ public class ProblemScheduler {
 //                    }// dto로 변환
 //
 //                    System.out.println(result);
-                    System.out.println("Problem saved. "+curId+":"+maxId);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        System.out.println("Problem saved. " + curId + ":" + maxId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            // 응답 데이터 출력
-//            System.out.println("Response Data: " + response.body());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

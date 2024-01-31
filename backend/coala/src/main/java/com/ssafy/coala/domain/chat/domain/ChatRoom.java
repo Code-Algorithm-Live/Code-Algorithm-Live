@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,14 +15,16 @@ import java.util.List;
 @NoArgsConstructor
 public class ChatRoom {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "room_id")
     private Long roomId;
 
     private String sender;
     private String receiver;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "")
+    @Builder.Default
     private List<ChatMessage> messages = new ArrayList<>();
+    
 }

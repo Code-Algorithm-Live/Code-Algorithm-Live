@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Builder
@@ -13,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ChatMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     public enum MessageType {
         ENTER, TALK
@@ -31,7 +33,7 @@ public class ChatMessage {
     //내용
     private String message;
 
-    private String date;
+    private LocalDateTime date;
 
     // 채팅생성
 }

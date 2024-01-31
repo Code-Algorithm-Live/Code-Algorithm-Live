@@ -9,15 +9,15 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { // Spring 웹 서버에서 WebSocket을 사용하도록 Configuration을 추가해주는 작업을 진행했다.
 
     private final StompHandler stompHandler;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        System.out.println("config");
+        System.out.println("ChatConfig");
         registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*");
         // .withSockJS();
     }
@@ -32,6 +32,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { // Sp
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
+        System.out.println("Chat Interceptor start");
         registration.interceptors(stompHandler);
+        System.out.println("Chat Interceptor end...");
     }
 }

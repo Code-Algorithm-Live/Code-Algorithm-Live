@@ -4,6 +4,8 @@ import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class MessageDto {
@@ -18,6 +20,6 @@ public class MessageDto {
     //내용
     private String message;
 
-    private String date;
+    private LocalDateTime date;
 
 }
