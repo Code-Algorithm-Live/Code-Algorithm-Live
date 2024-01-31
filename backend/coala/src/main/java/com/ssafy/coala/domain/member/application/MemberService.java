@@ -18,11 +18,13 @@ public interface MemberService {
 
     boolean check(MemberDto member);
 
-    void signUp(MemberDto memberDto, String solvedId);
+    void signUp(MemberDto memberDto);
 
     MemberProfile getMemberProfile(UUID uuid);
 
     Member getMember(UUID uuid);
 
     boolean dupCheck(String nickname);
+
+    void logout();
 }
