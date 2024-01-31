@@ -20,8 +20,8 @@ public class MatchingServiceImpl implements MatchingService{
     public void notifyMatching(WaitDto waitDto) {
         if(redisService.isExist(waitDto)){
             waitDto.setSuccess(true);
-            messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getSender().getEmail(), waitDto.getRoomUuid());
-            messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto.getRoomUuid());
+            messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getSender().getEmail(), waitDto);
+            messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto);
             redisService.removeUser(waitDto);
         }else{
             System.out.println("만료된 요청입니다.");
