@@ -1,0 +1,142 @@
+.modal {
+  width: 316px;
+  height: 480px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.closeButton {
+  margin: auto 22px 22px auto;
+}
+.ImgContainer {
+  width: 167px;
+  height: 167px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+.profileImg {
+  border-radius: 50%;
+  position: relative;
+  border: 1px var(--foreground-rgb) ridge;
+}
+.state {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  position: absolute;
+  margin: 123px;
+}
+
+#connected {
+  background-color: var(--connect-color);
+}
+#unconnected {
+  background-color: var(--unconnected-color);
+}
+.nickname {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.levelContainer {
+  width: 152px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+
+.word {
+  font-size: 16px;
+  color: var(--modal-level-word-color);
+  -webkit-text-stroke-width: 0.5px;
+}
+
+#빨간 {
+  -webkit-text-stroke-color: var(--level-color-red);
+}
+
+#주황 {
+  -webkit-text-stroke-color: var(--level-color-orange);
+}
+
+#노란 {
+  -webkit-text-stroke-color: var(--level-color-yellow);
+}
+
+#초록 {
+  -webkit-text-stroke-color: var(--level-color-green);
+}
+
+#파란 {
+  -webkit-text-stroke-color: var(--level-color-skyblue);
+}
+
+#남색 {
+  -webkit-text-stroke-color: var(--level-color-darkblue);
+}
+
+#보라 {
+  -webkit-text-stroke-color: var(--level-color-purple);
+}
+.help {
+  display: flex;
+  width: 298px;
+  justify-content: space-between;
+}
+
+.aboutHelp {
+  width: 146px;
+  height: 43px;
+  display: flex;
+  padding: 9px;
+  gap: 2px;
+  box-shadow: 0px 2px 4px 0px var(--modal-help-box-shadow);
+  border: 1px solid var(--modal-help-border);
+  border-radius: 5px;
+}
+
+.sortHelp {
+  font-size: 8px;
+}
+
+#sortHelpDo {
+  color: var(--main-color);
+}
+#sortHelpGet {
+  color: var(--important-color);
+}
+
+.sortHelpNum {
+  font-size: 12px;
+}
+.Buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.personButton {
+  border-radius: 10px;
+  width: 298px;
+  height: 35px;
+  display: flex;
+  background-color: var(--main-color);
+  p {
+    color: var(--white-color);
+    font-size: 15px;
+    width: 60px;
+    height: 19px;
+    margin: auto 30%;
+  }
+}
+#buttonHelp {
+  background-color: var(--important-color);
+}
+
+.buttonImg {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 6px;
+}
