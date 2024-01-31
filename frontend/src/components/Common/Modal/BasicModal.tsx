@@ -25,12 +25,16 @@ const BasicModal = ({
   onClose,
   children,
 }: {
-  open?: boolean;
+  open: boolean;
   onClose?: () => void;
   children?: JSX.Element;
 }) => {
   const [isOpen, setIsOpen] = useState(open);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   const handleClose = () => {
     setIsOpen(false);
