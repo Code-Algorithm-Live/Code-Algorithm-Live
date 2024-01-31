@@ -1,5 +1,3 @@
-'use client';
-
 import '@/styles/reset.css';
 import Nav from '@/components/Common/Header';
 import { signOut } from 'next-auth/react';
