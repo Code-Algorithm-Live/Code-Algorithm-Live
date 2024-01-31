@@ -2,12 +2,17 @@ package com.ssafy.coala.domain.member.dto;
 
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
+@ToString
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final Member member;
@@ -35,7 +40,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getEmail();
+        return member.getPassword();
     }
 
     @Override
@@ -43,6 +48,13 @@ public class CustomUserDetails implements UserDetails {
         return member.getNickname();
     }
 
+    public UUID getId(){
+        return member.getId();
+    }
+
+    public String getEmail(){
+        return member.getEmail();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

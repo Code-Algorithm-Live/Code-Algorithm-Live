@@ -1,26 +1,23 @@
 package com.ssafy.coala.domain.member.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
+@ToString
 public class Member implements Serializable {
 
 //    @Id @GeneratedValue(generator = "uuid2")
@@ -32,6 +29,8 @@ public class Member implements Serializable {
     @Column(name = "regist_date")
     @CreatedDate
     private LocalDateTime registDate;
+
+    private String password;
 
     @ColumnDefault("0")
     @Column(name = "member_exp")

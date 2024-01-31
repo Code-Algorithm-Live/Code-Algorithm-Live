@@ -25,4 +25,6 @@ public interface MemberService {
     Member getMember(UUID uuid);
 
     boolean dupCheck(String nickname);
+
+    void logout();
 }

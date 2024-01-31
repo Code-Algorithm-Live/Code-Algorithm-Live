@@ -1,10 +1,12 @@
 package com.ssafy.coala.config;
 
+import com.ssafy.coala.domain.member.jwt.JWTFilter;
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
 import com.ssafy.coala.domain.member.jwt.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,10 +26,13 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+
+    private final RedisTemplate<String, String> redisStringTemplate;
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,  RedisTemplate<String, String> redisStringTemplate) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.redisStringTemplate = redisStringTemplate;
     }
 
     @Bean
@@ -85,10 +90,10 @@ public class SecurityConfig {
 
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil,redisStringTemplate), UsernamePasswordAuthenticationFilter.class);
 
-//        http
-//                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil,redisStringTemplate),LoginFilter.class);
 
 
 

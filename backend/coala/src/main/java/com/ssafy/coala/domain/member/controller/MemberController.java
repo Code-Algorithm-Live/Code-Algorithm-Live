@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 //import org.jsoup.nodes.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -43,6 +44,12 @@ public class MemberController {
         return new ResponseEntity<Boolean>(isMember,HttpStatus.OK);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(){
+        memberService.logout();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto){
         memberService.signUp(memberDto);
@@ -61,6 +68,13 @@ public class MemberController {
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<?> info(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println(name+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     @GetMapping("/dupcheck/{nickname}")
     public ResponseEntity<?> dupcheck(@PathVariable String nickname){
