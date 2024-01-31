@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
+    Member findBySolvedId(String SolvedId);
 
     Member findById(UUID uuid);
 

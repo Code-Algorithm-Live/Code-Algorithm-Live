@@ -140,7 +140,7 @@ public class ProblemController {
 
             ObjectMapper mapper = new ObjectMapper();
             Map map = mapper.readValue(response.body(), Map.class);//json 파싱
-
+            System.out.println("map.get(\"bio\")");
             return ResponseEntity.ok((String) map.get("bio"));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
