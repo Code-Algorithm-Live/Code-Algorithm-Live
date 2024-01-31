@@ -11,10 +11,10 @@ import com.ssafy.coala.domain.member.dto.MemberDto;
 import java.util.UUID;
 
 public interface MemberService {
-    public KakaoTokenDto getKakaoAccessToken(String code);
-    public KakaoUserDto kakaoLogin(String kakaoAccessToken)throws Exception;
-
-    public KakaoUserDto getKakaoInfo(String kakaoAccessToken) throws JsonProcessingException;
+//    public KakaoTokenDto getKakaoAccessToken(String code);
+//    public KakaoUserDto kakaoLogin(String kakaoAccessToken)throws Exception;
+//
+//    public KakaoUserDto getKakaoInfo(String kakaoAccessToken) throws JsonProcessingException;
 
     boolean check(MemberDto member);
 
