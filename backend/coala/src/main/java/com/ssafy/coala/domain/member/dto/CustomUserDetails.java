@@ -1,19 +1,26 @@
-package com.ssafy.coala.test.dto;
+package com.ssafy.coala.domain.member.dto;
 
+import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
+@ToString
+@Getter
 public class CustomUserDetails implements UserDetails {
 
-    private final MemberProfile memberProfile;
+    private final Member member;
 
-    public CustomUserDetails(MemberProfile memberProfile) {
-        this.memberProfile = memberProfile;
+    public CustomUserDetails(Member member) {
+        this.member = member;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -33,17 +40,21 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return memberProfile.getNickname();
+        return member.getNickname();
     }
 
-    public String getEmail(){return memberProfile.getEmail();}
+    public UUID getId(){
+        return member.getId();
+    }
 
-//    public Long getId(){return memberProfile.getId();}
+    public String getEmail(){
+        return member.getEmail();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

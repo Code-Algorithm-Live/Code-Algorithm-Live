@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.coala.domain.member.dao.MemberRepository;
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.dto.CustomUserDetails;
 import com.ssafy.coala.domain.member.dto.KakaoTokenDto;
 
 import com.ssafy.coala.domain.member.dto.KakaoUserDto;
@@ -14,7 +15,10 @@ import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,6 +34,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberProfileRepository memberProfileRepository;
     private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisStringTemplate;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -43,9 +50,11 @@ public class MemberServiceImpl implements MemberService {
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String KAKAO_USER_INFO_URI;
 
-    public MemberServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberProfileRepository memberProfileRepository, MemberRepository memberRepository, RedisTemplate<String, String> redisStringTemplate, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberProfileRepository = memberProfileRepository;
         this.memberRepository = memberRepository;
+        this.redisStringTemplate = redisStringTemplate;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -147,22 +156,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void signUp(MemberDto memberDto, String solvedId) {
+    public void signUp(MemberDto memberDto) {
+        System.out.println(memberDto);
         MemberProfile memberProfile = MemberProfile.builder()
                 .nickname(memberDto.getName())
                 .email(memberDto.getEmail())
-                .solvedId(solvedId)
+                .solvedId(memberDto.getSolvedId())
                 .imageUrl(memberDto.getImage())
                 .build();
 
         memberProfileRepository.save(memberProfile);
-        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(solvedId);
+        MemberProfile tmpmember = memberProfileRepository.findBySolvedId(memberDto.getSolvedId());
 
-
+        System.out.println("UUID : " + tmpmember.getId());
         Member member = Member.builder()
                 .id(tmpmember.getId())
+                .nickname(tmpmember.getNickname())
                 .email(tmpmember.getEmail())
-                .solvedId(solvedId)
+                .solvedId(tmpmember.getSolvedId())
+                .password(bCryptPasswordEncoder.encode(tmpmember.getEmail()))
                 .build();
         memberRepository.save(member);
     }
@@ -180,5 +192,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean dupCheck(String nickname) {
         return memberRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public void logout() {
+        //Token에서 로그인한 사용자 정보 get해 로그아웃 처리
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = customUserDetails.getMember();
+        if (redisStringTemplate.opsForValue().get("JWT_TOKEN:" + member.getEmail()) != null) {
+            redisStringTemplate.delete("JWT_TOKEN:" + member.getEmail()); //Token 삭제
+            System.out.println("로그아웃 성공");
+        }
     }
 }
