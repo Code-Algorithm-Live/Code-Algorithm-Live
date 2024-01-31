@@ -9,6 +9,7 @@ public class MemberDto {
 
     private String email;
     private String image;
-    private String name;
+    private String kakaoname;
     private String solvedId;
+    private String nickname;
 }
