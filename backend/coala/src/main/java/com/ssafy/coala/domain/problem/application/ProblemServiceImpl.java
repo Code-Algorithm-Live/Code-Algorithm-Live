@@ -50,9 +50,13 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional
     public CurateInfo getCurateProblem(List<Integer> problemIds, List<String[]> recentProblemStr, String solvedId) {
         //get solvedId
-        Member member = new Member();
-        member.setSolvedId(solvedId);
-        member.setId(memberProblemRepository.findUUIDBySolveId(solvedId));
+//        Member member = new Member();
+//        member.setSolvedId(solvedId);
+//        member.setId(memberProblemRepository.findUUIDBySolveId(solvedId));
+        Member member = Member.builder()
+                .solvedId(solvedId)
+                .id(memberProblemRepository.findUUIDBySolveId(solvedId))
+                .build();
 
         //check updateTime
         CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);

@@ -19,6 +19,7 @@ public class MatchingServiceImpl implements MatchingService{
     @Override
     public void notifyMatching(WaitDto waitDto) {
         if(redisService.isExist(waitDto)){
+            waitDto.setSuccess(true);
             messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getSender().getEmail(), waitDto.getRoomUuid());
             messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto.getRoomUuid());
             redisService.removeUser(waitDto);
