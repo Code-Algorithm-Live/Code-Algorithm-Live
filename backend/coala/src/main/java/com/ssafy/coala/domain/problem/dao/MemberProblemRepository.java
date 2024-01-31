@@ -12,13 +12,21 @@ import java.util.UUID;
 
 public interface MemberProblemRepository extends JpaRepository<MemberProblem, MemberProblemId> {
     @Query("select m from MemberProblem m where m.member.id = :memberId")
-    List<MemberProblem> selectByMemberId(@Param("memberId") UUID memberId);
+    List<MemberProblem> findByMemberId(@Param("memberId") UUID memberId);
 
     @Query(value = "select id from member where solved_id = :solvedId", nativeQuery = true)
-    byte[] findBySolveId(@Param("solvedId") String solvedId);
+    byte[] findMemberBySolveId(@Param("solvedId") String solvedId);
+
+    @Query(value = "select problem_id from member_problem mp join member m on m.id = mp.member_id where solved_id = :solvedId", nativeQuery = true)
+    List<Integer> findProblemIdBySolvedId(@Param("solvedId") String solvedId);
+
+    @Query(value = "select solved_id from member m join member_problem mp on mp.member_id = m.id where problem_id = :problemId", nativeQuery = true)
+    List<String> findSolveIdByProblemId(@Param("problemId") int problemId);
+
+    @Query(value = "select solved_id form member m join member_problem mp on mp.member_id = m.id where problem_id = :problemId ordered by solved_time")
 
     default UUID findUUIDBySolveId(String solvedId) {
-        byte[] result = findBySolveId(solvedId);
+        byte[] result = findMemberBySolveId(solvedId);
         ByteBuffer byteBuffer = ByteBuffer.wrap(result);
         long high = byteBuffer.getLong();
         long low = byteBuffer.getLong();
