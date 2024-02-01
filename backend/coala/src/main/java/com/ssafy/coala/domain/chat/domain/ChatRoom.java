@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "chatRoom")
 @Getter
@@ -17,7 +18,7 @@ public class ChatRoom {
     @Id
     @GeneratedValue
     @Column(name = "room_id")
-    private Long roomId;
+    private UUID roomUuid;
 
     private String sender;
     private String receiver;
