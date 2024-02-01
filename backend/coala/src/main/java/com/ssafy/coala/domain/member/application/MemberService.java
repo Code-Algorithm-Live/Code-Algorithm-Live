@@ -27,4 +27,6 @@ public interface MemberService {
     boolean dupCheck(String nickname);
 
     void logout();
+
+    Member getMemberByNickname(String name);
 }
