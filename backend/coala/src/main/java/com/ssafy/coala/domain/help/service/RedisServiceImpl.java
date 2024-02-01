@@ -5,6 +5,9 @@ import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.repository.RedisRepository;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.dto.MemberDto;
+import com.ssafy.coala.domain.problem.application.ProblemService;
+import com.ssafy.coala.domain.problem.application.ProblemServiceImpl;
+import com.ssafy.coala.domain.problem.domain.Problem;
 import lombok.RequiredArgsConstructor;
 import org.h2.command.dml.Help;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisServiceImpl implements RedisService {
 
     private final RedisRepository redisRepository;
+    private final ProblemServiceImpl problemService;
 
     private static final String MATCH_QUEUE_KEY = "waiting_queue";
 
@@ -164,6 +168,24 @@ public class RedisServiceImpl implements RedisService {
     @Cacheable(value = "HelpDto", key = "#solvedId", cacheManager = "cacheManager")
     public HelpDto getHelp(String solvedId) {
         return null;
+    }
+
+    @Override
+    public List<Object> getSolvedListUsers(String solvedId) {
+        List<Integer> problemList = problemService.getProblem(solvedId);
+        List<Object> list = new ArrayList<>();
+        for(int problem : problemList){
+            String key = Integer.toString(problem);
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+                list.addAll(Objects.requireNonNull(redisTemplate.opsForList().range(key, 0, -1)));
+            } else {
+                // 키가 존재하지 않는 경우에 대한 처리
+                System.out.println("Key not found for problem: " + problem);
+                // 또는 다른 처리를 수행하거나 예외를 던질 수 있습니다.
+            }
+        }
+
+        return list;
     }
 
 }

@@ -27,33 +27,33 @@ public class HelpController {
     private final MatchingService matchingService;
 
 
-    @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @PostMapping("/form")
-    public ResponseEntity<String> form(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-    }
-
-    @Operation(summary = "도움 요청 폼 수정", description = "문제 번호, 도움 제목, 도움 요청 내용 수정")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @PutMapping("/form")
-    public ResponseEntity<String> formupdate(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-    }
+//    @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성해서 캐시에 등록")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
+//    @PostMapping("/form")
+//    public ResponseEntity<String> form(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
+//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
+//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
+//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
+//    }
+//
+//    @Operation(summary = "도움 요청 폼 수정", description = "문제 번호, 도움 제목, 도움 요청 내용 수정")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
+//    @PutMapping("/form")
+//    public ResponseEntity<String> formupdate(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
+//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
+//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
+//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
+//    }
 
     @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
     @ApiResponses({
@@ -127,6 +127,18 @@ public class HelpController {
     @GetMapping("/waitqueue")
     public ResponseEntity<?> waitqueuelist() {
         return ResponseEntity.ok(redisService.getAllUsers());
+    }
+
+    @Operation(summary = "도움 요청 대기열 내가 푼 문제 리스트", description = "도움 요청 내가 푼 문제 대기열을 반환")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @GetMapping("/waitqueue/solvedlist")
+    public ResponseEntity<?> waitqueuesolvedlist(@RequestBody String solvedId) {
+        return ResponseEntity.ok(redisService.getSolvedListUsers(solvedId));
     }
 
 
