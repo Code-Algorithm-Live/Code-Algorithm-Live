@@ -1,5 +1,5 @@
 // import Modal from '@/components/Common/Modal/PersonModal';
-import Person from '@/components/Common/Person';
+import Person from '@/components/Common/User/User';
 
 export default function Edit() {
   return (
