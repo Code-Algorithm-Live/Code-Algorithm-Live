@@ -33,4 +33,6 @@ public interface RedisService {
     HelpDto saveHelp(HelpDto helpDto, String solvedId);
 
     HelpDto getHelp(String solvedId);
+
+    List<Object> getSolvedListUsers(String solvedId);
 }

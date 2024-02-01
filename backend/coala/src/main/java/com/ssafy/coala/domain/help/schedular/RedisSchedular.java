@@ -30,8 +30,11 @@ public class RedisSchedular {
 //        System.out.println("만료 스케쥴러 작동");
         // 만료된 유저를 삭제
         for (Object object : allObjects) {
-            if (redisService.isMemberExpired((WaitDto) object)) {
-                redisTemplate.opsForList().remove(MATCH_QUEUE_KEY,1,object);
+            if (object instanceof WaitDto) {
+                WaitDto waitDto = (WaitDto) object;
+                if (redisService.isMemberExpired(waitDto)) {
+                    redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, waitDto);
+                }
             }
         }
     }
