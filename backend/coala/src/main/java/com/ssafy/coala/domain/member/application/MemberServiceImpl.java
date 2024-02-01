@@ -176,6 +176,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(tmpmember.getEmail())
                 .solvedId(tmpmember.getSolvedId())
                 .password(bCryptPasswordEncoder.encode(tmpmember.getEmail()))
+                .imageUrl(tmpmember.getImageUrl())
                 .build();
         memberRepository.save(member);
     }
