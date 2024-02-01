@@ -45,7 +45,6 @@ public class FriendController {
                                         @PathVariable Long id){
         FriendDto friendDto = new FriendDto();
         id = 1L;
-        friendDto.setId(id);
         return ResponseEntity.ok("friendDto");
     }
 
@@ -62,7 +61,6 @@ public class FriendController {
                                            @PathVariable Long id){
         FriendDto friendDto = new FriendDto();
         id = 1L;
-        friendDto.setId(id);
         return ResponseEntity.ok("friendDto");
     }
 
@@ -79,7 +77,20 @@ public class FriendController {
                                          @PathVariable Long id){
         FriendDto friendDto = new FriendDto();
         id = 1L;
-        friendDto.setId(id);
+        return ResponseEntity.ok("friendDto");
+    }
+
+    @PostMapping(value = "/send")
+    ResponseEntity<String> send(@Parameter(description = "친구 요청 보내기", required = true, example = "친구 요청 보내기")
+                                      @RequestBody FriendDto friendDto){
+        friendService.send(friendDto);
+        return ResponseEntity.ok("friendDto");
+    }
+
+    @PostMapping(value = "/accept")
+    ResponseEntity<String> accept(@Parameter(description = "친구 요청 수락", required = true, example = "친구 요청 수락")
+                                @RequestBody FriendDto friendDto){
+        friendService.accept(friendDto);
         return ResponseEntity.ok("friendDto");
     }
 }
