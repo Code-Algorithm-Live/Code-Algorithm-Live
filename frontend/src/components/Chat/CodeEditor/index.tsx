@@ -1,11 +1,12 @@
 'use client';
 
+import { java } from '@codemirror/lang-java';
+import { atomone } from '@uiw/codemirror-theme-atomone';
+import ReactCodeMirror, { EditorView, ViewUpdate } from '@uiw/react-codemirror';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import ReactCodeMirror, { EditorView, ViewUpdate } from '@uiw/react-codemirror';
-import { atomone } from '@uiw/codemirror-theme-atomone';
-import { java } from '@codemirror/lang-java';
 import yorkie from 'yorkie-js-sdk';
+import { YorkieDoc } from './type';
 
 const Container = styled.div`
   position: relative;
@@ -35,12 +36,12 @@ const DOC_NAME = 'hamster';
 const CodeEditor = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [maxHeight, setMaxHeight] = useState('');
-  const yorkieClient = useRef(
-    new yorkie.Client(yorkieBaseURL, {
-      apiKey: YORKIE_API_KEY,
-    }),
-  );
-  const docRef = useRef(new yorkie.Document(DOC_KEY));
+  const doc = useRef(new yorkie.Document<YorkieDoc>(DOC_KEY));
+
+  const handleChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
+    console.log('value:', value);
+    console.log('viewUpdate: ', viewUpdate);
+  }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
   useEffect(() => {
@@ -49,21 +50,18 @@ const CodeEditor = () => {
   }, []);
 
   useEffect(() => {
-    if (yorkieClient.current.isActive()) return;
-    // yorkie클라이언트 실행
-    const startPairProgramming = async () => {
-      await yorkieClient.current.activate();
-      // await yorkieClient.current.attach(docRef.current);
-      console.log('요끼시작', yorkieClient.current.isActive());
+    // yorkie 활성화
+    const client = new yorkie.Client(yorkieBaseURL, {
+      apiKey: YORKIE_API_KEY,
+    });
+
+    const attachDoc = async () => {
+      await client.activate();
+      await client.attach(doc.current);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    startPairProgramming();
-  }, []);
-
-  const handleChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
-    console.log('value:', value);
-    console.log('viewUpdate: ', viewUpdate);
+    attachDoc();
   }, []);
 
   return (
