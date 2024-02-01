@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,8 +55,8 @@ public class ChatService {
     }
 
     // 채팅방 찾기
-    public ResponseEntity<?> findRoom(UUID roomUuid){
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomUuid));
+    public ResponseEntity<?> findRoom(UUID roomId){
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomId));
         if(chatRoom.isEmpty()){
             return ResponseEntity.ok().build();
         }
@@ -64,9 +65,9 @@ public class ChatService {
 
     // 메시지 저장
     @Transactional
-    public void saveMessage(UUID roomUuId, MessageDto messageDto){
+    public void saveMessage(UUID roomId, MessageDto messageDto){
         // id로 방을 찾아주고 그 방에 메세지를 전달해야겠지?
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomUuId); // 방을 찾기
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId); // 방을 찾기
         if(chatRoom.isEmpty()){
             System.out.println("empty");
         }
@@ -76,20 +77,21 @@ public class ChatService {
                 .type(messageDto.getType())
                 .sender(messageDto.getSender())
                 .message(messageDto.getMessage())
-                .date(messageDto.getDate())
-                .chatRoom(chatRoomRepository.findById(roomUuId).orElseThrow())
+                .chatRoom(chatRoomRepository.findById(roomId).orElseThrow())
                 .build();
 
         // 메시지를 메시지레포지토리에 저장해줌
         chatMessageRepository.save(chatMessage);
         chatRoom.get().getMessages().add(chatMessage);
+        for(ChatMessage cm : chatRoom.get().getMessages()){
+            System.out.println("채팅: " + cm.getMessage());
+        }
     }
 
-    public <T> void sendMessage(WebSocketSession session, T message) {
-        try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+
+
+    public ResponseEntity<?> getMessage(UUID roomId) {
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId);
+        return ResponseEntity.ok().body(chatRoom.get().getMessages());
     }
 }
