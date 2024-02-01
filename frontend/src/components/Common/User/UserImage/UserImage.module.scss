@@ -10,10 +10,6 @@
   position: relative;
   margin-right: 6%;
 }
-.userContainer {
-  width: 172px;
-  height: 38px;
-}
 
 .connected {
   width: 9px;
@@ -30,16 +26,6 @@
   position: absolute;
   margin: 24px;
   background-color: var(--unconnected-color);
-}
-.nickname {
-  width: 134px;
-  height: 19px;
-  font-size: 16px;
-}
-.detailActive {
-  width: 134px;
-  height: 14px;
-  font-size: 12px;
 }
 
 .right {

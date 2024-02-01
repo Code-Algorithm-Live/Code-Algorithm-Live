@@ -1,13 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import UserModal from '@/components/User/UserModal/UserModal';
-import styles from '@/components/Common/User/User.module.scss';
-// TODO: shadow 적용
+import { useState, useRef, useEffect } from 'react';
+import UserModal from '@/components/Common/User/UserModal/UserModal';
+import styles from '@/components/Common/User/UserImage/UserImage.module.scss';
 
-// TODO: 친구인지 확인하고 만약 친구라면 자세한 상태값도 알아오기
-// TODO: 서버에서 확인
 const response = {
   data: {
     isFriend: true,
@@ -25,9 +22,8 @@ const userData = {
   url: '/images/coala/smile.png',
 };
 
-const User = () => {
+const UserImage = () => {
   const [isActive, setIsActive] = useState(false); // 접속중, 비접속중 isActive
-  const [isDetailActive, setIsDetailActive] = useState(''); // 유저 활동 isDetailActive
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [position, setPosition] = useState<'right' | 'left'>('left');
 
@@ -58,16 +54,6 @@ const User = () => {
   if (isActive !== response.data.isActive) {
     setIsActive(response.data.isActive);
   }
-
-  /** 친구 && 접속 중 일때, */
-  if (isFriend && response.data.isActive) {
-    /** 현재 동작 파악 */
-    const nowDetailActive = '도움을 찾는 중';
-    if (isDetailActive !== nowDetailActive) {
-      setIsDetailActive(nowDetailActive);
-    }
-  }
-
   useEffect(() => {
     /** 모달 외 지역 눌러서 닫기 */
     const handleClickOutSide = (e: MouseEvent) => {
@@ -98,10 +84,6 @@ const User = () => {
         height={30}
       />
       <div className={styles[bgColor]}></div>
-      <div>
-        <p className={styles.nickname}>{userData.nickname}</p>
-        <p className={styles.detailActive}>{isDetailActive}</p>
-      </div>
       {isModalOpen && (
         <>
           <div className={styles.shadow}></div>
@@ -119,4 +101,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default UserImage;

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '@/components/Common/UserModal/UserModal.module.scss';
+import styles from '@/components/Common/User/UserModal/UserModal.module.scss';
 
 interface IUser {
   nickname: string;
