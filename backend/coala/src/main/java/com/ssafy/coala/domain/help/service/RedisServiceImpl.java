@@ -175,6 +175,7 @@ public class RedisServiceImpl implements RedisService {
         List<Integer> problemList = problemService.getProblem(solvedId);
         List<Object> list = new ArrayList<>();
         for(int problem : problemList){
+            System.out.println(problem+"check");
             String key = Integer.toString(problem);
             if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
                 list.addAll(Objects.requireNonNull(redisTemplate.opsForList().range(key, 0, -1)));
