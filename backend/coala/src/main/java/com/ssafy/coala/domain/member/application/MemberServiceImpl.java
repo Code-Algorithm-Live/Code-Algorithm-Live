@@ -205,4 +205,9 @@ public class MemberServiceImpl implements MemberService {
             System.out.println("로그아웃 성공");
         }
     }
+
+    @Override
+    public Member getMemberByNickname(String name) {
+        return memberRepository.findByNickname(name);
+    }
 }

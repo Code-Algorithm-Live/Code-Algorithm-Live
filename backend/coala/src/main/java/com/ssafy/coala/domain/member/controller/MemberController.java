@@ -3,6 +3,7 @@ package com.ssafy.coala.domain.member.controller;
 import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
+import com.ssafy.coala.domain.member.dto.CustomUserDetails;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,9 +72,8 @@ public class MemberController {
     @GetMapping("/info")
     public ResponseEntity<?> info(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        System.out.println(name+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        return new ResponseEntity(HttpStatus.OK);
+        Member member = memberService.getMemberByNickname(name);
+        return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 
     @GetMapping("/dupcheck/{nickname}")
