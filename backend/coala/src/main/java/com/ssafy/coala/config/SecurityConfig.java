@@ -85,7 +85,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/ws/**","/login","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs", "/swagger-ui/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/member/auth/**","/ws/**","/login","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs", "/swagger-ui/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
 
