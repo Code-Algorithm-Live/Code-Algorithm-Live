@@ -1,10 +1,12 @@
 package com.ssafy.coala.domain.member.dto;
 
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
+@Embeddable
 public class MemberDto {
 
     private String email;
