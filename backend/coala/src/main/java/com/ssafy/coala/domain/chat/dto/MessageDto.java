@@ -15,7 +15,7 @@ public class MessageDto {
     private ChatMessage.MessageType type;
 
     // 방 아이디
-    private Long roomId;
+    private UUID roomId;
 
     //보내는 사람
     private String sender;

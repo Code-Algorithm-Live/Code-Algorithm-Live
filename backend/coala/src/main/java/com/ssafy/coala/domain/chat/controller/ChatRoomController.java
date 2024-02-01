@@ -45,13 +45,13 @@ public class ChatRoomController {
     })
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<?> findRoom(@PathVariable("roomId") Long roomId){
+    public ResponseEntity<?> findRoom(@PathVariable("roomId") UUID roomId){
         return chatService.findRoom(roomId);
     }
 
     // 방에 있는 채팅리스트 가져오기
     @PostMapping("/messages")
-    public ResponseEntity<?> getMessages(@RequestBody Map<String, Long> roomIdMap){
+    public ResponseEntity<?> getMessages(@RequestBody Map<String, UUID> roomIdMap){
         return chatService.getMessage(roomIdMap.get("roomId"));
     }
 

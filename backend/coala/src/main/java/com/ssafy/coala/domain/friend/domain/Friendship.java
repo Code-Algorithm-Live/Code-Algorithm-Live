@@ -13,7 +13,7 @@ public class Friendship {
 
     private String userId;
 
-//    @OneToMany(fetch = FetchType.LAZY) // 한 유저는 여러 친구(Member) 목록을 가지고 있다.
-//    private List<Member> friendList;
+    @OneToMany(fetch = FetchType.LAZY) // 한 유저는 여러 친구(Member) 목록을 가지고 있다.
+    private List<Member> friendList;
 
 }

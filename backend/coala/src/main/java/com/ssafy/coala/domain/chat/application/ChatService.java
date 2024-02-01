@@ -55,7 +55,7 @@ public class ChatService {
     }
 
     // 채팅방 찾기
-    public ResponseEntity<?> findRoom(Long roomId){
+    public ResponseEntity<?> findRoom(UUID roomId){
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomId));
         if(chatRoom.isEmpty()){
             return ResponseEntity.ok().build();
@@ -65,7 +65,7 @@ public class ChatService {
 
     // 메시지 저장
     @Transactional
-    public void saveMessage(Long roomId, MessageDto messageDto){
+    public void saveMessage(UUID roomId, MessageDto messageDto){
         // id로 방을 찾아주고 그 방에 메세지를 전달해야겠지?
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId); // 방을 찾기
         if(chatRoom.isEmpty()){
@@ -90,7 +90,7 @@ public class ChatService {
 
 
 
-    public ResponseEntity<?> getMessage(Long roomId) {
+    public ResponseEntity<?> getMessage(UUID roomId) {
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId);
         return ResponseEntity.ok().body(chatRoom.get().getMessages());
     }
