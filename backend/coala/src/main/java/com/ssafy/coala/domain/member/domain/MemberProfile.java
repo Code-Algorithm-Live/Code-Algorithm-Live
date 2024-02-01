@@ -23,6 +23,7 @@ public class MemberProfile {
     private String solvedId;
 
     private String email;
+    private String kakaoname;
     private String nickname;
     private String imageUrl;
 

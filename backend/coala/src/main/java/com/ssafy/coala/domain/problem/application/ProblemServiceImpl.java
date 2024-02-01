@@ -110,8 +110,11 @@ public class ProblemServiceImpl implements ProblemService {
 
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
-        //get solvedId
-        Member member = memberRepository.findBySolvedId(solvedId);
+
+        Member member = Member.builder()
+                .solvedId(solvedId)
+                .id(memberProblemRepository.findUUIDBySolveId(solvedId))
+                .build();
 
         //check updateTime
         CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);

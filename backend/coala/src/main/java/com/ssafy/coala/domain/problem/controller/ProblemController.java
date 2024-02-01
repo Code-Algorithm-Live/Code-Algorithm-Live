@@ -125,27 +125,7 @@ public class ProblemController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "유저 정보 조회", description = "유저의 자기소개 데이터를 보여준다.")
-    @GetMapping("auth/{solvedId}")
-    private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
-        // 응답 데이터 읽기
-        try {
-            String apiUrl = "https://solved.ac/api/v3/user/show?handle="+solvedId;
-            HttpClient client = HttpClient.newHttpClient();
-            // HttpRequest 객체 생성
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl.toString()))
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(response.body(), Map.class);//json 파싱
-            System.out.println("map.get(\"bio\")");
-            return ResponseEntity.ok((String) map.get("bio"));
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private static String generateRandomString(int length) {
         SecureRandom secureRandom = new SecureRandom();

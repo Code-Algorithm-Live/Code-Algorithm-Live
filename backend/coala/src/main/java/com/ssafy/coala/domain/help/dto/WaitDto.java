@@ -18,7 +18,7 @@ public class WaitDto {
     private MemberDto receiver;
     private HelpDto helpDto;
     private UUID roomUuid;
-
+    private boolean success;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

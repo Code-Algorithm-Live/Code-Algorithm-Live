@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.member.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
@@ -16,6 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -80,6 +87,28 @@ public class MemberController {
     public ResponseEntity<?> dupcheck(@PathVariable String nickname){
         boolean isDup = memberService.dupCheck(nickname);
         return new ResponseEntity<Boolean>(isDup,HttpStatus.OK);
+    }
+
+    @Operation(summary = "유저 정보 조회", description = "유저의 자기소개 데이터를 보여준다.")
+    @GetMapping("auth/{solvedId}")
+    private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
+        // 응답 데이터 읽기
+        try {
+            String apiUrl = "https://solved.ac/api/v3/user/show?handle="+solvedId;
+            HttpClient client = HttpClient.newHttpClient();
+            // HttpRequest 객체 생성
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(apiUrl.toString()))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map map = mapper.readValue(response.body(), Map.class);//json 파싱
+            System.out.println("map.get(\"bio\")");
+            return ResponseEntity.ok((String) map.get("bio"));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    @Operation(summary = "백준 연동 시도", description = "해당 id에 대한 solved 자기소개 프로필 확인후 문자연 일치하면 id반환")

@@ -167,6 +167,6 @@ public class HelpController {
     @PostMapping("/accept")
     public ResponseEntity<String> accept(@Parameter(description = "요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.notifyMatching(waitDto);
-        return ResponseEntity.ok("메시지 전달 완료");
+        return ResponseEntity.ok("매칭 수락!!! 페어프로그래밍으로 이동");
     }
 }
