@@ -1,5 +1,7 @@
 package com.ssafy.coala.domain.help.service;
 
+import com.ssafy.coala.domain.alarm.domain.HelpAlarm;
+import com.ssafy.coala.domain.alarm.repository.HelpAlarmRepository;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,6 +16,9 @@ public class MatchingServiceImpl implements MatchingService{
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private HelpAlarmRepository helpAlarmRepository;
 
 
     @Override
@@ -34,6 +39,12 @@ public class MatchingServiceImpl implements MatchingService{
 //        messagingTemplate.convertAndSend( "/sub/queue/match", "도움 요청이 도착했습니다.");
 //        System.out.println(waitDto.getReceiver().getEmail());
         messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto);
+        HelpAlarm helpAlarm = HelpAlarm.builder()
+                .sender(waitDto.getSender())
+                .receiverNickname(waitDto.getReceiver().getNickname())
+                .help(waitDto.getHelpDto())
+                .build();
+        helpAlarmRepository.save(helpAlarm);
         System.out.println("알림 전송");
     }
 
