@@ -32,6 +32,9 @@ public class Member implements Serializable {
 
     private String password;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ColumnDefault("0")
     @Column(name = "member_exp")
     private int exp;
