@@ -2,12 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import UserModal from '@/components/Common/UserModal/UserModal';
+import UserModal from '@/components/User/UserModal/UserModal';
 import styles from '@/components/Common/User/User.module.scss';
 // TODO: shadow 적용
 
-// 친구인지 확인하고 만약 친구라면 자세한 상태값도 알아오기
-// 서버에서 확인
+// TODO: 친구인지 확인하고 만약 친구라면 자세한 상태값도 알아오기
+// TODO: 서버에서 확인
 const response = {
   data: {
     isFriend: true,
@@ -15,7 +15,7 @@ const response = {
   },
 };
 
-// 서버와 연결해서 데이터 받아오기
+// TODO: 서버와 연결해서 데이터 받아오기
 const userData = {
   nickname: '알라코',
   등급: 1,
@@ -26,8 +26,6 @@ const userData = {
 };
 
 const User = () => {
-  // 상태 바뀌면 재렌더링
-  // 친구 삭제는 아예 다른 페이지로 보내버리기(모달에서)
   const [isActive, setIsActive] = useState(false); // 접속중, 비접속중 isActive
   const [isDetailActive, setIsDetailActive] = useState(''); // 유저 활동 isDetailActive
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,7 +38,7 @@ const User = () => {
     setIsModalOpen(true);
   };
 
-  // x버튼으로 모달 닫기
+  /** x버튼으로 모달 닫기  */
   const handleModal = (Active: boolean) => {
     setIsModalOpen(Active);
   };
@@ -61,9 +59,9 @@ const User = () => {
     setIsActive(response.data.isActive);
   }
 
-  // 친구 && 접속 중
+  /** 친구 && 접속 중 일때, */
   if (isFriend && response.data.isActive) {
-    // 현재 동작 파악
+    /** 현재 동작 파악 */
     const nowDetailActive = '도움을 찾는 중';
     if (isDetailActive !== nowDetailActive) {
       setIsDetailActive(nowDetailActive);

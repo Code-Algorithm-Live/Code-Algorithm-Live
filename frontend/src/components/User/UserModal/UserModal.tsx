@@ -17,16 +17,6 @@ interface UserProps {
   onModal(active: boolean): void;
 }
 
-// 현재 데이터
-// const personData = {
-//   nickname: '알라코',
-//   등급: 1,
-//   레벨: 3,
-//   도움_준_횟수: 11700,
-//   도움_받은_횟수: 54,
-//   url: '/images/coala/smile.png',
-// };
-
 const userGrade = (grade: number) => {
   switch (grade) {
     case 1:
@@ -49,9 +39,6 @@ const userGrade = (grade: number) => {
 };
 
 const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
-  // 친구 추가 or 삭제 시 보내야 하는 정보 체크 X
-  // 상태 파악 nowState 실시간으로 갱신해야 하나?
-
   const bgColor = isActive ? 'connected' : 'unconnected';
 
   const doHelpNum = userData.도움_준_횟수.toLocaleString('en-US');
@@ -90,7 +77,7 @@ const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
           src={userData.url}
           alt="친구 이름"
           style={{
-            // 비율 변화
+            /** 비율 변화 */
             width: '167px',
             height: '167px',
           }}
