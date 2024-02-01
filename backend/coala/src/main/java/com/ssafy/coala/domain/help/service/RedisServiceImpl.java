@@ -191,6 +191,7 @@ public class RedisServiceImpl implements RedisService {
             System.out.println(problem+"check");
             String key = Integer.toString(problem);
             if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+                System.out.println("문제 존재");
                 list.addAll(Objects.requireNonNull(redisTemplate.opsForList().range(key, 0, -1)));
             } else {
                 // 키가 존재하지 않는 경우에 대한 처리
