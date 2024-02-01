@@ -176,6 +176,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(tmpmember.getEmail())
                 .solvedId(tmpmember.getSolvedId())
                 .password(bCryptPasswordEncoder.encode(tmpmember.getEmail()))
+                .imageUrl(tmpmember.getImageUrl())
                 .build();
         memberRepository.save(member);
     }
@@ -204,5 +205,10 @@ public class MemberServiceImpl implements MemberService {
             redisStringTemplate.delete("JWT_TOKEN:" + member.getEmail()); //Token 삭제
             System.out.println("로그아웃 성공");
         }
+    }
+
+    @Override
+    public Member getMemberByNickname(String name) {
+        return memberRepository.findByNickname(name);
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.help.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WaitDto {
     private MemberDto sender;
     private MemberDto receiver;

@@ -137,7 +137,8 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @GetMapping("/waitqueue/solvedlist")
-    public ResponseEntity<?> waitqueuesolvedlist(@RequestBody String solvedId) {
+    public ResponseEntity<?> waitqueuesolvedlist(@RequestParam String solvedId) {
+        System.out.println(solvedId);
         return ResponseEntity.ok(redisService.getSolvedListUsers(solvedId));
     }
 
