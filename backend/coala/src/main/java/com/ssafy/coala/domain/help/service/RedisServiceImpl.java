@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.help.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.help.dto.HelpDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.repository.RedisRepository;
@@ -71,9 +72,15 @@ public class RedisServiceImpl implements RedisService {
         if(isExist(waitDto)){
             List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
             if (list != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+
                 for (Object obj : list) {
-                    if (obj instanceof WaitDto) {
-                        WaitDto dtoInList = (WaitDto) obj;
+                    if (obj instanceof LinkedHashMap) {
+                        LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) obj;
+
+                        // 역직렬화하여 WaitDto로 변환
+                        WaitDto dtoInList = objectMapper.convertValue(map, WaitDto.class);
+
                         if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
                             redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, obj);
                             redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,obj);
@@ -82,9 +89,8 @@ public class RedisServiceImpl implements RedisService {
                     }
                 }
             }
+
             System.out.println("대기열에서 삭제");
-//            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY,1,waitDto);
-//            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,waitDto);
         }else{
             System.out.println("삭제할 데이터가 없습니다!!!!");
         }
@@ -119,10 +125,17 @@ public class RedisServiceImpl implements RedisService {
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
 
         if (list != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+
             for (Object obj : list) {
-                if (obj instanceof WaitDto) {
-                    WaitDto dtoInList = (WaitDto) obj;
+                if (obj instanceof LinkedHashMap) {
+                    LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) obj;
+
+                    // 역직렬화하여 WaitDto로 변환
+                    WaitDto dtoInList = objectMapper.convertValue(map, WaitDto.class);
+
                     if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
+                        System.out.println("suceess true 반환");
                         return true;
                     }
                 }
