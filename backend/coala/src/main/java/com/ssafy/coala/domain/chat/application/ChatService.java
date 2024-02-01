@@ -18,6 +18,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,9 +31,9 @@ public class ChatService {
 //    private Map<String, ChatRoomDto> chatRooms;
 
     // 채팅 생성
-    public ChatMessage createChat(Long roomId, String sender, String message){
+    public ChatMessage createChat(Long id, String sender, String message){
         ChatMessage chatMessage = ChatMessage.builder()
-                .id(roomId)
+                .id(id)
                 .sender(sender)
                 .message(message)
                 .build();
@@ -53,8 +54,8 @@ public class ChatService {
     }
 
     // 채팅방 찾기
-    public ResponseEntity<?> findRoom(Long roomId){
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomId));
+    public ResponseEntity<?> findRoom(UUID roomUuid){
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomUuid));
         if(chatRoom.isEmpty()){
             return ResponseEntity.ok().build();
         }
@@ -63,9 +64,9 @@ public class ChatService {
 
     // 메시지 저장
     @Transactional
-    public void saveMessage(Long roomId, MessageDto messageDto){
+    public void saveMessage(UUID roomUuId, MessageDto messageDto){
         // id로 방을 찾아주고 그 방에 메세지를 전달해야겠지?
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId); // 방을 찾기
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomUuId); // 방을 찾기
         if(chatRoom.isEmpty()){
             System.out.println("empty");
         }
@@ -76,7 +77,7 @@ public class ChatService {
                 .sender(messageDto.getSender())
                 .message(messageDto.getMessage())
                 .date(messageDto.getDate())
-                .chatRoom(chatRoomRepository.findById(roomId).orElseThrow())
+                .chatRoom(chatRoomRepository.findById(roomUuId).orElseThrow())
                 .build();
 
         // 메시지를 메시지레포지토리에 저장해줌
