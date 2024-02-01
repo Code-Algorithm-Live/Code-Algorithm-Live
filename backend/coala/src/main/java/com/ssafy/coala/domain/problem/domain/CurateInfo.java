@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CurateInfo {
     @Id
-    String id;//memberId
+    String id;//solvedId
 //    List<Integer> recentId;
     List<ProblemDto> curateFromRecent;
     List<ProblemDto> curateFromQuestionCnt;

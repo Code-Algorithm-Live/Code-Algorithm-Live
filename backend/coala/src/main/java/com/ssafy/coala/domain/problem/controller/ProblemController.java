@@ -35,7 +35,7 @@ public class ProblemController {
     @Operation(summary = "문제 추천", description = "해당 유저의 정보를 기반으로 문제를 추천한다." +
             " 5분에 한번 호출가능. 약 5초정도 대기 필요")
     @GetMapping("curate/{solvedId}")
-    public ResponseEntity<CurateInfo> udpateMemberProblem(@PathVariable String solvedId){
+    public ResponseEntity<CurateInfo> updateMemberProblem(@PathVariable String solvedId){
 
         CurateInfo result = problemService.getCurateProblem(solvedId);
 

@@ -24,6 +24,7 @@ public class FriendController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
+
     // 친구 목록 가져오기
     @GetMapping(value = "/list")
     ResponseEntity<String> getListFriend(@Parameter(description = "내id", required = true, example = "내 아이디로 친구목록 가져오기")

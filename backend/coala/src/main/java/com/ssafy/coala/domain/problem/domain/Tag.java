@@ -9,8 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(TagId.class)
+@Table(indexes = {
+        @Index(columnList = "problem_id")})
 public class Tag {
-
     @Id
     @ManyToOne
     @JoinColumn(name = "problem_id")
