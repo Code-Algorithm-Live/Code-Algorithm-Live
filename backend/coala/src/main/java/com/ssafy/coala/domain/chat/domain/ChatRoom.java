@@ -18,7 +18,7 @@ public class ChatRoom {
     @Id
     @GeneratedValue
     @Column(name = "room_id")
-    private UUID roomUuid;
+    private Long roomId;
 
     private String sender;
     private String receiver;

@@ -69,7 +69,7 @@ const userId = Math.random().toString();
 const roomId = 2;
 const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
 const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
-const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+const pubDestination = `/pub/chat/message`; // 채팅방 메세지 전송
 
 const Chatting = () => {
   const [input, setInput] = useState('');
@@ -113,6 +113,7 @@ const Chatting = () => {
     if (!message) return;
 
     onMessageReceived(message);
+    console.log('sendMessage');
     client.current.publish({
       destination: pubDestination,
       body: JSON.stringify({

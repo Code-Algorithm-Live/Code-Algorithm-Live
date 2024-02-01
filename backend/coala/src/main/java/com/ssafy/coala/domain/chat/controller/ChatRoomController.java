@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -43,9 +44,15 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     // 특정 채팅방 조회
-    @GetMapping("/room/{roomUuid}")
-    public ResponseEntity<?> findRoom(@PathVariable("roomUuid") UUID roomUuid){
-        return chatService.findRoom(roomUuid);
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> findRoom(@PathVariable("roomId") Long roomId){
+        return chatService.findRoom(roomId);
+    }
+
+    // 방에 있는 채팅리스트 가져오기
+    @PostMapping("/messages")
+    public ResponseEntity<?> getMessages(@RequestBody Map<String, Long> roomIdMap){
+        return chatService.getMessage(roomIdMap.get("roomId"));
     }
 
 }
