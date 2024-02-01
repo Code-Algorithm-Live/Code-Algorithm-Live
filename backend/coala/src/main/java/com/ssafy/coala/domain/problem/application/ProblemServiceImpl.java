@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.problem.application;
 
+import com.ssafy.coala.domain.member.dao.MemberRepository;
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.dao.CustomCurateInfoRepository;
 import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
@@ -28,6 +29,9 @@ public class ProblemServiceImpl implements ProblemService {
     MemberProblemRepository memberProblemRepository;
     @Autowired
     CustomCurateInfoRepository customCurateInfoRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Override
     public List<Problem> insertProblem(List<Problem> list) {
@@ -106,10 +110,7 @@ public class ProblemServiceImpl implements ProblemService {
 
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
-        //get solvedId
-//        Member member = new Member();
-//        member.setSolvedId(solvedId);
-//        member.setId(memberProblemRepository.findUUIDBySolveId(solvedId));
+
         Member member = Member.builder()
                 .solvedId(solvedId)
                 .id(memberProblemRepository.findUUIDBySolveId(solvedId))
