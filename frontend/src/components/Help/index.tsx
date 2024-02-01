@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import TextInput from '@/components/Common/TextInput';
-import QuillEditor from '@/components/Common/QuillEditor';
+import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
 
