@@ -118,7 +118,7 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, waitDto);
         redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
-        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(100));
+        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
     }
     @Override
     public boolean isExist(WaitDto waitDto){

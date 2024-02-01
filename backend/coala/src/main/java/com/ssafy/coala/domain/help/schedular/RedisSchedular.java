@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.help.schedular;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.service.RedisService;
 import com.ssafy.coala.domain.member.domain.Member;
@@ -8,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -29,14 +31,21 @@ public class RedisSchedular {
         List<Object> allObjects = redisService.getAllUsers();
 //        System.out.println("만료 스케쥴러 작동");
         // 만료된 유저를 삭제
-        for (Object object : allObjects) {
-            if (object instanceof WaitDto) {
-                WaitDto waitDto = (WaitDto) object;
-                if (redisService.isMemberExpired(waitDto)) {
-                    redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, waitDto);
+        if (allObjects != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            for (Object object : allObjects) {
+                if (object instanceof LinkedHashMap) {
+                    LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) object;
+
+                    // 역직렬화하여 WaitDto로 변환
+                    WaitDto dtoInList = objectMapper.convertValue(map, WaitDto.class);
+                    if (redisService.isMemberExpired(dtoInList)) {
+                        redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, dtoInList);
+                    }
                 }
             }
         }
+
     }
 
 
