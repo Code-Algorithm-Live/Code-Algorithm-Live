@@ -1,7 +1,13 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import useTimer from '@/hooks/useTimer';
+import {
+  convertMillisecondsToTime,
+  convertMinutesToMilliseconds,
+  timerFormatter,
+} from '@/utils/timer';
 
 const Container = styled.div`
   display: flex;
@@ -42,84 +48,34 @@ const ExtentionButton = styled.button`
   }
 `;
 
-/** 분에서 밀리초로 변환 */
-const convertMinutesToMilliseconds = (minutes: number) => minutes * 60 * 1000;
-
-/** 밀리초를 시, 분, 초로 변환 */
-const convertMillisecondsToTime = (milliseconds: number) => {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-
-  return {
-    hours: hours % 24, // 24시간 형식으로 표시
-    minutes: minutes % 60,
-    seconds: seconds % 60,
-  };
-};
-
-/** 타이머 00:00:00 형식으로 포맷팅 */
-const timerFormatter = ({
-  hours,
-  minutes,
-  seconds,
-}: {
-  hours: number;
-  minutes: number;
-  seconds: number;
-}) => {
-  const formatTimeUnit = (unit: number) => {
-    if (unit > 9) return `${unit}`;
-    return unit === 0 ? `00` : `0${unit}`;
-  };
-
-  let timer = hours === 0 ? '' : `${formatTimeUnit(hours)}:`;
-  timer += `${formatTimeUnit(minutes)}:${formatTimeUnit(seconds)}`;
-
-  return timer;
-};
-
 const END_TIME = 0;
-const REMAIN_TIME = convertMinutesToMilliseconds(10); // 연장하기 버튼이 활성화 되는 시간
-const EXTAND_TIME = convertMinutesToMilliseconds(10); // 연장 시간
+const REMAIN_TIME = convertMinutesToMilliseconds(9); // 연장하기 버튼이 활성화 되는 시간
+const EXTEND_TIME = 30; // 연장 시간
 
 const Timer = () => {
-  const [timestamp, setTimestamp] = useState(convertMinutesToMilliseconds(3));
-  const timerRef = useRef<NodeJS.Timeout>();
+  const { time, increaseTime, clearTimer } = useTimer({ initMinutes: 10 });
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
-    // 타이머 시작
-    timerRef.current = setInterval(() => {
-      setTimestamp(prev => prev - 1000);
-    }, 1000);
-
-    // 타이머 클린 업
-    return () => {
-      clearInterval(timerRef.current);
-    };
-  }, []);
-
-  // 타이머 종료
-  if (timestamp === END_TIME) {
-    clearInterval(timerRef.current);
-  }
-
-  useEffect(() => {
     // 남은시간이 REMAIN_TIME이하면 연장 가능
-    if (timestamp <= REMAIN_TIME) {
+    if (time <= REMAIN_TIME) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
-  }, [timestamp]);
+
+    // 타이머 종료
+    if (time === END_TIME) {
+      clearTimer();
+    }
+  }, [clearTimer, time]);
 
   const handleExtandTime = () => {
-    // EXTAND_TIME 만큼 남은시간 증가
-    setTimestamp(prev => prev + EXTAND_TIME);
+    // EXTEND_TIME 만큼 남은시간 증가
+    increaseTime(EXTEND_TIME);
   };
 
-  const { hours, minutes, seconds } = convertMillisecondsToTime(timestamp);
+  const { hours, minutes, seconds } = convertMillisecondsToTime(time);
   const timer = timerFormatter({ hours, minutes, seconds });
 
   return (

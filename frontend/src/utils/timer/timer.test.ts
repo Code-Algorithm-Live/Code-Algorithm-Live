@@ -1,4 +1,4 @@
-import { timerFormatter } from '.';
+import { timerFormatter } from '@/utils/timer/';
 
 describe('타이머 00:00:00 형식으로 포맷팅', () => {
   test('12:12:12, 모두 두자리수 일 때', () => {
