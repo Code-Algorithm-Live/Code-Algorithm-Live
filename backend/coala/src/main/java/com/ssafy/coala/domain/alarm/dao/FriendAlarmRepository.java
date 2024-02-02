@@ -1,4 +1,4 @@
-package com.ssafy.coala.domain.alarm.repository;
+package com.ssafy.coala.domain.alarm.dao;
 
 import com.ssafy.coala.domain.alarm.domain.FriendAlarm;
 import org.springframework.data.jpa.repository.JpaRepository;

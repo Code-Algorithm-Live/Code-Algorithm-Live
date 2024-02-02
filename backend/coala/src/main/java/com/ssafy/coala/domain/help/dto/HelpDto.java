@@ -11,7 +11,10 @@ import lombok.ToString;
 @ToString
 public class HelpDto {
 
+    // 문제 번호
     private int num;
+    // 도움 요청 제목
     private String title;
+    // 도움 요청 내용
     private String content;
 }

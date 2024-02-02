@@ -2,16 +2,13 @@ package com.ssafy.coala.domain.help.schedular;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.help.dto.WaitDto;
-import com.ssafy.coala.domain.help.service.RedisService;
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.domain.member.dto.MemberDto;
+import com.ssafy.coala.domain.help.application.RedisService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class RedisSchedular {

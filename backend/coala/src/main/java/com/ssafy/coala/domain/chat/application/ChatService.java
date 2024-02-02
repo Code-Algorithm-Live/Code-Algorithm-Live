@@ -44,13 +44,13 @@ public class ChatService {
 
     //채팅방 생성
     public ChatRoom createRoom(MakeRoomDto makeRoomDto) {
-        System.out.println("service");
+        System.out.println("application");
         ChatRoom chatRoom = ChatRoom.builder()
                 .sender(makeRoomDto.getSender())
                 .receiver(makeRoomDto.getReceiver())
                 .build();
         chatRoomRepository.save(chatRoom);
-        System.out.println("service: " + chatRoom.getSender());
+        System.out.println("application: " + chatRoom.getSender());
         return chatRoom;
     }
 

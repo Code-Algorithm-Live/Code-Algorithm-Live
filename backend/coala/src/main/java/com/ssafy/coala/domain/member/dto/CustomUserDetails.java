@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+//security가 제공하는 UserDetails라는 dto? 같은 걸 상속받아서 사용
 @ToString
 @Getter
 public class CustomUserDetails implements UserDetails {
