@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.help.dto.HelpDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.dao.RedisRepository;
+import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.application.ProblemServiceImpl;
+import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,8 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisServiceImpl implements RedisService {
 
     private final RedisRepository redisRepository;
-    private final ProblemServiceImpl problemService;
-
+    private final MemberProblemRepository memberProblemRepository;
     private static final String MATCH_QUEUE_KEY = "waiting_queue";
 
 
@@ -169,7 +170,7 @@ public class RedisServiceImpl implements RedisService {
     //내가 푼 문제를 현재 도움요청중인 유저의 리스트를 반환한다
     @Override
     public List<Object> getSolvedListUsers(String solvedId) {
-        List<Integer> problemList = problemService.getProblem(solvedId);
+        List<Integer> problemList = memberProblemRepository.findProblemIdBySolvedId(solvedId);
         List<Object> list = new ArrayList<>();
         for(int problem : problemList){
             System.out.println(problem+"check");
