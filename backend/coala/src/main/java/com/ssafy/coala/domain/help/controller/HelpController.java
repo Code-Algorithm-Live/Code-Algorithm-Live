@@ -78,7 +78,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/waitqueue")
-    public ResponseEntity<String> waitqueue(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> waitqueue(@Parameter(description = "도움 대기열 등록 - sender : 필수, receiver : 안보냄, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.addUser(waitDto);
         return ResponseEntity.ok("queue 푸쉬 완료");
     }
@@ -117,7 +117,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @DeleteMapping("/waitqueue")
-    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "도움 대기열에서 삭제 - sender : 필수, receiver : 안보냄, helpDto : 안보내도됨, roomUuid : 안보내도됨, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.removeUser(waitDto);
 
         return ResponseEntity.ok("아이디 " + waitDto);
@@ -131,7 +131,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/send")
-    public ResponseEntity<String> send(@Parameter(description = "도움 요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> send(@Parameter(description = "도움 요청 보내기 - sender : 필수, receiver : 필수, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.sendHelp(waitDto);
         return ResponseEntity.ok("알림 전달 완료");
     }
@@ -144,7 +144,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/accept")
-    public ResponseEntity<String> accept(@Parameter(description = "요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> accept(@Parameter(description = "도움 요청 수락 - sender : 필수, receiver : 필수, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.notifyMatching(waitDto);
         return ResponseEntity.ok("매칭 수락!!! 페어프로그래밍으로 이동");
     }

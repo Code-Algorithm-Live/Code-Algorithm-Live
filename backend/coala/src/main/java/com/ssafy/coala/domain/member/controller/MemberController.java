@@ -42,7 +42,7 @@ public class MemberController {
     })
 
     @PostMapping("/login")
-    public ResponseEntity<?> logincheck(@RequestBody MemberDto memberDto){
+    public ResponseEntity<?> logincheck(@Parameter(description = "기존 회원인지 확인 - email만 보내도 됨 ", required = true, example = "member객체")@RequestBody MemberDto memberDto){
         System.out.println(memberDto);
         boolean isMember = memberService.check(memberDto);
         System.out.println(isMember);
@@ -59,19 +59,19 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto){
+    public ResponseEntity<?> signUp(@Parameter(description = "회원가입 필수 정보 - kakao정보 3개 + nickname + solvedid ", required = true, example = "member객체")@RequestBody MemberDto memberDto){
         memberService.signUp(memberDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profile/{uuid}")
-    public ResponseEntity<?> getMemberProfile(@PathVariable UUID uuid){
+    public ResponseEntity<?> getMemberProfile(@Parameter(description = "멤버 UUID", required = true, example = "xxxx-xxxx-xxxx-xxxx")@PathVariable UUID uuid){
         MemberProfile memberProfile = memberService.getMemberProfile(uuid);
         return new ResponseEntity<MemberProfile>(memberProfile,HttpStatus.OK);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<?> getMember(@PathVariable UUID uuid){
+    public ResponseEntity<?> getMember(@Parameter(description = "멤버 UUID", required = true, example = "xxxx-xxxx-xxxx-xxxx")@PathVariable UUID uuid){
         Member member = memberService.getMember(uuid);
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
@@ -87,14 +87,14 @@ public class MemberController {
     }
 
     @GetMapping("/dupcheck/{nickname}")
-    public ResponseEntity<?> dupcheck(@PathVariable String nickname){
+    public ResponseEntity<?> dupcheck(@Parameter(description = "유저가 입력한 nickname", required = true, example = "차승윤")@PathVariable String nickname){
         boolean isDup = memberService.dupCheck(nickname);
         return new ResponseEntity<Boolean>(isDup,HttpStatus.OK);
     }
 
     @Operation(summary = "유저 정보 조회", description = "유저의 자기소개 데이터를 보여준다.")
     @GetMapping("auth/{solvedId}")
-    private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
+    private static ResponseEntity<String> generateAuthStr(@Parameter(description = "solvedac 아이디", required = true, example = "algoking")@PathVariable String solvedId){
         // 응답 데이터 읽기
         try {
             String apiUrl = "https://solved.ac/api/v3/user/show?handle="+solvedId;

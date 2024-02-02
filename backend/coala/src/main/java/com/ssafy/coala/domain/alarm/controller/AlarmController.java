@@ -54,7 +54,7 @@ public class AlarmController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @DeleteMapping("/help/{id}")
-    public ResponseEntity<?> deletehelplist(@Parameter(description = "닉네임", required = true, example = "차승윤") @PathVariable long id) {
+    public ResponseEntity<?> deletehelplist(@Parameter(description = "도움 요청 알람 ID", required = true, example = "1") @PathVariable long id) {
         alarmService.deleteHelpAlram(id);
         return ResponseEntity.ok(true);
     }
@@ -67,7 +67,7 @@ public class AlarmController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @DeleteMapping("/friend/{id}")
-    public ResponseEntity<?> deletefriendlist(@Parameter(description = "닉네임", required = true, example = "차승윤") @PathVariable long id) {
+    public ResponseEntity<?> deletefriendlist(@Parameter(description = "친구 요청 알람 ID", required = true, example = "1") @PathVariable long id) {
         alarmService.deleteFriendAlram(id);
         return ResponseEntity.ok(true);
     }
