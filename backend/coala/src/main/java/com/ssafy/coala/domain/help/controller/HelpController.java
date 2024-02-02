@@ -2,12 +2,8 @@ package com.ssafy.coala.domain.help.controller;
 
 
 import com.ssafy.coala.domain.help.dto.WaitDto;
-import com.ssafy.coala.domain.help.service.MatchingService;
-import com.ssafy.coala.domain.help.service.RedisService;
-import com.ssafy.coala.domain.member.application.MemberService;
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.domain.member.domain.MemberProfile;
-import com.ssafy.coala.domain.member.dto.MemberDto;
+import com.ssafy.coala.domain.help.application.MatchingService;
+import com.ssafy.coala.domain.help.application.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,8 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RequestMapping("/help")
@@ -26,34 +20,6 @@ public class HelpController {
     private final RedisService redisService;
     private final MatchingService matchingService;
 
-
-//    @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성해서 캐시에 등록")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK !!"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-//    })
-//    @PostMapping("/form")
-//    public ResponseEntity<String> form(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-//    }
-//
-//    @Operation(summary = "도움 요청 폼 수정", description = "문제 번호, 도움 제목, 도움 요청 내용 수정")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK !!"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-//    })
-//    @PutMapping("/form")
-//    public ResponseEntity<String> formupdate(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-//    }
 
     @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
     @ApiResponses({

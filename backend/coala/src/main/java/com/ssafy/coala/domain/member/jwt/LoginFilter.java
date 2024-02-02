@@ -37,29 +37,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("Login Filter");
-        // Request Body의 InputStream을 얻어옵니다.
-//        InputStream inputStream = null;
-//        try {
-//            inputStream = request.getInputStream();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        // InputStream을 사용하여 BufferedReader를 생성합니다.
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//        // 한 줄씩 읽어오면서 처리합니다.
-//        String line;
-//        StringBuilder requestBody = new StringBuilder();
-//        while (true) {
-//            try {
-//                if (!((line = reader.readLine()) != null)) break;
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            requestBody.append(line);
-//        }        //클라이언트 요청에서 username, password 추출
-//        System.out.println(requestBody);
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
@@ -81,11 +58,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println(customUserDetails+"loginFilter success시");
         String username = customUserDetails.getUsername();
         String email = customUserDetails.getEmail();
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-//        GrantedAuthority auth = iterator.next();
-//
-//        String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(username, email, 24L * 60L * 60L * 1000L); //24시간
         String refeshToken = jwtUtil.createRefreshJwt(30L* 24L * 60L * 60L * 1000L); //30일

@@ -1,17 +1,11 @@
-package com.ssafy.coala.domain.help.service;
+package com.ssafy.coala.domain.help.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.help.dto.HelpDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
-import com.ssafy.coala.domain.help.repository.RedisRepository;
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.domain.member.dto.MemberDto;
-import com.ssafy.coala.domain.problem.application.ProblemService;
+import com.ssafy.coala.domain.help.dao.RedisRepository;
 import com.ssafy.coala.domain.problem.application.ProblemServiceImpl;
-import com.ssafy.coala.domain.problem.domain.Problem;
 import lombok.RequiredArgsConstructor;
-import org.h2.command.dml.Help;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,6 +61,7 @@ public class RedisServiceImpl implements RedisService {
 //        redisRepository.remove(member);
 //    }
 
+    //매칭 대기열에서 삭제
     @Override
     public void removeUser(WaitDto waitDto) {
         if(isExist(waitDto)){
@@ -84,6 +79,8 @@ public class RedisServiceImpl implements RedisService {
                         if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
                             redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, obj);
                             redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,obj);
+                            String hashKey = Integer.toString(waitDto.getSender().hashCode());
+                            redisTemplate.opsForHash().delete(MATCH_QUEUE_KEY + ":expiration",hashKey);
                             break;
                         }
                     }
@@ -97,29 +94,22 @@ public class RedisServiceImpl implements RedisService {
         
     }
 
-    @Override
-    public void expiredRemove() {
-        List<Object> elements = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
-
-        if (elements != null) {
-            for (Object element : elements) {
-                // element에 대한 만료 여부를 확인하고 만료된 경우 삭제
-                if (isMemberExpired((WaitDto)element)) {
-                    redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, element);
-                }
-            }
-        }
-    }
-
+    // 매칭 대기열에 등록
     @Override
     @Transactional
     public void addUser(WaitDto waitDto) {
+        //기존에 대기열에 존재하면 기존의 요청을 삭제
         removeUser(waitDto);
+        //문제번호 상관없는 전체 대기열에 push
         redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, waitDto);
+        //문제 별 대기열에 push -> 문제 별 데이터를 얻어올 때 활용하기 쉽게 하기 위해
         redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
+        //대기열 만료 시간 설정
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
         redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
     }
+
+    //현재 매칭 대기열에 존재하는지 검사
     @Override
     public boolean isExist(WaitDto waitDto){
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
@@ -145,13 +135,17 @@ public class RedisServiceImpl implements RedisService {
         return false;
     }
 
+
+    //매칭 대기중인 유저들의 전체 리스트
     @Override
     public List<Object> getAllUsers() {
+        // range()의 end인자값을 바꿔서 원하는 만큼만 가져올 수 있음 -> pagenation 구현 할 때 생각해봐도 될듯
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
 
         return list;
     }
 
+    // 매칭 만료시간을 검사하는 메소드 스케쥴러에서 계속 호출하며 검사한다.
     @Override
     public boolean isMemberExpired(WaitDto waitDto) {
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
@@ -164,6 +158,7 @@ public class RedisServiceImpl implements RedisService {
         return false;
     }
 
+    //문제 별 매칭 대기중인 유저 리스트
     @Override
     public List<Object> getProbUsers(int probid) {
         List<Object> list = redisTemplate.opsForList().range(Integer.toString(probid), 0, -1);
@@ -171,18 +166,7 @@ public class RedisServiceImpl implements RedisService {
         return list;
     }
 
-    @Override
-    @CachePut(value = "HelpDto", key = "#solvedId", cacheManager = "cacheManager")
-    public HelpDto saveHelp(HelpDto helpDto, String solvedId) {
-        return helpDto;
-    }
-
-    @Override
-    @Cacheable(value = "HelpDto", key = "#solvedId", cacheManager = "cacheManager")
-    public HelpDto getHelp(String solvedId) {
-        return null;
-    }
-
+    //내가 푼 문제를 현재 도움요청중인 유저의 리스트를 반환한다
     @Override
     public List<Object> getSolvedListUsers(String solvedId) {
         List<Integer> problemList = problemService.getProblem(solvedId);

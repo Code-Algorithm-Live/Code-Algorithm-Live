@@ -2,8 +2,8 @@ package com.ssafy.coala.domain.alarm.application;
 
 import com.ssafy.coala.domain.alarm.domain.FriendAlarm;
 import com.ssafy.coala.domain.alarm.domain.HelpAlarm;
-import com.ssafy.coala.domain.alarm.repository.FriendAlarmRepository;
-import com.ssafy.coala.domain.alarm.repository.HelpAlarmRepository;
+import com.ssafy.coala.domain.alarm.dao.FriendAlarmRepository;
+import com.ssafy.coala.domain.alarm.dao.HelpAlarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
