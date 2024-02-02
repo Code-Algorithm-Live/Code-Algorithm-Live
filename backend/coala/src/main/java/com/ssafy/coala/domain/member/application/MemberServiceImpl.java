@@ -87,6 +87,7 @@ public class MemberServiceImpl implements MemberService {
         //Token에서 로그인한 사용자 정보 get해 로그아웃 처리
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = customUserDetails.getMember();
+        //
         if (redisStringTemplate.opsForValue().get("JWT_TOKEN:" + member.getEmail()) != null) {
             redisStringTemplate.delete("JWT_TOKEN:" + member.getEmail()); //Token 삭제
             System.out.println("로그아웃 성공");
