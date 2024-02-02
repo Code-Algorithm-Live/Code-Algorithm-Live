@@ -62,6 +62,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJwt(username, email, 24L * 60L * 60L * 1000L); //24시간
         String refeshToken = jwtUtil.createRefreshJwt(30L* 24L * 60L * 60L * 1000L); //30일
         System.out.println(refeshToken+"이게 리프레쉬 토큰임 이제 넣을거임");
+        // key : value -> test@test.com : refreshToken
+        // key : value -> JWT_TOKEN:test@test.com : accessToken
         redisStringTemplate.opsForValue().set(email,refeshToken,30L* 24L * 60L * 60L * 1000L,TimeUnit.MILLISECONDS);
         redisStringTemplate.opsForValue().set("JWT_TOKEN:" + email, token, 24L * 60L * 60L * 1000L, TimeUnit.MILLISECONDS);
         response.addHeader("Authorization", "Bearer " + token);

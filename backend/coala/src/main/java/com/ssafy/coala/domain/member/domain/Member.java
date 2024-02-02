@@ -50,6 +50,6 @@ public class Member implements Serializable {
     private String email;
 
     //회원가입 할 때 유저한테 입력받은 nickname
-    @Column(name = "nick_name")
+    @Column(name = "nick_name", unique = true)
     private String nickname;
 }
