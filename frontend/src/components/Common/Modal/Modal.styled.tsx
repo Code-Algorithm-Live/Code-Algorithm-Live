@@ -54,6 +54,7 @@ const Body = styled.div`
 const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
 
   padding: 0 34px;
   height: 50px;

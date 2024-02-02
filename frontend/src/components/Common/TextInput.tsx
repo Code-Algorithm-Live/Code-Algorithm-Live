@@ -4,6 +4,7 @@ import styles from './TextInput.module.css';
 type TextInputProps = {
   inputSort: string;
   children: string;
+  // ref: HTMLInputElement;
 };
 
 function TextInput({ inputSort, children }: TextInputProps) {

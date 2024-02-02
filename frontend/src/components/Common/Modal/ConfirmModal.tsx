@@ -14,19 +14,37 @@ const CloseBarButton = styled.div`
   height: 45px;
 
   border-radius: 6px;
+  border: 1px solid var(--unconnected-color, #d1d1d1);
+
+  background: #fff;
+
+  cursor: pointer;
+`;
+
+const ConfirmBarButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 166px;
+  height: 45px;
+
+  border-radius: 6px;
   background: var(--sub-color, #69c7e0);
 
   color: #fff;
   cursor: pointer;
 `;
 
-const BasicModal = ({
+const ConfirmModal = ({
   open,
   onClose,
+  onConfirm,
   children,
 }: {
   open: boolean;
-  onClose?: () => void;
+  onClose: () => void;
+  onConfirm: () => void;
   children?: JSX.Element;
 }) => {
   const [isOpen, setIsOpen] = useState(open);
@@ -72,6 +90,14 @@ const BasicModal = ({
         <CoreModal.Body>{children}</CoreModal.Body>
         <CoreModal.Footer>
           <CloseBarButton onClick={onClose}>닫기</CloseBarButton>
+          <ConfirmBarButton
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+          >
+            수락
+          </ConfirmBarButton>
         </CoreModal.Footer>
       </CoreModal.Container>
       <CoreModal.ShadowDrop />
@@ -79,4 +105,4 @@ const BasicModal = ({
   );
 };
 
-export default BasicModal;
+export default ConfirmModal;
