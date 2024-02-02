@@ -24,6 +24,35 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
 
 ## 주요 기능
 
+### 카카오 회원가입 / 로그인 기능
+
+카카오에서 받은 정보를 키로 회원가입/로그인 가능하다.
+
+### 멘토-멘티 매칭 기능
+
+메인 페이지에서 도움을 구하는 사람을 도와줄 수 있다.
+
+### 알림 기능
+
+다른 유저가 자신에게 도움을 요청할 때 알림으로 확인가능하다.
+
+다른 유저의 친구요청을 알림으로 확인가능하다.
+
+### 채팅+페어프로그래밍 기능
+
+멘토-멘티 매칭이 완료된 유저끼리 채팅과 공동 편집 가능한 코드 편집기를 사용해서 알고리즘 문제에 대한 도움을 받는다.
+
+편집기에서 작성한 코드를 실행가능하다.
+
+채팅 및 페어프로그래밍 내역은 DB에 저장되어 볼 수 있다.
+
+### 백준 문제 추천 기능
+
+유저가 푼 문제의 난이도와 태그를 기반으로 문제를 추천한다.
+
+다른 유저들이 많이 질문한 문제를 추천한다.
+
+
 <div align=center><h1>📚 STACKS</h1></div>
 
 <div align=center> 
@@ -32,18 +61,21 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   
   <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
   <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
-  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+  <img src="https://img.shields.io/badge/Typescript-F7DF1E?style=for-the-badge&logo=Typescript&logoColor=white">
+   
   <br>
   
   <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Redis-003545?style=for-the-badge&logo=Redis&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Redis-003545?style=for-the-badge&logo=Redis&logoColor=black"> 
   <br>
   
   <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
   <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
   <br>
   
-  <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
+  <img src="https://img.shields.io/badge/spring-boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white">
+  <img src="https://img.shields.io/badge/WebSocket-6DB33F?style=for-the-badge&logo=WebSocket&logoColor=black">  
   <br>
 
   <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> 
@@ -56,3 +88,5 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   <img src="https://img.shields.io/badge/fontawesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white">
   <br>
 </div>
+
+## 아키텍처
