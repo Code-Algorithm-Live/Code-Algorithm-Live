@@ -3,9 +3,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { styled } from 'styled-components';
 import { IconClose } from '@assets/svgs';
-import CoreModal, { CloseButton } from '@/components/Common/Modal/Modal.styled';
+import CoreModal, { CloseButton } from './Modal.styled';
 
-const CloseBarButton = styled.div`
+const CheckButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,14 +20,16 @@ const CloseBarButton = styled.div`
   cursor: pointer;
 `;
 
-const BasicModal = ({
+const GuideModal = ({
   open,
   onClose,
   children,
+  clickCheckButton,
 }: {
   open?: boolean;
   onClose?: () => void;
   children?: JSX.Element;
+  clickCheckButton?: () => void;
 }) => {
   const [isOpen, setIsOpen] = useState(open);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ const BasicModal = ({
         </CoreModal.Header>
         <CoreModal.Body>{children}</CoreModal.Body>
         <CoreModal.Footer>
-          <CloseBarButton onClick={onClose}>닫기</CloseBarButton>
+          <CheckButton onClick={clickCheckButton}>확인</CheckButton>
         </CoreModal.Footer>
       </CoreModal.Container>
       <CoreModal.ShadowDrop />
@@ -79,4 +81,4 @@ const BasicModal = ({
   );
 };
 
-export default BasicModal;
+export default GuideModal;
