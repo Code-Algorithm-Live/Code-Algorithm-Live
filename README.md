@@ -1,4 +1,12 @@
-## README
+# README
+# Coala (코알라: 코드 알고리즘 라이브)
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/be52fccd-e518-45d4-bc34-125e2f9bc1dd/db45a140-2166-4180-92cc-46d70b201aed/Untitled.png)
+
+## 프로젝트 정보
+
+Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 프로젝트입니다.
+
 
 <div align=center><h1>📚 STACKS</h1></div>
 
