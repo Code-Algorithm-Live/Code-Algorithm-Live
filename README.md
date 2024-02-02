@@ -36,6 +36,7 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   <br>
   
   <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Redis-003545?style=for-the-badge&logo=Redis&logoColor=white"> 
   <br>
   
   <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
