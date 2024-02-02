@@ -22,7 +22,7 @@ public class RedisSchedular {
         this.redisTemplate = redisTemplate;
     }
 
-    @Scheduled(fixedRate = 1000) // 1초마다 실행
+//    @Scheduled(fixedRate = 1000) // 1초마다 실행
     public void cleanExpiredUsers() {
         // Redis Sorted Set에서 모든 객체 조회
         List<Object> allObjects = redisService.getAllUsers();
