@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 interface ListItem {
   main: string;
@@ -14,20 +14,15 @@ interface ListProps {
 const Container = styled.div`
   height: calc(100vh - 200px);
   overflow-y: auto;
-`;
-
-const customScrollbarStyles = `
-  ::-webkit-scrollbar {
-    width: 6px;
+  &::-webkit-scrollbar {
+    width: 10px;
   }
 
-  ::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: var(--main-color);
     border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--main-hover-color);
+    background-clip: padding-box;
+    border: 3px solid transparent;
   }
 `;
 
@@ -67,7 +62,6 @@ const SubText = styled.p`
 const List: React.FC<ListProps> = ({ historyList }) => {
   return (
     <Container>
-      <style>{customScrollbarStyles}</style>
       {historyList.map((history, index) => (
         <Link key={index} href={history.href}>
           <SidebarLink>
