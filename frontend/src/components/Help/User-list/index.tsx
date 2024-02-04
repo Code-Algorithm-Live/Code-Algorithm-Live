@@ -54,7 +54,7 @@ function Form() {
   };
 
   return (
-    <div>
+    <div className={styles.containerBase}>
       <NavBar sort="도움 요청하기" />
       <div className={styles.sort}>
         <a className={styles.people}>최근에 이 문제를 푼 사람</a>
