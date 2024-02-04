@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 800px;
+  height: 82px;
+}
+.help {
+  width: 145px;
+  height: 34px;
+  background-color: var(--user-help-undo-color);
+  border-radius: 16px;
+}
+.helped {
+  width: 145px;
+  height: 34px;
+  border-radius: 16px;
+  background-color: var(--user-help-did-color);
+}
