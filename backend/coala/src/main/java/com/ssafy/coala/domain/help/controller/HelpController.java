@@ -5,12 +5,8 @@ import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.controller.ChatRoomController;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
-import com.ssafy.coala.domain.help.service.MatchingService;
-import com.ssafy.coala.domain.help.service.RedisService;
-import com.ssafy.coala.domain.member.application.MemberService;
-import com.ssafy.coala.domain.member.domain.Member;
-import com.ssafy.coala.domain.member.domain.MemberProfile;
-import com.ssafy.coala.domain.member.dto.MemberDto;
+import com.ssafy.coala.domain.help.application.MatchingService;
+import com.ssafy.coala.domain.help.application.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,8 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RequestMapping("/help")
@@ -30,34 +24,6 @@ public class HelpController {
     private final MatchingService matchingService;
     private final ChatService chatService;
 
-
-//    @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성해서 캐시에 등록")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK !!"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-//    })
-//    @PostMapping("/form")
-//    public ResponseEntity<String> form(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-//    }
-//
-//    @Operation(summary = "도움 요청 폼 수정", description = "문제 번호, 도움 제목, 도움 요청 내용 수정")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK !!"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-//    })
-//    @PutMapping("/form")
-//    public ResponseEntity<String> formupdate(@Parameter(description = "문제 번호", required = true, example = "1000") @RequestParam int num,
-//                                       @Parameter(description = "도움 제목", required = true, example = "반례를 찾아주세요") @RequestParam String title,
-//                                       @Parameter(description = "도움 내용", required = true, example = "제발요ㅠㅠ") @RequestParam String content) {
-//        return ResponseEntity.ok("문제번호 " + num + " 도움 제목 " +title+" 도움 내용 " + content);
-//    }
 
     @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
     @ApiResponses({
@@ -116,7 +82,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/waitqueue")
-    public ResponseEntity<String> waitqueue(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> waitqueue(@Parameter(description = "도움 대기열 등록 - sender : 필수, receiver : 안보냄, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.addUser(waitDto);
 
         MakeRoomDto makeRoomDto = new MakeRoomDto();
@@ -162,7 +128,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @DeleteMapping("/waitqueue")
-    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> waitqueuedelete(@Parameter(description = "도움 대기열에서 삭제 - sender : 필수, receiver : 안보냄, helpDto : 안보내도됨, roomUuid : 안보내도됨, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.removeUser(waitDto);
 
         return ResponseEntity.ok("아이디 " + waitDto);
@@ -176,7 +142,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/send")
-    public ResponseEntity<String> send(@Parameter(description = "도움 요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> send(@Parameter(description = "도움 요청 보내기 - sender : 필수, receiver : 필수, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.sendHelp(waitDto);
         return ResponseEntity.ok("알림 전달 완료");
     }
@@ -189,7 +155,7 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping("/accept")
-    public ResponseEntity<String> accept(@Parameter(description = "요청", required = true, example = "test") @RequestBody WaitDto waitDto) {
+    public ResponseEntity<String> accept(@Parameter(description = "도움 요청 수락 - sender : 필수, receiver : 필수, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.notifyMatching(waitDto);
         return ResponseEntity.ok("매칭 수락!!! 페어프로그래밍으로 이동");
     }

@@ -31,6 +31,6 @@ spring:
 #      org.hibernate.type: trace
   profiles:
     active: local
-    include: oauth, jwt
+    include: jwt
 
 

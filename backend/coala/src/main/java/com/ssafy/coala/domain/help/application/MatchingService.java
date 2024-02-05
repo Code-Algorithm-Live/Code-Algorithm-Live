@@ -1,4 +1,4 @@
-package com.ssafy.coala.domain.help.service;
+package com.ssafy.coala.domain.help.application;
 
 import com.ssafy.coala.domain.help.dto.WaitDto;
 
