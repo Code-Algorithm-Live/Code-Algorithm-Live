@@ -1,10 +1,5 @@
+import Index from '@/components/Profile';
 
-
-export default function Profile() {
-    return (
-      <h1>
-        Profile 
-      </h1>
-    )
-  }
-  
+export default function SignUp() {
+  return <Index />;
+}
