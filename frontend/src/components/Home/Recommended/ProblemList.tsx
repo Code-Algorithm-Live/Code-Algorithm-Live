@@ -16,7 +16,7 @@ interface ProblemsProps {
 const StyledSlide = styled(Slider)<Settings>`
   .slick-list {
     width: 1190px;
-    padding: 10px 0px 10px 5px;
+    padding: 5px 0px 10px 5px;
   }
 
   .slick-prev:before,
@@ -29,7 +29,7 @@ const StyledSlide = styled(Slider)<Settings>`
 
 const ProblemBox = styled.div`
   width: 220px;
-  height: 180px;
+  height: 150px;
   border-radius: 10px;
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
   padding: 20px;

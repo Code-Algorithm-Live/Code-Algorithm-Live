@@ -20,14 +20,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 30px 50px 50px 50px;
-  height: 320px;
+  height: 250px;
 `;
 
 const Header = styled.span`
   font-family: Pretendard;
   font-size: 20px;
   font-weight: 700;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 `;
 
 const Recommended = () => {
