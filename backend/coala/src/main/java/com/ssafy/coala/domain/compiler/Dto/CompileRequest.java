@@ -1,4 +1,4 @@
-package com.ssafy.coala.domain.Compiler.Dto;
+package com.ssafy.coala.domain.compiler.Dto;
 
 
 import lombok.AllArgsConstructor;

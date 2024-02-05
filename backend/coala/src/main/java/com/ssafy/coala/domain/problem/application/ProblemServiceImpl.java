@@ -7,6 +7,7 @@ import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import com.ssafy.coala.domain.problem.dao.ProblemRepository;
 import com.ssafy.coala.domain.problem.domain.*;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,6 +54,30 @@ public class ProblemServiceImpl implements ProblemService {
         problemRepository.updateProblemDescription(id, description);
     }
 
+//    @PostConstruct
+    public void problemCaching(){
+        List<Problem> problems = problemRepository.findAll();
+        Map<Integer, LevelProblem> levelProblemMap = new LinkedHashMap<>();
+
+        for (Problem p:problems){
+            if (p.getLevel()==0) continue;
+            if (!levelProblemMap.containsKey(p.getLevel())){
+                LevelProblem levelProblem = new LevelProblem(p.getLevel(),new HashMap<>());
+                levelProblem.putProblem(p);
+                levelProblemMap.put(p.getLevel(),levelProblem);
+            } else {
+                LevelProblem levelProblem = levelProblemMap.get(p.getLevel());
+                levelProblem.putProblem(p);
+            }
+        }
+
+        for (int i=1; i<30; i++){
+            if (levelProblemMap.containsKey(i)){
+                //save
+            }
+        }
+
+    }
 
     public List<Integer> getProblem(String solvedId){
         List<Integer> result = new ArrayList<>();

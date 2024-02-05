@@ -1,6 +1,6 @@
-package com.ssafy.coala.domain.Compiler.Controller;
+package com.ssafy.coala.domain.compiler.Controller;
 
-import com.ssafy.coala.domain.Compiler.Dto.CompileRequest;
+import com.ssafy.coala.domain.compiler.Dto.CompileRequest;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,6 @@ import javax.tools.ToolProvider;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
