@@ -3,9 +3,11 @@ package com.ssafy.coala.domain.chat.application;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.chat.dao.ChatMessageRepository;
 import com.ssafy.coala.domain.chat.dao.ChatRoomRepository;
+import com.ssafy.coala.domain.chat.dao.CodeHistoryRepository;
 import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
 //import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
+import com.ssafy.coala.domain.chat.domain.CodeHistory;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
 import jakarta.transaction.Transactional;
@@ -55,8 +57,8 @@ public class ChatService {
     }
 
     // 채팅방 찾기
-    public ResponseEntity<?> findRoom(UUID roomId){
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomId));
+    public ResponseEntity<?> findRoom(UUID roomUuid){
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById((roomUuid));
         if(chatRoom.isEmpty()){
             return ResponseEntity.ok().build();
         }
@@ -65,9 +67,9 @@ public class ChatService {
 
     // 메시지 저장
     @Transactional
-    public void saveMessage(UUID roomId, MessageDto messageDto){
+    public void saveMessage(UUID roomUuId, MessageDto messageDto){
         // id로 방을 찾아주고 그 방에 메세지를 전달해야겠지?
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId); // 방을 찾기
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomUuId); // 방을 찾기
         if(chatRoom.isEmpty()){
             System.out.println("empty");
         }
@@ -77,21 +79,19 @@ public class ChatService {
                 .type(messageDto.getType())
                 .sender(messageDto.getSender())
                 .message(messageDto.getMessage())
-                .chatRoom(chatRoomRepository.findById(roomId).orElseThrow())
+                .chatRoom(chatRoomRepository.findById(roomUuId).orElseThrow())
                 .build();
 
         // 메시지를 메시지레포지토리에 저장해줌
         chatMessageRepository.save(chatMessage);
         chatRoom.get().getMessages().add(chatMessage);
-        for(ChatMessage cm : chatRoom.get().getMessages()){
-            System.out.println("채팅: " + cm.getMessage());
-        }
     }
 
-
-
-    public ResponseEntity<?> getMessage(UUID roomId) {
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId);
-        return ResponseEntity.ok().body(chatRoom.get().getMessages());
+    public <T> void sendMessage(WebSocketSession session, T message) {
+        try {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

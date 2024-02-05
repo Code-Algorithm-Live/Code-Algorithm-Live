@@ -1,14 +1,14 @@
 package com.ssafy.coala.domain.problem.dao;
 
 import com.ssafy.coala.domain.problem.domain.CurateInfo;
+import com.ssafy.coala.domain.problem.dto.ProblemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
 import java.time.Duration;
-
-import static org.springframework.cache.interceptor.SimpleKeyGenerator.generateKey;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CustomCurateInfoRepository {
@@ -17,12 +17,17 @@ public class CustomCurateInfoRepository {
     private RedisTemplate<String, Object> redisTemplate;
 
     public void saveWithTTL(CurateInfo curateInfo, long ttlInMinutes) {
-        String key = generateKey(curateInfo.getId()).toString(); // 키 생성 로직
+        String key = generateKey(curateInfo.getId()); // 키 생성 로직
         redisTemplate.opsForValue().set(key, curateInfo, Duration.ofMinutes(ttlInMinutes));
     }
+    @SuppressWarnings("unchecked")
     public CurateInfo findById(String id) {
-        String key = generateKey(id).toString();
-        return (CurateInfo) redisTemplate.opsForValue().get(key);
+        String key = generateKey(id);
+        Map<?, ?> map = (Map<?,?>) redisTemplate.opsForValue().get(key);
+        if (map==null) return null;
+        System.out.println(map);
+        return new CurateInfo(id,(List<ProblemDto>) map.get("curateFromRecent"),(List<ProblemDto>) map.get("curateFromQuestionCnt"));
+
     }
 
     // 다른 메서드들...

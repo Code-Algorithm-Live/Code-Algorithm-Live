@@ -133,13 +133,13 @@ public class ProblemScheduler {
 //                    }// dto로 변환
 //
 //                    System.out.println(result);
-                        System.out.println("Problem saved. " + curId + ":" + maxId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
             input = problemService.insertProblem(input);
+            System.out.println("Problem saved. " + curId + ":" + maxId);
 
         } catch (Exception e) {
             e.printStackTrace();
