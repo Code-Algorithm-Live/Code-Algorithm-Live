@@ -2,9 +2,9 @@
 
 import styled from 'styled-components';
 import { SetStateAction, useState } from 'react';
-import List from '@/components/Home/HistoryBar/List';
-import Button from '@/components/Home/HistoryBar/Button';
-import Select from '@/components/Home/HistoryBar/Select';
+import List from '@/components/Home/HistorySideBar/List';
+import Button from '@/components/Home/HistorySideBar/Button';
+import Select from '@/components/Home/HistorySideBar/Select';
 
 const SidebarContainer = styled.nav`
   padding: 20px 20px 20px 10px;

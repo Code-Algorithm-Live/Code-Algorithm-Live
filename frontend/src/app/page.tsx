@@ -1,12 +1,12 @@
 import '@/styles/reset.css';
 import Nav from '@/components/Common/Header';
-import HistoryBar from '@/components/Home/HistoryBar';
+import HistorySideBar from '@/components/Home/HistorySideBar';
 
 export default function Home() {
   return (
     <>
       <Nav />
-      <HistoryBar />
+      <HistorySideBar />
     </>
   );
 }
