@@ -40,8 +40,6 @@ const Recommended = () => {
     }>
   >([]);
   useEffect(() => {
-    console.log(session?.user);
-
     const fetchData = async () => {
       try {
         const solvedId = session?.user?.SolvedId as string;
@@ -56,7 +54,6 @@ const Recommended = () => {
             },
           },
         );
-        console.log(Response);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const responseData: ApiResponse = await Response.json();
@@ -89,7 +86,6 @@ const Recommended = () => {
         }
 
         setProblems(combinedProblems);
-        console.log(combinedProblems);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
