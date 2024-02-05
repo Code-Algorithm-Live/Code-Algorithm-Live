@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import Slider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -79,12 +78,14 @@ const ProblemList: React.FC<ProblemsProps> = ({ problems }) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     draggable: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
   return (
     <StyledSlide {...settings}>
       {problems.map((problem, index) => (
-        <Link key={index} href={problem.href}>
+        <a key={index} href={problem.href}>
           <ProblemBox>
             <MainText>{problem.summary}</MainText>
             <TextContainer>
@@ -92,7 +93,7 @@ const ProblemList: React.FC<ProblemsProps> = ({ problems }) => {
               <SubText>{problem.title}</SubText>
             </TextContainer>
           </ProblemBox>
-        </Link>
+        </a>
       ))}
     </StyledSlide>
   );

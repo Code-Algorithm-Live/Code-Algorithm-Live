@@ -2,7 +2,7 @@
 
 import styled from 'styled-components';
 import Header from '@/components/Common/Header';
-import HistoryBar from '@/components/Common/HistoryBar';
+import HistorySideBar from '@/components/Common/HistorySideBar';
 import Recommended from '@/components/Home/Recommended';
 import Waiting from '@/components/Home/Waiting';
 
@@ -21,7 +21,7 @@ const Home = () => {
     <>
       <Header />
       <SidebarContainer>
-        <HistoryBar />
+        <HistorySideBar />
         <Container>
           <Recommended />
           <Waiting />

@@ -21,7 +21,6 @@ const ProfileImage = styled.div<{ $userImage: string }>`
 
 export default function Nav() {
   const { data: session } = useSession();
-  console.log(session?.user);
 
   return (
     <nav>

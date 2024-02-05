@@ -26,7 +26,7 @@ const Recommended = () => {
     summary: `이런 문제 어때요? ${index + 1}`,
     number: 123123,
     title: '상어파이어볼뭐시기',
-    href: '/',
+    href: 'https://www.naver.com/',
   }));
 
   return (
