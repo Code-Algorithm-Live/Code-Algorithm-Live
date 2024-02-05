@@ -1,3 +1,4 @@
+import Form from '@/components/Help/UserList';
 import UserListItem from '@/components/Help/UserList/UserListItem';
 import { loginUserB } from '@/mock';
 import { generateUUID } from '@/utils/uuid';
@@ -21,6 +22,7 @@ export default function UserList() {
           <UserListItem key={user.email} roomUuid={roomUuid} {...user} />
         ))}
       </div>
+      <Form />
     </>
   );
 }

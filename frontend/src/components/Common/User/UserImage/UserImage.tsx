@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import UserModal from '@/components/Common/User/UserModal/UserModal';
 import styles from '@/components/Common/User/UserImage/UserImage.module.scss';
 
+// TODO: response는 서버와 연결해서 데이터 받아오기
 const response = {
   data: {
     isFriend: true,
@@ -12,17 +13,15 @@ const response = {
   },
 };
 
-// TODO: 서버와 연결해서 데이터 받아오기
-const userData = {
-  nickname: '알라코',
-  등급: 1,
-  레벨: 3,
-  도움_준_횟수: 11700,
-  도움_받은_횟수: 54,
-  url: '/images/coala/smile.png',
-};
+// // TODO: props로 데이터 받아오기
 
-const UserImage = () => {
+interface IUser {
+  memberExp: number;
+  nickname: string;
+  url: string;
+}
+
+const UserImage = ({ userData }: { userData: IUser }) => {
   const [isActive, setIsActive] = useState(false); // 접속중, 비접속중 isActive
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [position, setPosition] = useState<'right' | 'left'>('left');
