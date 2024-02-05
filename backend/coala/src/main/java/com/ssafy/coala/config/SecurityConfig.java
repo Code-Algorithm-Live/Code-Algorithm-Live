@@ -35,12 +35,14 @@ public class SecurityConfig {
         this.redisStringTemplate = redisStringTemplate;
     }
 
+    //password 암호화 해주는 메소드
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
         return new BCryptPasswordEncoder();
     }
 
+    //security 내부에서 인가 작업 알아서 수행해줌
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
@@ -85,7 +87,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/ws/**","/login", "/chat/**","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/member/auth/**","/ws/**","/login","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
 

@@ -23,4 +23,6 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
     boolean existsByEmail(String email);
 
     MemberProfile findById(UUID uuid);
+
+    MemberProfile findByKakaoname(String username);
 }

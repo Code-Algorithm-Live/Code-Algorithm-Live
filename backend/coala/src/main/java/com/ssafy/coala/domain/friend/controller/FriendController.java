@@ -24,6 +24,7 @@ public class FriendController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
+
     // 친구 목록 가져오기
     @GetMapping(value = "/list")
     ResponseEntity<String> getListFriend(@Parameter(description = "내id", required = true, example = "내 아이디로 친구목록 가져오기")
@@ -81,14 +82,14 @@ public class FriendController {
     }
 
     @PostMapping(value = "/send")
-    ResponseEntity<String> send(@Parameter(description = "친구 요청 보내기", required = true, example = "친구 요청 보내기")
+    ResponseEntity<String> send(@Parameter(description = "친구 요청 보내기 - sender : 필수, receivernickname : 필수, success : 안보내도됨", required = true, example = "친구 요청 보내기")
                                       @RequestBody FriendDto friendDto){
         friendService.send(friendDto);
         return ResponseEntity.ok("friendDto");
     }
 
     @PostMapping(value = "/accept")
-    ResponseEntity<String> accept(@Parameter(description = "친구 요청 수락", required = true, example = "친구 요청 수락")
+    ResponseEntity<String> accept(@Parameter(description = "친구 요청 보내기 - sender : 필수, receivernickname : 필수, success : 안보내도됨", required = true, example = "친구 요청 수락")
                                 @RequestBody FriendDto friendDto){
         friendService.accept(friendDto);
         return ResponseEntity.ok("friendDto");

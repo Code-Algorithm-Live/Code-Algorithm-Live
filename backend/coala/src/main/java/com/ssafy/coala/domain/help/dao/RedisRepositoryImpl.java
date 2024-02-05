@@ -1,12 +1,11 @@
-package com.ssafy.coala.domain.help.repository;
+package com.ssafy.coala.domain.help.dao;
 
 import com.ssafy.coala.domain.member.domain.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
+// Redis 기본 CRUD 예제 코드, 프로젝트에서 사용되고 있지 않음
 @Repository
 @RequiredArgsConstructor
 public class RedisRepositoryImpl implements RedisRepository {

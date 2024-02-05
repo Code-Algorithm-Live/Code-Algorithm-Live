@@ -59,7 +59,7 @@ public class JWTFilter extends OncePerRequestFilter {
             String refreshToken =  redisStringTemplate.opsForValue().get(jwtUtil.getEmail(token));
             //리프레쉬 토큰 유무, 소멸시간 검증
             if(refreshToken!=null&&jwtUtil.isExpired(refreshToken)){
-                redisStringTemplate.delete(token);
+                redisStringTemplate.delete(jwtUtil.getEmail(token));
                 String username = jwtUtil.getNickname(token);
                 String email = jwtUtil.getEmail(token);
                 String newtoken = jwtUtil.createJwt(username, email, 24L * 60L * 60L * 1000L); //24시간
@@ -92,7 +92,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
-        //스프링 시큐리티 인증 토큰 생성
+        //스프링 시큐리티 인증 토큰 생성 (principal, credentials, authorities)
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);

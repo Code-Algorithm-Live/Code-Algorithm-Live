@@ -2,6 +2,7 @@ package com.ssafy.coala.domain.chat.controller;
 
 import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
+import com.ssafy.coala.domain.chat.domain.CodeHistory;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,9 +36,9 @@ public class ChatRoomController {
         ChatRoom chatRoom = chatService.createRoom(makeRoomDto);
         return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
-
-         
-    @Operation(summary = "채팅방 입장~", description = "사용자 2명이 채팅방에 입장한다.")
+    
+    
+    @Operation(summary = "특정 채팅 방 조회", description = "방 번호로 채팅 방 조회 ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
@@ -44,15 +46,9 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     // 특정 채팅방 조회
-    @GetMapping("/room/{roomId}")
-    public ResponseEntity<?> findRoom(@PathVariable("roomId") UUID roomId){
-        return chatService.findRoom(roomId);
-    }
-
-    // 방에 있는 채팅리스트 가져오기
-    @PostMapping("/messages")
-    public ResponseEntity<?> getMessages(@RequestBody Map<String, UUID> roomIdMap){
-        return chatService.getMessage(roomIdMap.get("roomId"));
+    @GetMapping("/room/{roomUuid}")
+    public ResponseEntity<?> findRoom(@PathVariable("roomUuid") UUID roomUuid){
+        return chatService.findRoom(roomUuid);
     }
 
 }

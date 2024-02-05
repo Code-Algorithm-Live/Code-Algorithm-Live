@@ -20,11 +20,6 @@ spring:
         ddl-auto: update
 
 
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: tutorial
 
   mvc:
     pathmatch:
@@ -36,6 +31,6 @@ spring:
 #      org.hibernate.type: trace
   profiles:
     active: local
-    include: oauth, jwt
+    include: jwt
 
 

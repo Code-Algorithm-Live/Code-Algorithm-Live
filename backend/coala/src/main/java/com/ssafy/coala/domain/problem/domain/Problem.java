@@ -32,7 +32,7 @@ public class Problem {
     @Fetch(value = FetchMode.JOIN)
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Fetch(value = FetchMode.JOIN)
     private List<ProblemLanguage> languages = new ArrayList<>();
     public Problem(Integer id, String title, int accepted_user_count,

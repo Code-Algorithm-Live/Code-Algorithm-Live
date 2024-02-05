@@ -7,6 +7,7 @@ import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import com.ssafy.coala.domain.problem.dao.ProblemRepository;
 import com.ssafy.coala.domain.problem.domain.*;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,10 +54,33 @@ public class ProblemServiceImpl implements ProblemService {
         problemRepository.updateProblemDescription(id, description);
     }
 
+//    @PostConstruct
+    public void problemCaching(){
+        List<Problem> problems = problemRepository.findAll();
+        Map<Integer, LevelProblem> levelProblemMap = new LinkedHashMap<>();
+
+        for (Problem p:problems){
+            if (p.getLevel()==0) continue;
+            if (!levelProblemMap.containsKey(p.getLevel())){
+                LevelProblem levelProblem = new LevelProblem(p.getLevel(),new HashMap<>());
+                levelProblem.putProblem(p);
+                levelProblemMap.put(p.getLevel(),levelProblem);
+            } else {
+                LevelProblem levelProblem = levelProblemMap.get(p.getLevel());
+                levelProblem.putProblem(p);
+            }
+        }
+
+        for (int i=1; i<30; i++){
+            if (levelProblemMap.containsKey(i)){
+                //save
+            }
+        }
+
+    }
 
     public List<Integer> getProblem(String solvedId){
         List<Integer> result = new ArrayList<>();
-//        String solvedId = "col016";
         String URL = "https://www.acmicpc.net/user/"+solvedId;
         try {
             Document doc = Jsoup.connect(URL).get();
@@ -75,7 +99,6 @@ public class ProblemServiceImpl implements ProblemService {
     }
     public List<String[]> getRecentProblem(String solvedId) {
         List<String[]> result = new ArrayList<>();
-//        String solvedId = "col016";
         try {
             String URL = "https://www.acmicpc.net/status?problem_id=&user_id="
                     + solvedId + "&language_id=-1&result_id=4";
@@ -107,6 +130,12 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     @Transactional
     public CurateInfo getCurateProblem(String solvedId) {
+        //check updateTime
+        CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);
+        if (curateInfo != null){
+//            System.out.println("not null");
+            return curateInfo;
+        }
 
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
@@ -116,11 +145,6 @@ public class ProblemServiceImpl implements ProblemService {
                 .id(memberProblemRepository.findUUIDBySolveId(solvedId))
                 .build();
 
-        //check updateTime
-        CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);
-        if (curateInfo != null){
-            return curateInfo;
-        }
         //update MemberProblem data
         if (member.getId()==null) return null;
         updateMemberProblem(problemIds, recentProblemStr, member);
@@ -130,19 +154,6 @@ public class ProblemServiceImpl implements ProblemService {
         for (int i=0; i<Math.min(5, recentProblemStr.size()); i++){
             recentId.add(Integer.parseInt(recentProblemStr.get(i)[0]));
         }
-
-//
-//        //recentId prepare
-//        if (curateInfo!=null && curateInfo.getRecentId().size() == recentId.size()){
-//            boolean flag = true;
-//            for (int i=0; i<recentId.size(); i++){
-//                if (!curateInfo.getRecentId().contains(recentId.get(i))){
-//                    flag = false;
-//                    break;
-//                }
-//            }
-//            if (flag) return null;//return old curatedata
-//        }
 
 
         List<Problem> recentProblem = problemRepository.findAllById(recentId);

@@ -1,7 +1,9 @@
 package com.ssafy.coala.domain.member.application;
 
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.dao.MemberRepository;
 import com.ssafy.coala.domain.member.domain.Member;
+import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dto.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,15 +15,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    public CustomUserDetailsService(MemberRepository memberRepository) {
+    private final MemberProfileRepository memberProfileRepository;
+
+    public CustomUserDetailsService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository) {
         this.memberRepository = memberRepository;
+        this.memberProfileRepository = memberProfileRepository;
     }
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Member userData = memberRepository.findByNickname(username);
+        MemberProfile memberProfile = memberProfileRepository.findByKakaoname(username);
+        Member userData = memberRepository.findByNickname(memberProfile.getNickname());
         System.out.println("Member Check : " + userData);
         if (userData != null) {
 

@@ -1,9 +1,6 @@
 package com.ssafy.coala.domain.problem.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(ProblemLanguageId.class)
+@Table(indexes = {
+        @Index(columnList = "problem_id")})
 public class ProblemLanguage {
 
     @Id

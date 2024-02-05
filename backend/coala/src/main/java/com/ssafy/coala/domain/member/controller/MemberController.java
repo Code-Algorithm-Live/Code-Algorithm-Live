@@ -42,7 +42,7 @@ public class MemberController {
     })
 
     @PostMapping("/login")
-    public ResponseEntity<?> logincheck(@RequestBody MemberDto memberDto){
+    public ResponseEntity<?> logincheck(@Parameter(description = "기존 회원인지 확인 - email만 보내도 됨 ", required = true, example = "member객체")@RequestBody MemberDto memberDto){
         System.out.println(memberDto);
         boolean isMember = memberService.check(memberDto);
         System.out.println(isMember);
@@ -59,19 +59,19 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto){
+    public ResponseEntity<?> signUp(@Parameter(description = "회원가입 필수 정보 - kakao정보 3개 + nickname + solvedid ", required = true, example = "member객체")@RequestBody MemberDto memberDto){
         memberService.signUp(memberDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profile/{uuid}")
-    public ResponseEntity<?> getMemberProfile(@PathVariable UUID uuid){
+    public ResponseEntity<?> getMemberProfile(@Parameter(description = "멤버 UUID", required = true, example = "xxxx-xxxx-xxxx-xxxx")@PathVariable UUID uuid){
         MemberProfile memberProfile = memberService.getMemberProfile(uuid);
         return new ResponseEntity<MemberProfile>(memberProfile,HttpStatus.OK);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<?> getMember(@PathVariable UUID uuid){
+    public ResponseEntity<?> getMember(@Parameter(description = "멤버 UUID", required = true, example = "xxxx-xxxx-xxxx-xxxx")@PathVariable UUID uuid){
         Member member = memberService.getMember(uuid);
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
@@ -79,19 +79,22 @@ public class MemberController {
     @GetMapping("/info")
     public ResponseEntity<?> info(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
+//        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+
         Member member = memberService.getMemberByNickname(name);
         return new ResponseEntity<Member>(member,HttpStatus.OK);
     }
 
     @GetMapping("/dupcheck/{nickname}")
-    public ResponseEntity<?> dupcheck(@PathVariable String nickname){
+    public ResponseEntity<?> dupcheck(@Parameter(description = "유저가 입력한 nickname", required = true, example = "차승윤")@PathVariable String nickname){
         boolean isDup = memberService.dupCheck(nickname);
         return new ResponseEntity<Boolean>(isDup,HttpStatus.OK);
     }
 
     @Operation(summary = "유저 정보 조회", description = "유저의 자기소개 데이터를 보여준다.")
     @GetMapping("auth/{solvedId}")
-    private static ResponseEntity<String> generateAuthStr(@PathVariable String solvedId){
+    private static ResponseEntity<String> generateAuthStr(@Parameter(description = "solvedac 아이디", required = true, example = "algoking")@PathVariable String solvedId){
         // 응답 데이터 읽기
         try {
             String apiUrl = "https://solved.ac/api/v3/user/show?handle="+solvedId;
@@ -104,66 +107,11 @@ public class MemberController {
 
             ObjectMapper mapper = new ObjectMapper();
             Map map = mapper.readValue(response.body(), Map.class);//json 파싱
-            System.out.println("map.get(\"bio\")");
+//            System.out.println("map.get(\"bio\")");
             return ResponseEntity.ok((String) map.get("bio"));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-//    @Operation(summary = "백준 연동 시도", description = "해당 id에 대한 solved 자기소개 프로필 확인후 문자연 일치하면 id반환")
-//    @GetMapping("/solved/{bojId}")
-//    public ResponseEntity<String> solved(@Parameter(description = "solved연동", required = true, example = "col016") @PathVariable String bojId){
-//        String apiUrl = "https://solved.ac/api/v3/user/show?handle="+bojId;
-//        // HttpClient 객체 생성
-//        HttpClient client = HttpClient.newHttpClient();
-//
-//        // HttpRequest 객체 생성
-//        HttpRequest request = HttpRequest.newBuilder()
-//                .uri(URI.create(apiUrl))
-//                .build();
-//        String result = "";
-//        // 응답 데이터 읽기
-//        try {
-//            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//            // 응답 코드 확인
-//            int statusCode = response.statusCode();
-////            System.out.println("Status Code: " + statusCode);
-//            List<Problem> input = new ArrayList<>();
-//
-//            if (statusCode == 200) {//solved.ac에서 계정정보 가져옴
-//                ObjectMapper mapper = new ObjectMapper();
-//                Map map = mapper.readValue(response.body(), Map.class);
-//
-//                if (((String)map.get("bio")).equals("")){
-//                    result = (String) map.get("handle");
-//                    System.out.println(getProblemList(bojId));
-//                }
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//
-//        return ResponseEntity.ok(result);
-//    }
-
-//    private List<Integer> getProblemList(String bojId) throws IOException {
-//        String URL = "https://www.acmicpc.net/user/"+bojId;
-//        Document doc = Jsoup.connect(URL).get();
-////        System.out.println(doc);
-//
-////        Element element = doc.select(".list_problem_id").get(0);
-//        String[] problems = doc.select(".problem-list").text().split(" ");
-//        List<Integer> result = new ArrayList<>();
-//
-//        for (String p : problems){
-//            if (p.length()>0){
-//                result.add(Integer.parseInt(p));
-//            }
-//        }
-//        return result;
-//    }
 }
