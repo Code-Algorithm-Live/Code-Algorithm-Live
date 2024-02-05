@@ -7,7 +7,6 @@ interface Problem {
   summary: string;
   number: number;
   title: string;
-  href: string;
 }
 
 interface ProblemsProps {
@@ -16,7 +15,7 @@ interface ProblemsProps {
 
 const StyledSlide = styled(Slider)<Settings>`
   .slick-list {
-    width: 1150px;
+    width: 1190px;
     padding: 10px 0px 10px 5px;
   }
 
@@ -30,7 +29,7 @@ const StyledSlide = styled(Slider)<Settings>`
 
 const ProblemBox = styled.div`
   width: 220px;
-  height: 200px;
+  height: 180px;
   border-radius: 10px;
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
   padding: 20px;
@@ -61,11 +60,11 @@ const TextContainer = styled.div`
 
 const SubText = styled.p`
   font-family: Pretendard;
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 16px;
+  font-weight: 400;
   line-height: normal;
   color: var(--main-font-color);
-
+  width: 180px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -73,23 +72,26 @@ const SubText = styled.p`
 
 const ProblemList: React.FC<ProblemsProps> = ({ problems }) => {
   const settings = {
-    dots: true,
     infinite: true,
     slidesToShow: 5,
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     draggable: false,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 5000,
   };
 
   return (
     <StyledSlide {...settings}>
       {problems.map((problem, index) => (
-        <a key={index} href={problem.href}>
+        <a
+          key={index}
+          href={`https://www.acmicpc.net/problem/${problem.number}`}
+          target="_blank"
+        >
           <ProblemBox>
             <MainText>{problem.summary}</MainText>
             <TextContainer>
-              <SubText>{problem.number}</SubText>
+              <SubText>{problem.number}번</SubText>
               <SubText>{problem.title}</SubText>
             </TextContainer>
           </ProblemBox>
