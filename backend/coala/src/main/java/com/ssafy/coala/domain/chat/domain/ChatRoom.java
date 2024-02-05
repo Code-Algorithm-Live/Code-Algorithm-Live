@@ -17,13 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ChatRoom {
     @Id
-    @GeneratedValue
     @Column(name = "room_id")
     private UUID roomId;
 
     private String sender;
     private String receiver;
-
+//isclose, title, content, problemId
     @JsonIgnore
     @OneToMany(mappedBy = "")
     @Builder.Default

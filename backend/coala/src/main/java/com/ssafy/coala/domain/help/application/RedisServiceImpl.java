@@ -1,6 +1,7 @@
 package com.ssafy.coala.domain.help.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.coala.domain.chat.dao.ChatRoomRepository;
 import com.ssafy.coala.domain.help.dto.HelpDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.dao.RedisRepository;
@@ -108,6 +109,7 @@ public class RedisServiceImpl implements RedisService {
         //대기열 만료 시간 설정
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
         redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
+
     }
 
     //현재 매칭 대기열에 존재하는지 검사
