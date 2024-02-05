@@ -7,12 +7,12 @@ import {
   convertMinutesToMilliseconds,
 } from '@/utils/timer';
 import Image from 'next/image';
-import styles from '@/components/Help/User-list/Refresh.module.scss';
+import styles from '@/components/Help/UserList/Refresh.module.scss';
 
 const END_TIME = 0;
 const REMAIN_TIME = convertMinutesToMilliseconds(0);
 
-const Refresh = ({ helpNumber }: number) => {
+const Refresh = ({ helpNumber }: { helpNumber: number }) => {
   const { time, increaseTime, clearTimer } = useTimer({ initMinutes: 0 });
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -29,7 +29,7 @@ const Refresh = ({ helpNumber }: number) => {
       clearTimer();
       setIsDisabled(true);
     }
-  }, [clearTimer, time]);
+  }, [helpNumber, clearTimer, time]);
 
   const { minutes, seconds } = convertMillisecondsToTime(time);
   const timer = `${minutes}분${seconds}초`;
@@ -67,4 +67,5 @@ const Refresh = ({ helpNumber }: number) => {
     </div>
   );
 };
+// })
 export default Refresh;

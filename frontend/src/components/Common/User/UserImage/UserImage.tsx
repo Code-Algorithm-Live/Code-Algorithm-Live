@@ -14,25 +14,14 @@ const response = {
 };
 
 // // TODO: props로 데이터 받아오기
-// const userData = {
-//   nickname: '알라코',
-//   등급: 1,
-//   레벨: 3,
-//   도움_준_횟수: 11700,
-//   도움_받은_횟수: 54,
-//   url: '/images/coala/smile.png',
-// };
 
-interface Iuser {
+interface IUser {
+  memberExp: number;
   nickname: string;
-  등급: number;
-  레벨: number;
-  도움_준_횟수: number;
-  도움_받은_횟수: number;
   url: string;
 }
 
-const UserImage = ({ userData }: Iuser) => {
+const UserImage = ({ userData }: { userData: IUser }) => {
   const [isActive, setIsActive] = useState(false); // 접속중, 비접속중 isActive
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [position, setPosition] = useState<'right' | 'left'>('left');

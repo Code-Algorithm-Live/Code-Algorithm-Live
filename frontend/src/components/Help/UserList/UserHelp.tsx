@@ -1,14 +1,11 @@
 'use client';
 
-import UserInfo from '@/components/Help/User-list/UserInfo';
-import styles from '@/components/Help/User-list/UserHelp.module.scss';
+import UserInfo from '@/components/Help/UserList/UserInfo';
+import styles from '@/components/Help/UserList/UserHelp.module.scss';
 
 interface Iuser {
   nickname: string;
-  등급: number;
-  레벨: number;
-  도움_준_횟수: number;
-  도움_받은_횟수: number;
+  memberExp: number;
   url: string;
 }
 

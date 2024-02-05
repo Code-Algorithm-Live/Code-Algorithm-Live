@@ -3,10 +3,7 @@ import styles from '@/components/Common/User/UserModal/UserModal.module.scss';
 
 interface IUser {
   nickname: string;
-  등급: number;
-  레벨: number;
-  도움_준_횟수: number;
-  도움_받은_횟수: number;
+  memberExp: number;
   url: string;
 }
 
@@ -41,8 +38,20 @@ const userGrade = (grade: number) => {
 const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
   const bgColor = isActive ? 'connected' : 'unconnected';
 
-  const doHelpNum = userData.도움_준_횟수.toLocaleString('en-US');
-  const getHelpNum = userData.도움_받은_횟수.toLocaleString('en-US');
+  function expToLevel(memberExp: number) {
+    const 등급 = Math.floor(memberExp / 15);
+    const 레벨 = memberExp % 15;
+    return { 등급, 레벨 };
+  }
+
+  // FIXME: 빨간 줄 발생(현재 없던 속성 추가> type 달라짐) but Quick Fix 가능
+  const updatedUserData = {
+    ...userData,
+    ...expToLevel(userData.memberExp),
+  };
+
+  // const doHelpNum = userData.도움_준_횟수.toLocaleString('en-US');
+  // const getHelpNum = userData.도움_받은_횟수.toLocaleString('en-US');
 
   const handleClickAdd = () => {
     // TODO: 친구추가 요청 보내기
@@ -89,17 +98,17 @@ const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
       <p className={styles.nickname}>{userData.nickname}</p>
       <div className={styles.levelContainer}>
         <Image
-          src={`/images/userLevel/${userData.등급}.png`}
+          src={`/images/userLevel/${updatedUserData.등급}.png`}
           alt="등급"
           width={39}
           height={37}
         ></Image>
-        <p className={styles[userGrade(userData.등급)]}>
-          {userGrade(userData.등급)}마법사 LV.{userData.레벨}
+        <p className={styles[userGrade(updatedUserData.등급)]}>
+          {userGrade(updatedUserData.등급)}마법사 LV.{updatedUserData.레벨}
         </p>
       </div>
       <div className={styles.help}>
-        <div className={styles.aboutHelp}>
+        {/* <div className={styles.aboutHelp}>
           <Image
             src="/images/userModal/doHelp.png"
             alt="도움을 준 횟수"
@@ -112,8 +121,8 @@ const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
             </p>
             <p className={styles.sortHelpNum}>{doHelpNum}회</p>
           </div>
-        </div>
-        <div className={styles.aboutHelp}>
+        </div> */}
+        {/* <div className={styles.aboutHelp}>
           <Image
             src="/images/userModal/getHelp.png"
             alt="도움을 받은 횟수"
@@ -126,7 +135,7 @@ const UserModal = ({ userData, isActive, isFriend, onModal }: UserProps) => {
             </p>
             <p className={styles.sortHelpNum}>{getHelpNum}회</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className={styles.Buttons}>
         {!isFriend && (

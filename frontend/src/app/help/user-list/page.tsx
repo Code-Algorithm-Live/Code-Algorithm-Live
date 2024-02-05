@@ -1,4 +1,4 @@
-import Form from '@/components/Help/User-list';
+import Form from '@/components/Help/UserList';
 
 export default function UserList() {
   return <Form />;
