@@ -27,7 +27,7 @@ public class MatchingServiceImpl implements MatchingService{
     private HelpAlarmRepository helpAlarmRepository;
 
 
-    //
+    //매칭 완료
     @Override
     public void notifyMatching(WaitDto waitDto) {
         if(redisService.isExist(waitDto)){
@@ -37,6 +37,7 @@ public class MatchingServiceImpl implements MatchingService{
             redisService.removeUser(waitDto);
 
             UUID roomUuid = waitDto.getRoomUuid();
+            //룸 생성 helpDto 정보
         }else{
             System.out.println("만료된 요청입니다.");
         }
