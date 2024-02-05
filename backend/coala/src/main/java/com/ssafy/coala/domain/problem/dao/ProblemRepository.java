@@ -16,11 +16,11 @@ public interface ProblemRepository extends JpaRepository<Problem, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update Problem set description = :desc where id = :i    d")
+    @Query("update Problem set description = :desc where id = :id")
     void updateProblemDescription(@Param("id") int id,@Param("desc") String description);
 
     @Query("SELECT p FROM Problem p " +
-            "JOIN p.tags t JOIN p.languages l " +
-            "WHERE p.level BETWEEN :low AND :high AND l.language = 'ko' AND p.give_no_rating = 0")
+            "JOIN p.languages l " +
+            "WHERE p.level BETWEEN :low AND :high AND l.language = 'ko' AND p.give_no_rating = false")
     List<Problem> findProblemsByLevelRange(@Param("low") int low, @Param("high") int high);
 }

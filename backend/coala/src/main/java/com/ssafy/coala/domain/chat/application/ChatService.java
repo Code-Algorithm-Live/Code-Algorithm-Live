@@ -3,9 +3,11 @@ package com.ssafy.coala.domain.chat.application;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.coala.domain.chat.dao.ChatMessageRepository;
 import com.ssafy.coala.domain.chat.dao.ChatRoomRepository;
+import com.ssafy.coala.domain.chat.dao.CodeHistoryRepository;
 import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
 //import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
+import com.ssafy.coala.domain.chat.domain.CodeHistory;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +30,7 @@ public class ChatService {
     private final ObjectMapper objectMapper;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final CodeHistoryRepository codeHistoryRepository;
 
 //    private Map<String, ChatRoomDto> chatRooms;
 
@@ -92,4 +96,12 @@ public class ChatService {
             log.error(e.getMessage(), e);
         }
     }
+
+    public List<CodeHistory> findHistory(UUID roomId){
+        return codeHistoryRepository.findByRoomId(roomId);
+    }
+    public void saveHistory(List<CodeHistory> list){
+        codeHistoryRepository.saveAll(list);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.ssafy.coala.domain.chat.controller;
 
 import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
+import com.ssafy.coala.domain.chat.domain.CodeHistory;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,4 +50,18 @@ public class ChatRoomController {
         return chatService.findRoom(roomUuid);
     }
 
+    @PutMapping("/history/{roomUuid}")
+    private ResponseEntity<?> saveHistory(List<CodeHistory> list){
+        try {
+            chatService.saveHistory(list);
+            return ResponseEntity.ok("save success");
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body("history save failed");
+        }
+    }
+
+    @GetMapping("/history/{roomUuid}")
+    private ResponseEntity<List<CodeHistory>> getHistory(@PathVariable("roomUuid") UUID roomUuid){
+        return ResponseEntity.ok(chatService.findHistory(roomUuid));
+    }
 }

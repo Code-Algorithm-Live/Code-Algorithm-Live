@@ -22,7 +22,7 @@ public class ChatRoom {
 
     private String sender;
     private String receiver;
-
+//isclose, title, content, problemId
     @JsonIgnore
     @OneToMany(mappedBy = "")
     @Builder.Default
