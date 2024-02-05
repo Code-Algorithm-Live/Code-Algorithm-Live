@@ -30,7 +30,6 @@ public class ChatService {
     private final ObjectMapper objectMapper;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final CodeHistoryRepository codeHistoryRepository;
 
 //    private Map<String, ChatRoomDto> chatRooms;
 
@@ -96,12 +95,4 @@ public class ChatService {
             log.error(e.getMessage(), e);
         }
     }
-
-    public List<CodeHistory> findHistory(UUID roomId){
-        return codeHistoryRepository.findByRoomId(roomId);
-    }
-    public void saveHistory(List<CodeHistory> list){
-        codeHistoryRepository.saveAll(list);
-    }
-
 }

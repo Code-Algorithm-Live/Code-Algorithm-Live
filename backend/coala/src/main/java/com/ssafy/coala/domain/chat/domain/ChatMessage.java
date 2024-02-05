@@ -3,16 +3,19 @@ package com.ssafy.coala.domain.chat.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
 @Entity
 @Builder
 @Getter
-@Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class ChatMessage {
     @Id
     @GeneratedValue
@@ -33,6 +36,7 @@ public class ChatMessage {
     //내용
     private String message;
 
+    @CreatedDate
     private LocalDateTime date;
 
     // 채팅생성

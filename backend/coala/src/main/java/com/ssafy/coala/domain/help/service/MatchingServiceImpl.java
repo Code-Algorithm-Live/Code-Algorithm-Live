@@ -1,9 +1,12 @@
 package com.ssafy.coala.domain.help.service;
 
+import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @Service
@@ -15,6 +18,8 @@ public class MatchingServiceImpl implements MatchingService{
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private ChatService chatService;
 
     @Override
     public void notifyMatching(WaitDto waitDto) {
@@ -23,6 +28,8 @@ public class MatchingServiceImpl implements MatchingService{
             messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getSender().getEmail(), waitDto);
             messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto);
             redisService.removeUser(waitDto);
+
+            UUID roomUuid = waitDto.getRoomUuid();
         }else{
             System.out.println("만료된 요청입니다.");
         }

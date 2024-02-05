@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -50,18 +51,4 @@ public class ChatRoomController {
         return chatService.findRoom(roomUuid);
     }
 
-    @PutMapping("/history/{roomUuid}")
-    private ResponseEntity<?> saveHistory(List<CodeHistory> list){
-        try {
-            chatService.saveHistory(list);
-            return ResponseEntity.ok("save success");
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body("history save failed");
-        }
-    }
-
-    @GetMapping("/history/{roomUuid}")
-    private ResponseEntity<List<CodeHistory>> getHistory(@PathVariable("roomUuid") UUID roomUuid){
-        return ResponseEntity.ok(chatService.findHistory(roomUuid));
-    }
 }

@@ -1,6 +1,7 @@
 package com.ssafy.coala.domain.help.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.coala.domain.chat.dao.ChatRoomRepository;
 import com.ssafy.coala.domain.help.dto.HelpDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.repository.RedisRepository;
@@ -119,6 +120,7 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
         redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
+
     }
     @Override
     public boolean isExist(WaitDto waitDto){

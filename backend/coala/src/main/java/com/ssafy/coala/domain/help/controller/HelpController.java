@@ -1,6 +1,9 @@
 package com.ssafy.coala.domain.help.controller;
 
 
+import com.ssafy.coala.domain.chat.application.ChatService;
+import com.ssafy.coala.domain.chat.controller.ChatRoomController;
+import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.service.MatchingService;
 import com.ssafy.coala.domain.help.service.RedisService;
@@ -25,6 +28,7 @@ public class HelpController {
 
     private final RedisService redisService;
     private final MatchingService matchingService;
+    private final ChatService chatService;
 
 
 //    @Operation(summary = "도움 요청 폼 작성", description = "문제 번호, 도움 제목, 도움 요청 내용 작성해서 캐시에 등록")
@@ -114,6 +118,13 @@ public class HelpController {
     @PostMapping("/waitqueue")
     public ResponseEntity<String> waitqueue(@Parameter(description = "멤버", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.addUser(waitDto);
+
+        MakeRoomDto makeRoomDto = new MakeRoomDto();
+        makeRoomDto.setRoomUuid(waitDto.getRoomUuid());
+        makeRoomDto.setSender(waitDto.getSender().getEmail());
+        makeRoomDto.setReceiver(null);
+
+        chatService.createRoom(makeRoomDto);
         return ResponseEntity.ok("queue 푸쉬 완료");
     }
 
