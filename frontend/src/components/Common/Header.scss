@@ -1,0 +1,33 @@
+nav {
+  background-color: var(--main-color);
+  height: 48px;
+
+  ul {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: flex-end;
+
+    :hover {
+      background-color: var(--white-hover-color);
+    }
+  }
+
+  li {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 9px 5px;
+  }
+
+  .home {
+    width: 100px;
+    color: var(--white-color);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--pretendard);
+  }
+}
