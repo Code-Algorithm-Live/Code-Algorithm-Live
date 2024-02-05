@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CodeHistoryRepository extends JpaRepository <CodeHistory, Long> {
-
     List<CodeHistory> findByRoomId(UUID roomId);
 }

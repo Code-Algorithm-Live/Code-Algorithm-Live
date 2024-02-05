@@ -32,9 +32,9 @@ public class HelpController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping("/hint/{num}")
-    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        return ResponseEntity.ok("문제번호 " + num);
+    @GetMapping("/hint/{problemId}")
+    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int problemId) {
+        return ResponseEntity.ok("문제번호 " + problemId);
     }
 
     @Operation(summary = "최근 푼 사람의 리스트", description = "해당 문제를 최근 푼 사람의 리스트를 반환합니다")
@@ -44,9 +44,9 @@ public class HelpController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping("/solvedlist/{num}")
-    public ResponseEntity<String> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        return ResponseEntity.ok("문제번호 " + num);
+    @GetMapping("/solvedlist/{problemId}")
+    public ResponseEntity<String> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int problemId) {
+        return ResponseEntity.ok("문제번호 " + problemId);
     }
 
     @Operation(summary = "질문 히스토리 리스트", description = "최근 질문 히스토리 리스트를 반환합니다")
