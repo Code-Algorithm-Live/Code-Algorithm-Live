@@ -70,9 +70,12 @@ const SignUp = () => {
 
   const fetchProfile = async (id: string): Promise<string> => {
     try {
-      const response = await fetch(`http://localhost:8080/member/auth/${id}`, {
-        method: 'GET',
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/member/auth/${id}`,
+        {
+          method: 'GET',
+        },
+      );
       const returnData = await response.text();
       return returnData;
     } catch (error) {
@@ -87,35 +90,41 @@ const SignUp = () => {
     solvedId: string,
   ) => {
     try {
-      const response = await fetch('http://localhost:8080/member/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/member/signup`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            image,
+            kakaoname,
+            nickname,
+            solvedId,
+          }),
         },
-        body: JSON.stringify({
-          email,
-          image,
-          kakaoname,
-          nickname,
-          solvedId,
-        }),
-      });
+      );
 
       if (response.ok) {
         //  회원가입이 완료된 경우 로그인 요청
         const { name, email } = session.user;
-        const loginResponse = await fetch('http://localhost:8080/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+        const loginResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ username: name, password: email }),
           },
-          body: new URLSearchParams({ username: name, password: email }),
-        });
+        );
         if (loginResponse.ok) {
           const token = loginResponse.headers.get('Authorization');
           // 토큰 담아서 회원 정보 요청
           const userDataResponse = await fetch(
-            'http://localhost:8080/member/info',
+            `${process.env.NEXT_PUBLIC_BASE_URL}/member/info`,
             {
               method: 'GET',
               headers: {

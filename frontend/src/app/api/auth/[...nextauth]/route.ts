@@ -15,8 +15,6 @@ export const authOptions = {
   ],
   callbacks: {
     jwt({ token, trigger, session }: any) {
-      console.log('token, trigger, session', token, trigger, session);
-
       if (trigger === 'update' && session?.action === 'logIn') {
         token.name = session.name;
         token.jwtToken = session.jwtToken;
@@ -27,8 +25,6 @@ export const authOptions = {
       return token;
     },
     session({ session, token }: any) {
-      console.log('session, token', session, token);
-
       if (token?.name && token?.image && token?.jwtToken) {
         session.user.name = token.name;
         session.user.image = token.image;

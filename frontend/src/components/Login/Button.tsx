@@ -29,13 +29,16 @@ const Button = () => {
           }
           setIsFetching(true);
 
-          const response = await fetch('http://localhost:8080/member/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8',
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/member/login`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+              },
+              body: JSON.stringify(userData),
             },
-            body: JSON.stringify(userData),
-          });
+          );
 
           // 신규회원 회원가입 페이지로 이동
           if (response.ok) {
@@ -43,19 +46,22 @@ const Button = () => {
           } else {
             // 기존 회원은 로그인 요청 후 바로 라우팅
             const { name, email } = session.user;
-            const loginResponse = await fetch('http://localhost:8080/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+            const loginResponse = await fetch(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ username: name, password: email }),
               },
-              body: new URLSearchParams({ username: name, password: email }),
-            });
+            );
 
             if (loginResponse.ok) {
               const token = loginResponse.headers.get('Authorization');
               // 토큰 담아서 회원 정보 요청
               const userDataResponse = await fetch(
-                'http://localhost:8080/member/info',
+                `${process.env.NEXT_PUBLIC_BASE_URL}/member/info`,
                 {
                   method: 'GET',
                   headers: {
