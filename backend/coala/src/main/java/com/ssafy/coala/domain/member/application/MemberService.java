@@ -5,6 +5,7 @@ import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface MemberService {
@@ -22,4 +23,6 @@ public interface MemberService {
     void logout();
 
     Member getMemberByNickname(String name);
+
+    List<Member> getMemberAllList();
 }
