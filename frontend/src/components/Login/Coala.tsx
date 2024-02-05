@@ -8,6 +8,7 @@ export default function CoalaImg() {
       height={300}
       alt="coala smile image"
       priority
+      style={{ width: 'auto', height: '100%' }}
     />
   );
 }
