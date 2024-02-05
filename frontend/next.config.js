@@ -12,4 +12,12 @@ module.exports = {
   images: {
     domains: ['k.kakaocdn.net'],
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: 'https://solved.ac/:path*',
+  //     },
+  //   ];
+  // },
 };
