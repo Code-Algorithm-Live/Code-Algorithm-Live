@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 const secret = process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET;
@@ -17,5 +17,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/signup', '/'],
+  matcher: ['/login'],
 };

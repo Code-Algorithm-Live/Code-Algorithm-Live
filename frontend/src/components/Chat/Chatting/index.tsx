@@ -7,6 +7,7 @@ import { Client } from '@stomp/stompjs';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
 import Input from '@/components/Chat/Chatting/Input';
+import { generateUUID } from '@/utils/uuid';
 
 const Container = styled.div`
   position: relative;
@@ -55,8 +56,6 @@ const roomId = 2;
 const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
 const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
 const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
-
-const generateUUID = () => crypto.randomUUID();
 
 /**
  * {hour}:{minutes}로 포맷팅합니다.
