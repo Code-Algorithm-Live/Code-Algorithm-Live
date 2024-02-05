@@ -2,11 +2,11 @@
 
 import styled from 'styled-components';
 import { SetStateAction, useState } from 'react';
-import List from '@/components/Home/HistorySideBar/List';
-import Button from '@/components/Home/HistorySideBar/Button';
-import Select from '@/components/Home/HistorySideBar/Select';
+import List from '@/components/Common/HistorySideBar/List';
+import Button from '@/components/Common/HistorySideBar/Button';
+import Select from '@/components/Common/HistorySideBar/Select';
 
-const SidebarContainer = styled.nav`
+const SidebarContainer = styled.div`
   padding: 20px 20px 20px 10px;
   display: flex;
   flex-direction: column;
