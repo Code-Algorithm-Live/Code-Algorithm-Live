@@ -7,13 +7,13 @@ nav {
     align-items: center;
     position: relative;
     justify-content: flex-end;
-
-    :hover {
-      background-color: var(--white-hover-color);
-    }
   }
 
   li {
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: var(--main-hover-color);
+    }
     height: 30px;
     width: 30px;
     display: flex;
@@ -23,7 +23,7 @@ nav {
   }
 
   .home {
-    width: 100px;
+    width: 70px;
     color: var(--white-color);
     position: absolute;
     left: 50%;
