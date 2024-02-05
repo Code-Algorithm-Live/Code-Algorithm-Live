@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
-  height: calc(100vh - 448px);
+  height: calc(100vh - 368px);
   background-color: gray;
 `;
 
