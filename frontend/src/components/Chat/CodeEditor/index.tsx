@@ -40,6 +40,62 @@ const DOC_NAME = `hamster-${new Date()
   .substring(0, 10)
   .replace(/-/g, '')}`;
 
+interface History {
+  idx: number; // 변경이 일어날 인덱스위치
+  pre: string; // 변경 되기 이전 위치의 텍스트
+  next: string; // 변경된 이후 텍스트
+  duration: number; // 채팅방 생성 후 ~ 변경이 생겼을 때
+}
+
+/**
+ * history 적정량 쌓은 후 flush
+ */
+
+/**
+ * @param preStr 변경이 일어나기 전 값
+ * @param nextStr 변경이 일어난 후 값
+ * @param startTime 채팅방 개설 시간
+ * @returns
+ */
+function addHistory({
+  preStr,
+  nextStr,
+}: {
+  preStr: string;
+  nextStr: string;
+}): History {
+  let preIdx = 0;
+  let reverseIdx = 1;
+  const shortLen =
+    preStr.length < nextStr.length ? preStr.length : nextStr.length;
+
+  while (preIdx < shortLen && preStr[preIdx] === nextStr[preIdx]) {
+    preIdx += 1;
+  }
+  if (preIdx === preStr.length && preIdx === nextStr.length) return;
+  while (
+    preIdx <= shortLen - reverseIdx &&
+    preStr[preStr.length - reverseIdx] === nextStr[nextStr.length - reverseIdx]
+  ) {
+    reverseIdx += 1;
+  }
+
+  const data = {
+    idx: preIdx,
+    pre: preStr.substring(preIdx, preStr.length - reverseIdx + 1),
+    next: nextStr.substring(preIdx, nextStr.length - reverseIdx + 1),
+    duration: new Date().getTime(),
+  };
+
+  // eslint-disable-next-line consistent-return
+  return data;
+}
+
+/** TODO:
+ * sender 호출
+ * sender onChange || remote 변화가 일어날 때
+ */
+
 const CodeEditor = () => {
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
@@ -51,6 +107,26 @@ const CodeEditor = () => {
   const [doc] = useState(new yorkie.Document<YorkieDoc>(DOC_NAME)); // useRef(new yorkie.Document<YorkieDoc>(DOC_NAME));
   const [content, setContent] = useState('');
   const [maxHeight, setMaxHeight] = useState('');
+  const [history, setHistory] = useState<History[]>([]);
+
+  useEffect(() => {
+    console.log(history);
+  }, [history]);
+
+  const handleAddHistory = ({
+    preStr,
+    nextStr,
+  }: {
+    preStr: string;
+    nextStr: string;
+  }) => {
+    console.log('preStr', preStr, '/// nextStr', nextStr);
+
+    const newHistory = addHistory({ preStr, nextStr });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    setHistory(pre => [...pre, newHistory]);
+  };
 
   const handleEditOp = (op: EditOpInfo) => {
     const changes = [
@@ -65,6 +141,8 @@ const CodeEditor = () => {
       changes,
       annotations: [Transaction.remote.of(true)],
     });
+
+    setContent(doc.getRoot().content.toString());
   };
 
   const handleOperations = (operations: OperationInfo[]) => {
@@ -88,13 +166,25 @@ const CodeEditor = () => {
           if (tr.annotation(Transaction.remote)) {
             continue;
           }
+
+          let preStr = '';
+          let nextStr = '';
+
+          preStr = doc.getRoot().content.toString();
+
           let adj = 0;
+          // eslint-disable-next-line @typescript-eslint/no-shadow,
           tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
             const insertText = inserted.toJSON().join('\n');
+
             doc.update(root => {
               root.content.edit(fromA + adj, toA + adj, insertText);
             }, `update content byA ${client.current.getID()}`);
+
             adj += insertText.length - (toA - fromA);
+
+            nextStr = doc.getRoot().content.toString();
+            handleAddHistory({ preStr, nextStr });
           });
         }
       }
@@ -114,8 +204,8 @@ const CodeEditor = () => {
     });
   };
 
+  // create a document then attach it into the client.
   useEffect(() => {
-    // 02-1. create a document then attach it into the client.
     const attachDoc = async () => {
       await client.current.activate();
 
@@ -132,15 +222,19 @@ const CodeEditor = () => {
         if (event.type === DocEventType.Snapshot) syncText();
 
         const text = doc.getRoot().content;
-        console.log('#####', event, doc.getRoot());
-        console.log('text', text.toString());
         setContent(text.toString());
       });
 
+      // remote change 이벤트 발생
       doc.subscribe('$.content', event => {
         if (event.type === DocEventType.RemoteChange) {
           const { operations } = event.value;
           handleOperations(operations);
+
+          // FIXME: remote change발생시 history 추가
+          const preStr = content;
+          const nextStr = doc.getRoot().content.toString();
+          handleAddHistory({ preStr, nextStr });
         }
       });
 
@@ -157,8 +251,6 @@ const CodeEditor = () => {
     if (!ref.current) return;
     setMaxHeight(`${ref.current.offsetHeight - 10}px`);
   }, []);
-
-  // syncText();
 
   return (
     <Container ref={ref}>
