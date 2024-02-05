@@ -79,7 +79,6 @@ public class ChatService {
                 .type(messageDto.getType())
                 .sender(messageDto.getSender())
                 .message(messageDto.getMessage())
-                .date(messageDto.getDate())
                 .chatRoom(chatRoomRepository.findById(roomUuId).orElseThrow())
                 .build();
 
