@@ -1,0 +1,35 @@
+.container {
+  width: 820px;
+  height: 49px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  border-bottom: ridge var(--editorTypo-color) 1px;
+  justify-content: space-between;
+}
+
+.content {
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 17px;
+  width: 364px;
+  display: flex;
+  justify-content: space-around;
+}
+.writer {
+  width: 60px;
+}
+.title {
+  width: 192px;
+}
+.recommend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+}
+.date {
+  width: 80px;
+  height: 17px;
+  margin-right: 16px;
+}

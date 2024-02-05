@@ -1,3 +1,5 @@
+'use client';
+
 import Form from '@/components/Help/UserList';
 import UserListItem from '@/components/Help/UserList/UserListItem';
 import { loginUserB } from '@/mock';
