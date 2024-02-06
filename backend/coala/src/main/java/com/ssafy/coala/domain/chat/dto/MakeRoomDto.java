@@ -11,4 +11,6 @@ public class MakeRoomDto {
     private UUID roomUuid;
     private String sender;
     private String receiver;
+
+    //isclose, title, content, problemId
 }
