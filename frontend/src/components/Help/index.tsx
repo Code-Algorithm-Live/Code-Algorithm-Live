@@ -7,13 +7,13 @@ import styles from '@/components/Help/index.module.scss';
 import axios from 'axios';
 import { generateUUID } from '@/utils/uuid';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -22,14 +22,23 @@ function Form() {
   };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
+  // const sender = {
+  //   email: session?.user?.email,
+  //   image: session?.user?.image,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // kakaoname: session?.user?.kakaoName,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   solvedId: session?.user?.SolvedId,
+  //   nickname: session?.user?.name,
+  // };
+
+  // 더미데이터
   const sender = {
-    email: session?.user?.email,
-    image: session?.user?.image,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // kakaoname: session?.user?.kakaoName,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    solvedId: session?.user?.SolvedId,
-    name: session?.user?.name,
+    email: 's98415@naver.com',
+    image: 's98415@naver.com',
+    kakaoname: 's98415@naver.com',
+    solvedId: 's98415@naver.com',
+    nickname: 's98415@naver.com',
   };
 
   const roomUuid = generateUUID();
@@ -102,7 +111,7 @@ function Form() {
           </div>
         </div>
         <div className={styles.linkForm}>
-          <LinkPreview />
+          <LinkPreview problemNumber={Number(problemNumber)} />
         </div>
       </div>
     </>
