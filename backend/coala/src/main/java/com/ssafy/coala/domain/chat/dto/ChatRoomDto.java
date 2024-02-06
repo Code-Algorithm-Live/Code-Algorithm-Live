@@ -14,4 +14,5 @@ public class ChatRoomDto {
     private Long userCount;
 
     private LocalDateTime registerdate;
+
 }

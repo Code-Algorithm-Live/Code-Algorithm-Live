@@ -46,8 +46,9 @@ public class ChatService {
 
     //채팅방 생성
     public ChatRoom createRoom(MakeRoomDto makeRoomDto) {
-        System.out.println("application");
+        System.out.println("매칭 수락시 방생성");
         ChatRoom chatRoom = ChatRoom.builder()
+                .roomId(makeRoomDto.getRoomUuid())
                 .sender(makeRoomDto.getSender())
                 .receiver(makeRoomDto.getReceiver())
                 .build();

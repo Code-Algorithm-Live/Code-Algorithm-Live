@@ -84,13 +84,7 @@ public class HelpController {
     @PostMapping("/waitqueue")
     public ResponseEntity<String> waitqueue(@Parameter(description = "도움 대기열 등록 - sender : 필수, receiver : 안보냄, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         redisService.addUser(waitDto);
-
-        MakeRoomDto makeRoomDto = new MakeRoomDto();
-        makeRoomDto.setRoomUuid(waitDto.getRoomUuid());
-        makeRoomDto.setSender(waitDto.getSender().getEmail());
-        makeRoomDto.setReceiver(null);
-
-        chatService.createRoom(makeRoomDto);
+        System.out.println("요청대기열: " + waitDto.getSender().getNickname());
         return ResponseEntity.ok("queue 푸쉬 완료");
     }
 

@@ -13,8 +13,10 @@ public class MemberDto {
     private String email;
     private String image;
     private String kakaoname;
+    private String nickname;
+
+    private int exp;
 
     //유저한테 직접 입력받는 부분
     private String solvedId;
-    private String nickname;
 }

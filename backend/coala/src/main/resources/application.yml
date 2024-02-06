@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 spring:
   redis:
     host: 127.0.0.1
@@ -15,7 +16,7 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
     open-in-view: false
     generate-ddl: true
-    show-sql: true
+#    show-sql: true
     hibernate:
         ddl-auto: update
 
@@ -32,5 +33,4 @@ spring:
   profiles:
     active: local
     include: jwt
-
 

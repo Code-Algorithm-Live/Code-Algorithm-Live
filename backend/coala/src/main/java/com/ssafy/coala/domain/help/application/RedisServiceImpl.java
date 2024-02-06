@@ -116,7 +116,6 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public boolean isExist(WaitDto waitDto){
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
-
         if (list != null) {
             ObjectMapper objectMapper = new ObjectMapper();
 
@@ -144,7 +143,6 @@ public class RedisServiceImpl implements RedisService {
     public List<Object> getAllUsers() {
         // range()의 end인자값을 바꿔서 원하는 만큼만 가져올 수 있음 -> pagenation 구현 할 때 생각해봐도 될듯
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
-
         return list;
     }
 
