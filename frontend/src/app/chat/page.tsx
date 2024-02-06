@@ -1,10 +1,14 @@
 'use client';
 
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import styled from 'styled-components';
 import Chatting from '@/components/Chat/Chatting';
 import Timer from '@/components/Chat/Timer';
 import InputOutput from '@/components/Chat/InputOutput';
 import CodeEditor from '@/components/Chat/CodeEditor';
+import { fetchPostCompiler } from '@/api/chat';
+import ProblemView from '@/components/Chat/ProblemView';
 
 const Container = styled.div`
   display: flex;
@@ -65,11 +69,6 @@ const LeftContainer = styled.div`
   flex-direction: column;
 
   width: 403px;
-
-  .problemContainer {
-    height: 100%;
-    background: var(--editorBlack, #282a36);
-  }
 
   .bottomMenuContainer {
     padding: 12px 14px 18px;
@@ -169,6 +168,20 @@ const RightContainer = styled.div`
 `;
 
 export default function Chat() {
+  const [code, setCode] = useState('heljaskldjlk');
+  const [output, setOutput] = useState('');
+  const compileMutation = useMutation({
+    mutationFn: fetchPostCompiler,
+    onSuccess: ({ data }) => setOutput(data),
+  });
+
+  const handleRun = (input: string) => {
+    if (!code) return;
+    if (compileMutation.isPending) return;
+
+    compileMutation.mutate({ code, input });
+  };
+
   return (
     <Container>
       <PairProgrammingContainer>
@@ -191,6 +204,7 @@ export default function Chat() {
         </HeaderContainer>
         <MainContainer>
           <LeftContainer>
+            <ProblemView />
             <div className="problemContainer"></div>
             <div className="bottomMenuContainer">
               <button>나가기</button>
@@ -198,7 +212,11 @@ export default function Chat() {
           </LeftContainer>
           <CodeEditorContainer>
             <CodeEditor />
-            <InputOutput />
+            <InputOutput
+              isRunning={compileMutation.isPending}
+              onRun={input => handleRun(input)}
+              output={output}
+            />
           </CodeEditorContainer>
         </MainContainer>
       </PairProgrammingContainer>
