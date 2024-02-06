@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import styles from './TextInput.module.css';
+import styles from '@/components/Common/TextInput.module.css';
 
 type TInputProps = {
   inputSort: string;

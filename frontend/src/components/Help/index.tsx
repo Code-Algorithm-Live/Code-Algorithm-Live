@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import TextInput from '@/components/Common/TextInput';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
@@ -7,13 +7,16 @@ import styles from '@/components/Help/index.module.scss';
 import axios from 'axios';
 import { generateUUID } from '@/utils/uuid';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { useSession } from 'next-auth/react';
+import useDebounce from '@/hooks/useDebounce';
+// import { useSession } from 'next-auth/react';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  const { data: session } = useSession();
+  const [middleNumber, setMiddleNumber] = useState<string>('');
+  const debouncedNumber = useDebounce(middleNumber, 5000);
+  // const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -22,27 +25,35 @@ function Form() {
   };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
+  // const sender = {
+  //   email: session?.user?.email,
+  //   image: session?.user?.image,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // kakaoname: session?.user?.kakaoName,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // solvedId: session?.user?.SolvedId,s
+  //   nickname: session?.user?.name,
+  // };
+
   const sender = {
-    email: session?.user?.email,
-    image: session?.user?.image,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // kakaoname: session?.user?.kakaoName,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    solvedId: session?.user?.SolvedId,
-    name: session?.user?.name,
+    email: 's98',
+    image: 's',
+    kakaoname: 's',
+    nickname: 's',
+    solvedId: 's',
   };
 
   const roomUuid = generateUUID();
 
   const handleChangeNumber = (num: string) => {
-    setProblemNumber(num);
+    // setProblemNumber(num);
+    setMiddleNumber(num);
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
   };
-  /** <p></p> 삭제 */
   const handleChangeContent = (content: string) => {
-    setFormContent(content.replace(/<p>/g, '').replace(/<\/p>/g, ''));
+    setFormContent(content);
   };
 
   const helpDto = {
@@ -52,8 +63,6 @@ function Form() {
   };
 
   const handleSubmit = async () => {
-    // TODO: 주스탠드 저장
-
     const data = {
       sender,
       helpDto,
@@ -74,7 +83,19 @@ function Form() {
     };
     // FIXME: 세션 해결시 없어짐
     await fetchRegistHelp(data);
+
+    /** 로컬 스토리지에 저장 */
+    const nowTime: string = Date.now().toString();
+    localStorage.setItem('title', formTitle);
+    localStorage.setItem('content', formContent);
+    localStorage.setItem('problemNumber', problemNumber);
+    localStorage.setItem('startTime', nowTime);
+    localStorage.setItem('helpRequestTime', '0');
   };
+
+  useEffect(() => {
+    setProblemNumber(debouncedNumber);
+  }, [debouncedNumber]);
 
   return (
     <>
