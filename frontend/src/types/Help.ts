@@ -1,13 +1,17 @@
 interface Sender {
   email: string;
   image: string;
-  name: string;
+  nickname: string;
+  solvedId: string;
+  kakaoname: string;
 }
 
 interface Receiver {
   email: string;
   image: string;
-  name: string;
+  nickname: string;
+  kakaoname: string;
+  solvedId: string;
 }
 
 interface HelpDto {
