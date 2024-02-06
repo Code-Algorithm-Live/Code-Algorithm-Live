@@ -41,7 +41,6 @@ const SignUp = () => {
   const [uuid, setUuid] = useState<string>('');
   const solvedIdRef = useRef<HTMLInputElement>(null);
   const nicknameRef = useRef<HTMLInputElement>(null);
-
   // userImage 상태 업데이트 함수
   const handleUserImageChange = (newUserImage: string) => {
     setUserImage(newUserImage);
@@ -107,9 +106,9 @@ const SignUp = () => {
         },
       );
 
-      if (response.ok) {
+      if (response.ok && session) {
         //  회원가입이 완료된 경우 로그인 요청
-        const { name, email } = session.user;
+        const { name, email }: { name: string; email: string } = session.user;
         const loginResponse = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
           {
@@ -161,6 +160,7 @@ const SignUp = () => {
 
       if (profileMessage === uuid) {
         // 회원가입(DB에 데이터 저장) 후, 홈으로 이동
+
         await sendProfileDataToBackend(
           userEmail,
           userImage,
@@ -178,7 +178,7 @@ const SignUp = () => {
       setUserName(session?.user?.name || '');
       setUserEmail(session?.user?.email || '');
     }
-  }, [session]);
+  }, []);
 
   // isInputId 또는 isUnique 값이 변경될 때마다 버튼 활성화 여부 체크
   useEffect(() => {

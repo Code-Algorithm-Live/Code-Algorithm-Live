@@ -12,6 +12,9 @@ module.exports = {
   images: {
     domains: ['k.kakaocdn.net'],
   },
+  compiler: {
+    styledComponents: true,
+  },
   // async rewrites() {
   //   return [
   //     {
