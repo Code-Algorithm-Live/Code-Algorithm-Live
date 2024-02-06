@@ -33,7 +33,8 @@ function Form() {
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
   };
-  /** <p></p> 삭제 */
+  
+  
   const handleChangeContent = (content: string) => {
     setFormContent(content);
   };
