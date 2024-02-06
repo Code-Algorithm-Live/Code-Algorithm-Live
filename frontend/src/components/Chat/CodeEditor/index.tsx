@@ -10,8 +10,9 @@ import ReactCodeMirror, {
 } from '@uiw/react-codemirror';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
+import yorkie, { DocEventType, EditOpInfo, OperationInfo, Text } from 'yorkie-js-sdk';
 import { YorkieDoc } from './type';
+import { log } from 'console';
 
 const Container = styled.div`
   position: relative;
@@ -64,15 +65,23 @@ function addHistory({
   preStr: string;
   nextStr: string;
 }): History {
+
   let preIdx = 0;
   let reverseIdx = 1;
   const shortLen =
     preStr.length < nextStr.length ? preStr.length : nextStr.length;
 
+    
   while (preIdx < shortLen && preStr[preIdx] === nextStr[preIdx]) {
     preIdx += 1;
   }
-  if (preIdx === preStr.length && preIdx === nextStr.length) return;
+
+  console.log(preIdx, preStr, nextStr);
+
+  if (preIdx === preStr.length && preIdx === nextStr.length) return ;
+
+
+
   while (
     preIdx <= shortLen - reverseIdx &&
     preStr[preStr.length - reverseIdx] === nextStr[nextStr.length - reverseIdx]
@@ -105,7 +114,7 @@ const CodeEditor = () => {
     }),
   );
   const [doc] = useState(new yorkie.Document<YorkieDoc>(DOC_NAME)); // useRef(new yorkie.Document<YorkieDoc>(DOC_NAME));
-  const [content, setContent] = useState('');
+  const preContent = useRef('');
   const [maxHeight, setMaxHeight] = useState('');
   const [history, setHistory] = useState<History[]>([]);
 
@@ -121,11 +130,11 @@ const CodeEditor = () => {
     nextStr: string;
   }) => {
     console.log('preStr', preStr, '/// nextStr', nextStr);
-
     const newHistory = addHistory({ preStr, nextStr });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     setHistory(pre => [...pre, newHistory]);
+    preContent.current = nextStr;
   };
 
   const handleEditOp = (op: EditOpInfo) => {
@@ -141,8 +150,6 @@ const CodeEditor = () => {
       changes,
       annotations: [Transaction.remote.of(true)],
     });
-
-    setContent(doc.getRoot().content.toString());
   };
 
   const handleOperations = (operations: OperationInfo[]) => {
@@ -155,7 +162,8 @@ const CodeEditor = () => {
 
   // local change를 브로드캐스트
   const handleChange = useCallback(
-    (_: string, viewUpdate: ViewUpdate) => {
+    (value: string, viewUpdate: ViewUpdate) => {
+
       if (viewUpdate.docChanged) {
         // eslint-disable-next-line no-restricted-syntax
         for (const tr of viewUpdate.transactions) {
@@ -166,6 +174,8 @@ const CodeEditor = () => {
           if (tr.annotation(Transaction.remote)) {
             continue;
           }
+
+
 
           let preStr = '';
           let nextStr = '';
@@ -220,9 +230,7 @@ const CodeEditor = () => {
 
       doc.subscribe(event => {
         if (event.type === DocEventType.Snapshot) syncText();
-
         const text = doc.getRoot().content;
-        setContent(text.toString());
       });
 
       // remote change 이벤트 발생
@@ -230,11 +238,12 @@ const CodeEditor = () => {
         if (event.type === DocEventType.RemoteChange) {
           const { operations } = event.value;
           handleOperations(operations);
-
           // FIXME: remote change발생시 history 추가
-          const preStr = content;
+          const preStr = '';
           const nextStr = doc.getRoot().content.toString();
-          handleAddHistory({ preStr, nextStr });
+          console.log(typeof preContent.current, '  ', typeof nextStr)
+
+          handleAddHistory({ preStr:preContent.current, nextStr });
         }
       });
 
@@ -252,6 +261,7 @@ const CodeEditor = () => {
     setMaxHeight(`${ref.current.offsetHeight - 10}px`);
   }, []);
 
+
   return (
     <Container ref={ref}>
       <ReactCodeMirror
@@ -259,7 +269,6 @@ const CodeEditor = () => {
         maxHeight={maxHeight}
         extensions={[java(), editorTheme]}
         onChange={handleChange}
-        value={content}
         ref={codeMirrorView}
       />
     </Container>
