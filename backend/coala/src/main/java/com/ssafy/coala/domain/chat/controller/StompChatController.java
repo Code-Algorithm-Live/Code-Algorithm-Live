@@ -52,4 +52,9 @@ public class StompChatController {
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
     }
 
+    @MessageMapping("/chat/exit")
+    public void ExitChat(MessageDto message){
+        message.setMessage("퇴장하셨습니다.");
+        template.convertAndSend("/sub/channel" + message.getRoomId(), message);
+    }
 }

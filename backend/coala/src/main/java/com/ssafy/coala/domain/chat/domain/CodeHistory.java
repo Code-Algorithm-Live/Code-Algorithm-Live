@@ -3,6 +3,7 @@ package com.ssafy.coala.domain.chat.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +22,7 @@ public class CodeHistory {
     private int idx;
     private String pre;
     private String next;
-    private int duration;
+    private LocalDateTime duration;
 
 
 }

@@ -8,11 +8,13 @@ import com.ssafy.coala.domain.member.domain.MemberProfile;
 import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -97,5 +99,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member getMemberByNickname(String name) {
         return memberRepository.findByNickname(name);
+    }
+
+    @Override
+    public List<Member> getMemberAllList() {
+        List<Member> list = memberRepository.findAll();
+        return list;
     }
 }
