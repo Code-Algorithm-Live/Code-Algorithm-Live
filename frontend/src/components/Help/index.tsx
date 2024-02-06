@@ -35,7 +35,7 @@ function Form() {
   };
   /** <p></p> 삭제 */
   const handleChangeContent = (content: string) => {
-    setFormContent(content.replace(/<p>/g, '').replace(/<\/p>/g, ''));
+    setFormContent(content);
   };
 
   const helpDto = {
