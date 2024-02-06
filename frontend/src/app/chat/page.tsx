@@ -8,7 +8,6 @@ import Timer from '@/components/Chat/Timer';
 import InputOutput from '@/components/Chat/InputOutput';
 import CodeEditor from '@/components/Chat/CodeEditor';
 import { fetchPostCompiler } from '@/api/chat';
-import ProblemView from '@/components/Chat/ProblemView';
 
 const Container = styled.div`
   display: flex;
@@ -69,6 +68,11 @@ const LeftContainer = styled.div`
   flex-direction: column;
 
   width: 403px;
+
+  .problemContainer {
+    height: 100%;
+    background: var(--editorBlack, #282a36);
+  }
 
   .bottomMenuContainer {
     padding: 12px 14px 18px;
@@ -204,7 +208,6 @@ export default function Chat() {
         </HeaderContainer>
         <MainContainer>
           <LeftContainer>
-            <ProblemView />
             <div className="problemContainer"></div>
             <div className="bottomMenuContainer">
               <button>나가기</button>
