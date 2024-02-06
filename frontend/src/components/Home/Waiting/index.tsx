@@ -16,7 +16,7 @@ const Container = styled.div`
   display: flex;
   height: calc(100vh - 298px);
   flex-direction: column;
-  padding: 30px 50px 50px 50px;
+  padding: 30px 50px 0px 50px;
 `;
 
 const Header = styled.span`
@@ -28,6 +28,7 @@ const Header = styled.span`
 
 const TabContainer = styled.div`
   display: flex;
+  width: 1190px;
   position: relative;
 
   font-family: Pretendard;
@@ -53,7 +54,7 @@ const TabLine = styled.div<DivProps>`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 1190px;
   height: 2px;
   background-color: ${({ $active }) =>
     $active ? 'var(--editorTypo-color)' : 'transparent'};

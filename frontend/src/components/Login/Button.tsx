@@ -6,12 +6,9 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 type UserInfo = {
-  action: string;
-  name: string;
-  image: string;
+  nickname: string;
+  imageUrl: string;
   jwtToken: string;
-  kakaoName: string;
-  SolvedId: string;
 };
 
 const Button = () => {

@@ -9,6 +9,7 @@ const ShadowDrop = styled.div`
   height: 100%;
 
   background: rgba(0, 0, 0, 0.58);
+  z-index: 998;
 `;
 
 const Header = styled.div`
@@ -32,7 +33,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  z-index: 1;
+  z-index: 999;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
