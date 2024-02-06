@@ -80,7 +80,15 @@ const Container = styled.div`
   }
 `;
 
-const InputOutput = () => {
+const InputOutput = ({
+  onRun,
+  isRunning,
+  output,
+}: {
+  onRun: (input: string) => void;
+  isRunning?: boolean;
+  output?: string;
+}) => {
   const [input, setInput] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -91,7 +99,7 @@ const InputOutput = () => {
     setInput('');
   };
   const handleSubmit = () => {
-    console.log(input);
+    onRun(input);
   };
 
   return (
@@ -113,11 +121,12 @@ const InputOutput = () => {
           className="content"
           value={input}
           onChange={handleChange}
+          disabled={isRunning}
         ></textarea>
       </div>
       <div className="Box">
         <p className="textContainer">실행결과</p>
-        <div className="content output"></div>
+        <div className="content output">{output}</div>
       </div>
     </Container>
   );
