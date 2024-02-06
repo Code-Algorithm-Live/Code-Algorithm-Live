@@ -10,20 +10,14 @@ interface IProblemData {
   id: string;
 }
 
+// 데이터 props으로 받아오기
 const QuestionBoard = ({ problemData }: { problemData: IProblemData }) => {
-  // 데이터 props으로 받아오기
-
-  /** 글자수 n자 초과시 ... 표시 */
-  const truncate = (str: string, n: number) => {
-    return str?.length > n ? `${str.substr(0, n - 1)}...` : str;
-  };
-
   return (
     <Link href={`/help/question-list/${problemData.id}`}>
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.writer}>{problemData.nickname}</div>
-          <div className={truncate(styles.title, 20)}>{problemData.title}</div>
+          <div className={styles.title}>{problemData.title}</div>
           <div className={styles.recommend}>
             <Image
               src="/images/help/recommend.png"
