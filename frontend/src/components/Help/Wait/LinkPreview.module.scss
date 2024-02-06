@@ -1,6 +1,7 @@
 .linkPreview {
   width: 361px;
   .linkBox {
+    cursor: pointer;
     border: var(--main-font-color) 1px ridge;
     border-radius: 5px;
     color: var(--sub-font-color);
