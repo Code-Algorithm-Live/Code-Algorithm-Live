@@ -14,23 +14,34 @@ const useTimer = ({ initMinutes }: { initMinutes: number }) => {
   const [time, setTime] = useState(convertMinutesToMilliseconds(initMinutes));
   const timerRef = useRef<NodeJS.Timeout>();
 
+  // 타이머 시작
+  const startTimer = () => {
+    if (timerRef.current) return;
+
+    timerRef.current = setInterval(() => {
+      setTime(prev => prev - 1000);
+    }, 1000);
+  };
+
   /**
    * minutes 만큼 타이머를 연장합니다.
    * @param minutes
    * @returns
    */
-  const increaseTime = (minutes: number) =>
+  const increaseTime = (minutes: number) => {
     setTime(prev => prev + convertMinutesToMilliseconds(minutes));
+    if (time === 0) {
+      timerRef.current = undefined;
+      startTimer();
+    }
+  };
 
   const clearTimer = useCallback(() => {
     clearInterval(timerRef.current);
   }, []);
 
   useEffect(() => {
-    // 타이머 시작
-    timerRef.current = setInterval(() => {
-      setTime(prev => prev - 1000);
-    }, 1000);
+    startTimer();
 
     // 타이머 클린 업
     return () => {
