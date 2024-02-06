@@ -31,7 +31,20 @@
   --textInput-sort-color: #6f7482;
   --textInput-placeholder-color: #b8bcca;
   --textInput-background-color: #f8fafc;
+  --modal-level-word-color: #8a8a8a;
+  --level-color-red: hsl(2, 99%, 65%);
+  --level-color-orange: hsl(39, 99%, 65%);
+  --level-color-yellow: hsl(72, 99%, 65%);
+  --level-color-green: hsl(119, 99%, 65%);
+  --level-color-skyblue: hsl(203, 99%, 65%);
+  --level-color-darkblue: hsl(249, 99%, 65%);
+  --level-color-purple: hsl(298, 99%, 65%);
+  --modal-help-border: rgba(66, 80, 102, 0.4);
+  --modal-help-box-shadow: rgba(66, 80, 102, 0.1);
   --box-shadow-color: rgba(0, 0, 0, 0.25);
+  --user-font-color: #7f7f7f;
+  --user-help-undo-color: #d9d9d9;
+  --user-help-did-color: #828282;
   --pretendard: 'pretendard';
 }
 

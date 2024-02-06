@@ -1,12 +1,10 @@
 import '@/styles/reset.css';
-import Nav from '@/components/Common/Header';
-import { signOut } from 'next-auth/react';
+import Home from '@/components/Home';
 
-export default function Home() {
+export default function Page() {
   return (
     <>
-      <Nav />
-      <button onClick={() => signOut('kakao')}>로그아웃</button>
+      <Home />
     </>
   );
 }

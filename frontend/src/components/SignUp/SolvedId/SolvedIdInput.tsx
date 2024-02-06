@@ -2,16 +2,20 @@ import styles from './SolvedIdInput.module.css';
 
 type SolvedIdInputProps = {
   inputSort: string;
-  children: string;
+  text: string;
   inputRef: React.RefObject<HTMLInputElement>;
+  handleCheckInput: () => void;
 };
 
-function SolvedIdInput({ inputSort, children, inputRef }: SolvedIdInputProps) {
-  const cleanChildren = children.endsWith('*')
-    ? children.slice(0, -1)
-    : children;
+function SolvedIdInput({
+  inputSort,
+  text,
+  inputRef,
+  handleCheckInput,
+}: SolvedIdInputProps) {
+  const cleanChildren = text.endsWith('*') ? text.slice(0, -1) : text;
 
-  const charCode = children.charCodeAt(cleanChildren.length - 1);
+  const charCode = text.charCodeAt(cleanChildren.length - 1);
   const consonantCode = (charCode - 44032) % 28;
   let sentence: string = cleanChildren;
   if (consonantCode === 0) {
@@ -25,7 +29,7 @@ function SolvedIdInput({ inputSort, children, inputRef }: SolvedIdInputProps) {
       <p className={styles.formSort}>
         <label htmlFor={inputSort}>
           {cleanChildren}
-          {children.endsWith('*') && <a className={styles.star}>*</a>}
+          {text.endsWith('*') && <a className={styles.star}>*</a>}
         </label>
       </p>
       <input
@@ -34,6 +38,7 @@ function SolvedIdInput({ inputSort, children, inputRef }: SolvedIdInputProps) {
         id={inputSort}
         placeholder={sentence}
         ref={inputRef}
+        onChange={handleCheckInput}
       ></input>
     </div>
   );

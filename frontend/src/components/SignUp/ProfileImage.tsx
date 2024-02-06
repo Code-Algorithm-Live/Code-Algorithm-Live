@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 
 interface ProfileImageProps {
   userImage: string;
+  onUserImageChange: (newUserImage: string) => void;
 }
 
-const ImageCircle = styled.div<{ userImage: string }>`
+const ImageCircle = styled.div<{ $userImage: string }>`
   position: absolute;
-  background-image: url(${({ userImage }) => userImage});
+  background-image: url(${({ $userImage }) => $userImage});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -50,7 +51,10 @@ const Container = styled.div`
   height: 300px;
 `;
 
-const ProfileImage: React.FC<ProfileImageProps> = ({ userImage }) => {
+const ProfileImage: React.FC<ProfileImageProps> = ({
+  userImage,
+  onUserImageChange,
+}) => {
   const [imgUrl, setImgUrl] = useState<string>('');
   const inputRef = React.createRef<HTMLInputElement>();
   const handleImageClick = () => {
@@ -63,6 +67,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ userImage }) => {
       const file = e.target.files[0];
       URL.revokeObjectURL(imgUrl);
       setImgUrl(URL.createObjectURL(file));
+      onUserImageChange(URL.createObjectURL(file));
     }
   };
 
@@ -70,7 +75,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ userImage }) => {
     <>
       <Container>
         <ImageCircle
-          userImage={imgUrl || userImage}
+          $userImage={imgUrl || userImage}
           onClick={handleImageClick}
         />
         <EditCircle>
