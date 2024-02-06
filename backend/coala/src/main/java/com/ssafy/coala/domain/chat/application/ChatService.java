@@ -88,11 +88,4 @@ public class ChatService {
         chatRoom.get().getMessages().add(chatMessage);
     }
 
-    public <T> void sendMessage(WebSocketSession session, T message) {
-        try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
 }
