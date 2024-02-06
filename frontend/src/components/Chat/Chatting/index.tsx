@@ -1,18 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 import { styled } from 'styled-components';
 import { Client } from '@stomp/stompjs';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-import Input, { INPUT_HEIGHT } from '@/components/Chat/Chatting/Input';
+import Input from '@/components/Chat/Chatting/Input';
+import { generateUUID } from '@/utils/uuid';
 
 const Container = styled.div`
   position: relative;
-  height: 100dvh;
-
+  height: 100%;
   background: var(--editorBlack, #282a36);
 `;
 
@@ -22,7 +21,6 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
-  height: calc(100dvh - ${INPUT_HEIGHT});
   padding: 7px;
   overflow-y: scroll;
 
@@ -38,86 +36,84 @@ const MessageContainer = styled.div`
   }
 `;
 
-const mockMessages = [
-  { chatRoomId: 5, type: '안녕하세요~~', sender: 'me', date: '2024/01/22' },
-  {
-    chatRoomId: 5,
-    type: '안녕하세요!!',
-    sender: 'hamster',
-    date: '2024/01/22',
-  },
-  {
-    chatRoomId: 5,
-    type: '시작해볼까요',
-    sender: 'hamster',
-    date: '2024/01/22',
-  },
-  { chatRoomId: 5, type: '넵', sender: 'me', date: '2024/01/22' },
-  { chatRoomId: 5, type: '후비고~', sender: 'me', date: '2024/01/22' },
-];
+enum MessageType {
+  ENTER = 'ENTER',
+  TALK = 'TALK',
+}
 
-interface TMessage {
-  chatRoomId: string;
-  type: string;
+interface IMessage {
+  chatId: string;
+  type: MessageType;
   sender: string;
+  message: string;
   date: string;
 }
 
-const BASE_URL = 'ws://localhost:8080';
+const BASE_URL = process.env.NEXT_PUBLIC_SOCKET_BASE_URL;
 const brokerURL = `${BASE_URL}/ws/chat`;
 const userId = Math.random().toString();
 const roomId = 2;
 const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
 const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
-const pubDestination = `/pub/chat/message`; // 채팅방 메세지 전송
+const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+
+/**
+ * {hour}:{minutes}로 포맷팅합니다.
+ */
+const getHourMinutes = (timeStamp: Date) => {
+  return `${timeStamp.getHours()}:${timeStamp.getMinutes()}`;
+};
 
 const Chatting = () => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<TMessage[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
-  const client = useRef(new Client({ brokerURL }));
+  /** 메세지를 수신했을 때 호출 */
+  const onMessageReceived = ({ message, type, sender }: IMessage) => {
+    const msgTime = getHourMinutes(new Date());
+    const chatId = generateUUID();
 
-  const connect = () => {
-    client.current.onConnect = () => {
-      /** roomId에 참가합니다. */
-      client.current.publish({
-        destination: enterDestination,
-        body: JSON.stringify({
-          type: 'ENTER',
-          roomId,
-          sender: userId,
-        }),
-      });
-      /** roomId를 구독합니다.  */
-      client.current.subscribe(subDestination, message => {
-        console.log('메시지용', message);
-      });
-    };
-
-    client.current.activate();
-  };
-
-  const onMessageReceived = (message: string) => {
     setMessages(prev => [
       ...prev,
       {
-        chatRoomId: roomId.toString(),
-        sender: userId,
-        type: message,
-        date: '',
+        chatId,
+        sender,
+        type,
+        message,
+        date: msgTime,
       },
     ]);
   };
 
+  const client = useRef(
+    new Client({
+      brokerURL,
+      onConnect: () => {
+        /** roomId에 참가합니다. */
+        client.current.publish({
+          destination: enterDestination,
+          body: JSON.stringify({
+            type: MessageType.ENTER,
+            roomId,
+            sender: userId,
+          }),
+        });
+        /** roomId를 구독합니다.  */
+        client.current.subscribe(subDestination, msg => {
+          const message = JSON.parse(msg.body) as IMessage;
+          onMessageReceived(message);
+        });
+      },
+    }),
+  );
+
   const sendMessage = (message: string) => {
     if (!message) return;
 
-    onMessageReceived(message);
-    console.log('sendMessage');
     client.current.publish({
       destination: pubDestination,
       body: JSON.stringify({
-        type: 'TALK',
+        type: MessageType.TALK,
         roomId,
         sender: userId,
         message,
@@ -125,15 +121,18 @@ const Chatting = () => {
     });
   };
 
-  const disconnect = () => {};
-
   useEffect(() => {
-    connect();
+    client.current.activate();
   }, []);
 
   useEffect(() => {
+    const disconnect = () => {
+      // FIXME 채팅방 종료가 되는지 확인
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      client.current.deactivate();
+    };
     return () => disconnect();
-  });
+  }, []);
 
   const handleSubmit = () => {
     const message = input || '';
@@ -149,7 +148,9 @@ const Chatting = () => {
   return (
     <Container>
       <MessageContainer>
-        {messages.map(({ type, sender, date }, idx) => {
+        {messages.map(({ chatId, type, sender, date, message }, idx) => {
+          if (type !== MessageType.TALK) return <></>;
+
           const isCurrentUser = userId === sender;
           const isFirst = idx > 0 && sender !== messages[idx - 1].sender;
 
@@ -157,9 +158,9 @@ const Chatting = () => {
 
           return (
             <MessageComponent
-              key={date + type}
+              key={chatId}
               first={isFirst}
-              message={type}
+              message={message}
               date={date}
             />
           );

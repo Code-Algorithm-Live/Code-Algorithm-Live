@@ -1,5 +1,4 @@
 module.exports = {
-  // ... 생략
   webpack: config => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -10,4 +9,18 @@ module.exports = {
   experimental: {
     forceSwcTransforms: true,
   },
+  images: {
+    domains: ['k.kakaocdn.net'],
+  },
+  compiler: {
+    styledComponents: true,
+  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: 'https://solved.ac/:path*',
+  //     },
+  //   ];
+  // },
 };

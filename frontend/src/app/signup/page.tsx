@@ -1,9 +1,5 @@
+import Index from '@/components/SignUp';
 
-
-export default function Signup() {
-  return (
-    <h1>
-      Signup 
-    </h1>
-  );
+export default function SignUp() {
+  return <Index />;
 }

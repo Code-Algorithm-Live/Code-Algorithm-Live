@@ -4,15 +4,15 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: rgb(0, 0, 0);
+  --background-start-rgb: rgb(214, 219, 220);
+  --background-end-rgb: rgb(255, 255, 255);
   --main-color: #5471a5;
   --main-hover-color: #2c4572;
   --sub-color: #69c7e0;
   --sub-hover-color: #1e8daa;
   --point-color: #bc56c1;
-  --point-color: #903e93;
+  --point-hover-color: #903e93;
   --important-color: #ff0000;
   --important-hover-color: #c90000;
   --white-color: #ffffff;
@@ -22,13 +22,34 @@
   --editorBlack-color: #282a36;
   --editorSub-color: #343746;
   --editorTypo-color: #e2e1e1;
+  --editorPoint-color: #6072a3;
   --main-font-color: #090909;
   --sub-font-color: #999999;
   --link-font-color: #0395ff;
+  --toggle-background-color: #7d7d7d;
+  --toggle-background-switch-color: #c8d1d6;
+  --textInput-sort-color: #6f7482;
+  --textInput-placeholder-color: #b8bcca;
+  --textInput-background-color: #f8fafc;
+  --modal-level-word-color: #8a8a8a;
+  --level-color-red: hsl(2, 99%, 65%);
+  --level-color-orange: hsl(39, 99%, 65%);
+  --level-color-yellow: hsl(72, 99%, 65%);
+  --level-color-green: hsl(119, 99%, 65%);
+  --level-color-skyblue: hsl(203, 99%, 65%);
+  --level-color-darkblue: hsl(249, 99%, 65%);
+  --level-color-purple: hsl(298, 99%, 65%);
+  --modal-help-border: rgba(66, 80, 102, 0.4);
+  --modal-help-box-shadow: rgba(66, 80, 102, 0.1);
+  --box-shadow-color: rgba(0, 0, 0, 0.25);
+  --user-font-color: #7f7f7f;
+  --user-help-undo-color: #d9d9d9;
+  --user-help-did-color: #828282;
   --pretendard: 'pretendard';
 }
 
 /* @media (prefers-color-scheme: dark) {
+>>>>>>> f083a77736e58d8e5b9b665f480f1829d756f991
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
