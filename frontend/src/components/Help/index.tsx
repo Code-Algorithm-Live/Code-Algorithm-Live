@@ -22,22 +22,14 @@ function Form() {
   };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
-  // const sender = {
-  //   email: session?.user?.email,
-  //   image: session?.user?.image,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   kakaoname: session?.user?.kakaoName,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   solvedId: session?.user?.SolvedId,
-  //   nickname: session?.user?.name,
-  // };
-
   const sender = {
-    email: 's',
-    image: 'S',
-    kakoname: 's',
-    nickname: 's',
-    solvedId: 's',
+    email: session?.user?.email,
+    image: session?.user?.image,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    kakaoname: session?.user?.kakaoName,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    solvedId: session?.user?.SolvedId,
+    nickname: session?.user?.name,
   };
 
   const roomUuid = generateUUID();
