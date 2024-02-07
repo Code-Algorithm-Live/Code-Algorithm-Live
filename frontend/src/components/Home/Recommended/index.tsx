@@ -87,7 +87,7 @@ const Recommended = () => {
 
         setProblems(combinedProblems);
       } catch (error) {
-        return null;
+        console.log(error);
       }
     };
 
