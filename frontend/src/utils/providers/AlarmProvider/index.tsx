@@ -11,44 +11,55 @@ import { HelpForm } from '@/types/Help';
 import { BROKER_URL } from '@/libs/stomp';
 import useHelpFromStore from '@/store/helpForm';
 
+const AUTHENTICATED = 'authenticated';
+
 const StompProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
   const { helpForm, setHelpForm } = useHelpFromStore();
   const acceptRequestMutation = useMutation({ mutationFn: fetchAcceptHelp });
-  const userId = useSession().data?.user?.email;
+  const session = useSession(); // 사용자의 아이디
 
   const client = useRef(
     new Client({
       brokerURL: BROKER_URL,
-      onConnect: () => {
-        console.log('연결 성공');
-        const subDestination = `/sub/queue/match/${userId}`;
-
-        // 도움 요청이 왔는지 상시 확인
-        client.current.subscribe(subDestination, response => {
-          const message = JSON.parse(
-            response.body,
-          ) as IMessage as unknown as HelpForm;
-
-          // 매칭 완료
-          if (message.success) {
-            const onMatchSuccess = () => {
-              router.push(`/chat/${message.roomUuid}`);
-            };
-            onMatchSuccess();
-            return;
-          }
-
-          setHelpForm(message);
-        });
-      },
     }),
   );
 
   useEffect(() => {
+    if (session.status !== AUTHENTICATED) return;
+
+    client.current.onConnect = () => {
+      const email = session.data?.user.email;
+      const subDestination = `/sub/queue/match/${email}`;
+
+      console.log('연결 성공', BROKER_URL, subDestination);
+
+      // 도움 요청이 왔는지 상시 확인
+      client.current.subscribe(subDestination, response => {
+        console.log('메세지가 왔음');
+
+        const message = JSON.parse(
+          response.body,
+        ) as IMessage as unknown as HelpForm;
+
+        console.log('message', message);
+
+        // 매칭 완료
+        if (message.success) {
+          const onMatchSuccess = () => {
+            router.push(`/chat?roomId=${message.roomUuid}`);
+          };
+          onMatchSuccess();
+          return;
+        }
+
+        setHelpForm(message);
+      });
+    };
+
     client.current.activate();
-  }, []);
+  }, [router, session.status]);
 
   useEffect(() => {
     const disconnect = () => {

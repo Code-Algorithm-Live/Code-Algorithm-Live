@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { HelpForm } from '@/utils/providers/AlarmProvider/type';
+import { HelpForm } from '@/types/Help';
 import { instance } from '@/api/instance';
 import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import UserImage from '@/components/Home/Waiting/UserImage';
