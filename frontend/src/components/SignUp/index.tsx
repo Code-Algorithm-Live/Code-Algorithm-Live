@@ -135,11 +135,13 @@ const SignUp = () => {
 
           await update({
             action: 'logIn',
-            name: userInfo.nickname,
-            image: userInfo.imageUrl,
-            jwtToken: token,
-            kakaoName: name,
-            SolvedId: userInfo.solvedId,
+            user: {
+              name: userInfo.nickname,
+              image: userInfo.imageUrl,
+              jwtToken: token,
+              kakaoName: name,
+              SolvedId: userInfo.solvedId,
+            },
           });
 
           await router.push('/');

@@ -10,6 +10,31 @@ interface WaitingQueueProps {
   activeTab: string;
 }
 
+interface QueueItem {
+  sender: {
+    email: string;
+    image: string;
+    nickname: string;
+    exp: number;
+    kakaoname: string;
+    solvedId: string;
+  };
+  receiver: {
+    email: string;
+    image: string;
+    nickname: string;
+    exp: number;
+    kakaoname: string;
+    solvedId: string;
+  };
+  helpDto: {
+    num: number;
+    title: string;
+    content: string;
+  };
+  roomUuid: string;
+}
+
 const Container = styled.div`
   width: 1190px;
   height: 250px;
@@ -95,129 +120,133 @@ const NumText = styled.span`
 const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
   const { data: session, status } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [modalData, setmodalData] = useState(null);
+  const [modalData, setmodalData] = useState<QueueItem | null>(null);
 
   const handleConfirm = () => console.log('confirm!!');
 
   // 임시 데이터
-  const queueData = [
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '박진아',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: '처우열',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '거고고',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: '기기기',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: 'ㅁㄴㅇㄴㅁㅇ',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: 'ㅇㅁㄴㅇㄴ',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '하하',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: 'ㅁㅁ',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-  ];
-  const userData = {
-    nickname: '알라코1',
-    memberExp: 15,
-    url: '/images/coala/smile.png',
-  };
-  // const [queueData, setQueueData] = useState<unknown[]>([]);
+  // const queueData = [
+  //   {
+  //     sender: {
+  //       email: 'sender',
+  //       image: 'test',
+  //       nickname: '박진아',
+  //       exp: 15,
+  //     },
+  //     receiver: {
+  //       email: 'receiver',
+  //       image: 'test',
+  //       nickname: '처우열',
+  //       exp: 15,
+  //     },
+  //     helpDto: {
+  //       num: 1001,
+  //       title: '도와주세요2222',
+  //       content: '살려주세요333333ㅜㅜㅜㅜ',
+  //     },
+  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
+  //   },
+  //   {
+  //     sender: {
+  //       email: 'sender',
+  //       image: 'test',
+  //       nickname: '거고고',
+  //       exp: 15,
+  //     },
+  //     receiver: {
+  //       email: 'receiver',
+  //       image: 'test',
+  //       nickname: '기기기',
+  //       exp: 15,
+  //     },
+  //     helpDto: {
+  //       num: 1001,
+  //       title: '도와주세요2222',
+  //       content: '살려주세요333333ㅜㅜㅜㅜ',
+  //     },
+  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
+  //   },
+  //   {
+  //     sender: {
+  //       email: 'sender',
+  //       image: 'test',
+  //       nickname: 'ㅁㄴㅇㄴㅁㅇ',
+  //       exp: 15,
+  //     },
+  //     receiver: {
+  //       email: 'receiver',
+  //       image: 'test',
+  //       nickname: 'ㅇㅁㄴㅇㄴ',
+  //       exp: 15,
+  //     },
+  //     helpDto: {
+  //       num: 1001,
+  //       title: '도와주세요2222',
+  //       content: '살려주세요333333ㅜㅜㅜㅜ',
+  //     },
+  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
+  //   },
+  //   {
+  //     sender: {
+  //       email: 'sender',
+  //       image: 'test',
+  //       nickname: '하하',
+  //       exp: 15,
+  //     },
+  //     receiver: {
+  //       email: 'receiver',
+  //       image: 'test',
+  //       nickname: 'ㅁㅁ',
+  //       exp: 15,
+  //     },
+  //     helpDto: {
+  //       num: 1001,
+  //       title: '도와주세요2222',
+  //       content: '살려주세요333333ㅜㅜㅜㅜ',
+  //     },
+  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
+  //   },
+  // ];
+  // const userData = {
+  //   nickname: '알라코1',
+  //   memberExp: 15,
+  //   url: '/images/coala/smile.png',
+  // };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const token = session?.user?.jwtToken as string;
-  //       const url =
-  //         activeTab === 'tab1'
-  //           ? '/help/waitqueue'
-  //           : `/help/waitqueue/solvedlist?solvedId=${session?.user?.SolvedId}`;
+  const [queueData, setQueueData] = useState<QueueItem[]>([]);
 
-  //       const Response = await fetch(
-  //         `${process.env.NEXT_PUBLIC_BASE_URL}${url}`,
-  //         {
-  //           method: 'GET',
-  //           headers: {
-  //             Authorization: token,
-  //           },
-  //         },
-  //       );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = session?.user?.jwtToken as string;
+        const url =
+          activeTab === 'tab1'
+            ? '/help/waitqueue'
+            : `/help/waitqueue/solvedlist?solvedId=${session?.user?.SolvedId}`;
 
-  //       const responseData: unknown = await Response.json();
-  //       console.log(responseData);
+        const Response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}${url}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
 
-  //       setQueueData(responseData);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+        const responseData: unknown = await Response.json();
+        console.log(responseData);
 
-  //   if (status === 'authenticated') {
-  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //     fetchData();
-  //   }
-  // }, [session, status, activeTab]);
+        setQueueData(responseData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchData();
+    }
+  }, [activeTab]);
 
   return (
     <Container>
@@ -229,7 +258,13 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
             setmodalData(queue);
           }}
         >
-          <UserImage userData={userData} />
+          <UserImage
+            userData={{
+              nickname: queue.sender.nickname,
+              memberExp: queue.sender.exp,
+              url: queue.sender.image,
+            }}
+          />
           <NameText>{queue.sender.nickname}</NameText>
           <TextContainer>
             <CompletedContainer>
@@ -248,7 +283,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           setIsConfirmModalOpen(false);
         }}
       >
-        <ModalContent modalData={modalData} userData={userData} />
+        <ModalContent modalData={modalData} />
       </ConfirmModal>
     </Container>
   );

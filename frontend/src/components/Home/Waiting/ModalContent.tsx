@@ -2,28 +2,25 @@ import styled from 'styled-components';
 import UserImage from '@/components/Home/Waiting/UserImage';
 
 interface ModalContentProps {
-  modalData: ModalData | null;
-  userData: UserData;
+  modalData: QueueItem | null;
 }
 
-interface UserData {
-  nickname: string;
-  memberExp: number;
-  url: string;
-}
-
-interface ModalData {
+interface QueueItem {
   sender: {
     email: string;
     image: string;
     nickname: string;
     exp: number;
+    kakaoname: string;
+    solvedId: string;
   };
   receiver: {
     email: string;
     image: string;
     nickname: string;
     exp: number;
+    kakaoname: string;
+    solvedId: string;
   };
   helpDto: {
     num: number;
@@ -89,7 +86,7 @@ const TitleDiv = styled.div`
   height: 100%;
 `;
 
-const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
+const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
   if (!modalData) {
     return null;
   }
