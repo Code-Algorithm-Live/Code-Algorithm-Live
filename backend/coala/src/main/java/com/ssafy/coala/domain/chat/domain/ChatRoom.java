@@ -1,37 +1,33 @@
 package com.ssafy.coala.domain.chat.domain;
 
-import com.ssafy.coala.domain.member.domain.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
-@Entity
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Entity(name = "chatRoom")
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChatRoom {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    @Column(name = "room_id")
+    private UUID roomId;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private Member sender;
+    private String sender;
+    private String receiver;
+//isclose, title, content, problemId
+    @JsonIgnore
+    @OneToMany(mappedBy = "")
+    @Builder.Default
+    private List<ChatMessage> messages = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "receiver_id")
-    private Member receiver;
-
-    public void setSender(Member sender) {
-        this.sender = sender;
-    }
-
-    public void setReceiver(Member receiver) {
-        this.receiver = receiver;
-    }
-
+    @CreatedDate
+    private LocalDateTime date;
 }
