@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { IData, IFetchData } from '@/types/Problem';
+import { instance } from '@/api/instance';
 import styles from './LinkPreview.module.scss';
 
 function LinkPreview({ problemNumber }: { problemNumber: number }) {
@@ -10,18 +11,18 @@ function LinkPreview({ problemNumber }: { problemNumber: number }) {
   const [problem, setProblem] = useState<IData | null>(null);
 
   useEffect(() => {
-    if (problemNumber !== problem?.id) {
-      fetch(`http://localhost:8080/problem/${problemNumber}`)
-        .then(response => response.json())
-        .then((res: IFetchData) => {
-          const data = {
-            id: res.id,
-            title: res.title,
-            level: res.level,
-            description: res.description,
-            tags: res.tags,
+    if (problemNumber !== 0 && problemNumber !== problem?.id) {
+      instance
+        .get<IFetchData>(`/problem/${problemNumber}`)
+        .then(({ data }: { data: IFetchData }) => {
+          const axiosProblemData: IData = {
+            id: data.id,
+            title: data.title,
+            level: data.level,
+            description: data.description,
+            tags: data.tags,
           };
-          setProblem(data);
+          setProblem(axiosProblemData);
         })
         // eslint-disable-next-line no-console
         .catch(err => console.log(err));
@@ -99,6 +100,10 @@ function LinkPreview({ problemNumber }: { problemNumber: number }) {
       </div>
     );
   }
-  return <div>nothing</div>;
+  return (
+    <div className={styles.unknown}>
+      <div>문제 번호를 입력하세요</div>
+    </div>
+  );
 }
 export default LinkPreview;
