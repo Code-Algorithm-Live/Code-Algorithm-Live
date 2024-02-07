@@ -4,26 +4,26 @@ import { Client, IMessage } from '@stomp/stompjs';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
-import { loginUserA } from '@/mock';
 import { fetchAcceptHelp } from '@/api/match';
-import { HelpForm } from '@/utils/providers/AlarmProvider/type';
+import { HelpForm } from '@/types/Help';
 import { BROKER_URL } from '@/libs/stomp';
-
-const userId = loginUserA.email; // 사용자의 아이디
-const subDestination = `/sub/queue/match/${userId}`;
+import useHelpFromStore from '@/store/helpForm';
 
 const StompProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
-  const [helpForm, setHelpForm] = useState<HelpForm>(); // TODO: 전역으로 관리
+  const { helpForm, setHelpForm } = useHelpFromStore();
   const acceptRequestMutation = useMutation({ mutationFn: fetchAcceptHelp });
+  const userId = useSession().data?.user?.email;
 
   const client = useRef(
     new Client({
       brokerURL: BROKER_URL,
       onConnect: () => {
         console.log('연결 성공');
+        const subDestination = `/sub/queue/match/${userId}`;
 
         // 도움 요청이 왔는지 상시 확인
         client.current.subscribe(subDestination, response => {
@@ -34,7 +34,7 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
           // 매칭 완료
           if (message.success) {
             const onMatchSuccess = () => {
-              router.push(`/chat?roomId=${message.roomUuid}`);
+              router.push(`/chat/${message.roomUuid}`);
             };
             onMatchSuccess();
             return;
@@ -75,8 +75,6 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
     if (!helpForm) return;
     const data = helpForm;
     acceptRequestMutation.mutate(data);
-
-    setHelpForm(undefined);
   };
 
   return (
