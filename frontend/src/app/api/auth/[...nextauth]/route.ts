@@ -2,7 +2,7 @@ import KakaoProvider from 'next-auth/providers/kakao';
 // import NaverProvider from 'next-auth/providers/naver';
 import NextAuth from 'next-auth';
 
-export const authOptions = {
+const authOptions = {
   providers: [
     KakaoProvider({
       clientId: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID ?? '',

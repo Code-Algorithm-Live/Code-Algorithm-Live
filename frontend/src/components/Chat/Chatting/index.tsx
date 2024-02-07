@@ -37,7 +37,7 @@ const MessageContainer = styled.div`
 `;
 
 enum MessageType {
-  ENTER = 'Enter',
+  ENTER = 'ENTER',
   TALK = 'TALK',
 }
 
@@ -49,7 +49,7 @@ interface IMessage {
   date: string;
 }
 
-const BASE_URL = 'ws://localhost:8080';
+const BASE_URL = process.env.NEXT_PUBLIC_SOCKET_BASE_URL;
 const brokerURL = `${BASE_URL}/ws/chat`;
 const userId = Math.random().toString();
 const roomId = 2;

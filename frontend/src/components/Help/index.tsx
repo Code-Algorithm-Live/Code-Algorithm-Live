@@ -4,7 +4,6 @@ import TextInput from '@/components/Common/TextInput';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import axios from 'axios';
 import { generateUUID } from '@/utils/uuid';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import useDebounce from '@/hooks/useDebounce';
@@ -17,12 +16,6 @@ function Form() {
   const [middleNumber, setMiddleNumber] = useState<string>('');
   const debouncedNumber = useDebounce(middleNumber, 5000);
   // const { data: session } = useSession();
-
-  type FetchRegistHelpRequest = {
-    sender: Sender;
-    helpDto: HelpDto;
-    roomUuid: RoomUuid;
-  };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
   // const sender = {
@@ -67,7 +60,7 @@ function Form() {
       sender,
       helpDto,
       roomUuid,
-    };
+    } as unknown as FetchRegistHelpRequest;
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const fetchRegistHelp = async (data: FetchRegistHelpRequest) => {
