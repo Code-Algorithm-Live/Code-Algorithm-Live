@@ -4,16 +4,16 @@ import TextInput from '@/components/Common/TextInput';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import axios from 'axios';
 import { generateUUID } from '@/utils/uuid';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import { useSession } from 'next-auth/react';
+import { instance } from '@/api/instance';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -51,29 +51,24 @@ function Form() {
     content: formContent,
   };
 
-  const handleSubmit = async () => {
-    // TODO: 주스탠드 저장
-
+  const handleSubmit = () => {
     const data = {
       sender,
       helpDto,
       roomUuid,
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const fetchRegistHelp = async (data: FetchRegistHelpRequest) => {
-      const request = await axios
-        .post<FetchRegistHelpRequest>(
-          'http://localhost:8080/help/waitqueue',
-          data,
-        )
-        .then(function helpForm(response) {
-          return response.data;
-        });
-      return request;
-    };
-    // FIXME: 세션 해결시 없어짐
-    await fetchRegistHelp(data);
+    instance
+      .post<FetchRegistHelpRequest>('/help/waitqueue', data)
+      .catch(Err => console.error(Err));
+
+    /** 로컬 스토리지에 저장 */
+    const nowTime: string = Date.now().toString();
+    localStorage.setItem('title', formTitle);
+    localStorage.setItem('content', formContent);
+    localStorage.setItem('problemNumber', problemNumber);
+    localStorage.setItem('startTime', nowTime);
+    localStorage.setItem('helpRequestTime', '0');
   };
 
   return (
