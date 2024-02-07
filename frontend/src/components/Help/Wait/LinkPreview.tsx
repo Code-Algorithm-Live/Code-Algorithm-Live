@@ -1,91 +1,108 @@
 // import BojLogo from '';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { IData, IFetchData } from '@/types/Problem';
+import { instance } from '@/api/instance';
 import styles from './LinkPreview.module.scss';
 
-function LinkPreview() {
+function LinkPreview({ problemNumber }: { problemNumber: number }) {
   const [sorts, setSorts] = useState('???,???,???');
   const [link, setLink] = useState('relative-0');
+  const [problem, setProblem] = useState<IData | null>(null);
 
-  const data = {
-    id: 1000,
-    title: 'A+B',
-    accepted_user_count: 276511,
-    level: 1,
-    give_no_rating: false,
-    average_tries: 2.5356,
-    description:
-      '두 정수 A와 B를 입력받은 다음, A+B를 출력하는 프로그램을 작성하시오.',
-    tags: ['구현', '사칙연산', '수학'],
-  };
+  useEffect(() => {
+    if (problemNumber !== 0 && problemNumber !== problem?.id) {
+      instance
+        .get<IFetchData>(`/problem/${problemNumber}`)
+        .then(({ data }: { data: IFetchData }) => {
+          const axiosProblemData: IData = {
+            id: data.id,
+            title: data.title,
+            level: data.level,
+            description: data.description,
+            tags: data.tags,
+          };
+          setProblem(axiosProblemData);
+        })
+        // eslint-disable-next-line no-console
+        .catch(err => console.log(err));
+    }
+  }, [problemNumber, problem?.id]);
 
-  const imgurl = `/images/problemLevel/${link}.svg`;
-  const handleClickLevel = () => {
-    setLink(link === 'relative-0' ? `${data.level}` : 'relative-0');
-  };
-  const url: string = `https://www.acmicpc.net/problem/${data.id}`;
+  if (problem !== null) {
+    const imgurl = `/images/problemLevel/${link}.svg`;
+    const handleClickLevel = () => {
+      setLink(link === 'relative-0' ? `${problem.level}` : 'relative-0');
+    };
+    const url: string = `https://www.acmicpc.net/problem/${problem.id}`;
 
-  const handleClick = () => {
-    window.open(url, '_blank');
-  };
+    const handleClick = () => {
+      window.open(url, '_blank');
+    };
 
-  const handleClickSort = () => {
-    setSorts(sorts === '???,???,???' ? `${data.tags}` : '???,???,???');
-  };
-
-  return (
-    <div className={styles.linkPreview}>
-      <div onClick={handleClick} className={styles.linkBox}>
-        <div className={styles.content}>
-          <div className={styles.linkTitle}>
-            <Image
-              src={imgurl}
-              alt="level"
-              className={styles.levelImg}
-              width={12}
-              height={12}
-            ></Image>
-            <a className={styles.title}>&nbsp; {data.title}</a>
+    const handleClickSort = () => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      setSorts(sorts === '???,???,???' ? `${problem.tags}` : '???,???,???');
+    };
+    return (
+      <div className={styles.linkPreview}>
+        <div onClick={handleClick} className={styles.linkBox}>
+          <div className={styles.content}>
+            <div className={styles.linkTitle}>
+              <Image
+                src={imgurl}
+                alt="level"
+                className={styles.levelImg}
+                width={12}
+                height={12}
+              ></Image>
+              <a className={styles.title}>&nbsp; {problem.title}</a>
+            </div>
+            <div className={styles.description}>
+              <p className={styles.desc}>{problem.description}</p>
+              <Image
+                src="/images/Boj_logo.png"
+                alt={problem.title}
+                className={styles.logo}
+                width={76}
+                height={76}
+              />
+            </div>
+            <p className={styles.sorting}>
+              {sorts.split(',').map((tag, index) => (
+                <span key={index}> #{tag}&nbsp;&nbsp; </span>
+              ))}
+            </p>
           </div>
-          <div className={styles.description}>
-            <p className={styles.desc}>{data.description}</p>
-            <Image
-              src="/images/Boj_logo.png"
-              alt={data.title}
-              className={styles.logo}
-              width={76}
-              height={76}
-            />
-          </div>
-          <p className={styles.sorting}>
-            {sorts.split(',').map((tag, index) => (
-              <span key={index}> #{tag}&nbsp;&nbsp; </span>
-            ))}
-          </p>
+        </div>
+        <div className={styles.toggle}>
+          <a className={styles.toggleSort}>난이도 보기</a>
+          <input
+            onClick={handleClickLevel}
+            type="checkbox"
+            id="switchLevel"
+            className={styles.checkbox}
+          />
+          <label htmlFor="switchLevel" className={styles.switch_label}>
+            <span className={styles.onf_btn}></span>
+          </label>
+          <a className={styles.toggleSort}>알고리즘 보기</a>
+          <input
+            onClick={handleClickSort}
+            type="checkbox"
+            id="switchSort"
+            className={styles.checkbox}
+          />
+          <label htmlFor="switchSort" className={styles.switch_label}>
+            <span className={styles.onf_btn}></span>
+          </label>
         </div>
       </div>
-      <div className={styles.toggle}>
-        <a className={styles.toggleSort}>난이도 보기</a>
-        <input
-          onClick={handleClickLevel}
-          type="checkbox"
-          id="switchLevel"
-          className={styles.checkbox}
-        />
-        <label htmlFor="switchLevel" className={styles.switch_label}>
-          <span className={styles.onf_btn}></span>
-        </label>
-        <a className={styles.toggleSort}>알고리즘 보기</a>
-        <input
-          onClick={handleClickSort}
-          type="checkbox"
-          id="switchSort"
-          className={styles.checkbox}
-        />
-        <label htmlFor="switchSort" className={styles.switch_label}>
-          <span className={styles.onf_btn}></span>
-        </label>
-      </div>
+    );
+  }
+  return (
+    <div className={styles.unknown}>
+      <div>문제 번호를 입력하세요</div>
     </div>
   );
 }
