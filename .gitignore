@@ -1,3 +1,6 @@
 
 frontend/.env
 node_modules
+frontend/.next/
+frontend/node_modules/
+frontend/.vscode/
