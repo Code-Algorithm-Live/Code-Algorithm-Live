@@ -24,6 +24,7 @@ const authOptions: NextAuthOptions = {
         updatedToken.image = session.user.image;
         updatedToken.SolvedId = session.user.SolvedId;
         updatedToken.kakaoName = session.user.kakaoName;
+        updatedToken.email = session.user.email;
       }
 
       return updatedToken;
@@ -35,7 +36,8 @@ const authOptions: NextAuthOptions = {
         token.image &&
         token.jwtToken &&
         token.SolvedId &&
-        token.kakaoName
+        token.kakaoName &&
+        token.email
       ) {
         updatedSession.user = {
           name: token.name,
@@ -43,6 +45,7 @@ const authOptions: NextAuthOptions = {
           jwtToken: token.jwtToken,
           SolvedId: token.SolvedId,
           kakaoName: token.kakaoName,
+          email: token.email,
         };
       }
       return updatedSession;

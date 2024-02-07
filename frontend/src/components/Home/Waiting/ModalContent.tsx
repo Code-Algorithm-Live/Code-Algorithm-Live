@@ -115,7 +115,9 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
             <Label>
               <label>상세 내용</label>
             </Label>
-            <TitleDiv>{modalData.helpDto.content}</TitleDiv>
+            <TitleDiv
+              dangerouslySetInnerHTML={{ __html: modalData.helpDto.content }}
+            />
           </ContentsContainer>
         </FormContainer>
         <div>문제 번호에 맞는 폼 생성 예정 : {modalData.helpDto.num}</div>

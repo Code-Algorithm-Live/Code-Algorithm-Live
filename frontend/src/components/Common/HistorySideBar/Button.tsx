@@ -13,6 +13,12 @@ const StyledButton = styled.button`
   font-size: 18px;
   font-weight: 400;
   color: var(--white-color);
+
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--sub-hover-color);
+  }
 `;
 
 const Button = () => {

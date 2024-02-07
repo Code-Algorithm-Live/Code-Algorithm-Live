@@ -66,6 +66,7 @@ const ProfileImage = styled.div<{ $userImage: string | undefined }>`
 
 export default function Nav() {
   const { data: session } = useSession();
+
   const token = session?.user?.jwtToken;
   const RealSignOut = async () => {
     try {
@@ -78,7 +79,6 @@ export default function Nav() {
           },
         },
       );
-      console.log(response);
 
       // 서버에서 로그아웃이 성공하면 클라이언트에서도 로그아웃
       if (response.ok) {

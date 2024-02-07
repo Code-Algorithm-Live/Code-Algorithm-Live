@@ -142,6 +142,7 @@ const SignUp = () => {
               jwtToken: token,
               kakaoName: name,
               SolvedId: userInfo.solvedId,
+              email: email,
             },
           });
 
