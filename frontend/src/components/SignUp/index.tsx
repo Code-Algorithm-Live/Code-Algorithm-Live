@@ -105,6 +105,7 @@ const SignUp = () => {
           }),
         },
       );
+      console.log(response);
 
       if (response.ok && session) {
         //  회원가입이 완료된 경우 로그인 요청
@@ -135,11 +136,13 @@ const SignUp = () => {
 
           await update({
             action: 'logIn',
-            name: userInfo.nickname,
-            image: userInfo.imageUrl,
-            jwtToken: token,
-            kakaoName: name,
-            SolvedId: userInfo.solvedId,
+            user: {
+              name: userInfo.nickname,
+              image: userInfo.imageUrl,
+              jwtToken: token,
+              kakaoName: name,
+              SolvedId: userInfo.solvedId,
+            },
           });
 
           await router.push('/');
