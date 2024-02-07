@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import UserImage from '@/components/Home/Waiting/UserImage';
-import { HelpForm } from '@/utils/providers/AlarmProvider/type';
+import { HelpForm } from '@/types/Help';
 
 interface ModalContentProps {
   modalData: HelpForm | null;
