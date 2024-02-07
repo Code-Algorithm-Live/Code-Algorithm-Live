@@ -172,7 +172,7 @@ const RightContainer = styled.div`
 `;
 
 export default function Chat() {
-  const [code, setCode] = useState('heljaskldjlk');
+  const [code] = useState('');
   const [output, setOutput] = useState('');
   const compileMutation = useMutation({
     mutationFn: fetchPostCompiler,

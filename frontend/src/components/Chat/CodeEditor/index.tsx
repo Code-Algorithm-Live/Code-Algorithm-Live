@@ -63,7 +63,7 @@ function addHistory({
 }: {
   preStr: string;
   nextStr: string;
-}): History {
+}): History | undefined {
   let preIdx = 0;
   let reverseIdx = 1;
   const shortLen =
@@ -72,8 +72,6 @@ function addHistory({
   while (preIdx < shortLen && preStr[preIdx] === nextStr[preIdx]) {
     preIdx += 1;
   }
-
-  console.log(preIdx, preStr, nextStr);
 
   if (preIdx === preStr.length && preIdx === nextStr.length) return;
 
@@ -124,10 +122,10 @@ const CodeEditor = () => {
     preStr: string;
     nextStr: string;
   }) => {
-    console.log('preStr', preStr, '/// nextStr', nextStr);
     const newHistory = addHistory({ preStr, nextStr });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    if (!newHistory) return;
     setHistory(pre => [...pre, newHistory]);
     preContent.current = nextStr;
   };
