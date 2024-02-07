@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef } from 'react';
-import styles from '@/components/Home/Waiting/UserImage/UserImage.module.scss';
+import styled from 'styled-components';
 
 interface IUser {
   memberExp: number;
@@ -10,14 +9,26 @@ interface IUser {
   url: string;
 }
 
-// const ImageContainer = styles(Image)`
-// border-radius: 50%;
-//   width: 70px;
-//   height: 70px;
-// `;
+const Container = styled.div`
+  position: relative;
+`;
+const ImageContainer = styled(Image)`
+  border-radius: 50%;
+  padding: 5px;
+  width: 80px;
+  height: 80px;
+`;
+
+const LevelContainer = styled(Image)`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: -15px;
+  top: -4px;
+  rotate: 30deg;
+`;
 
 const UserImage = ({ userData }: { userData: IUser }) => {
-  const userContainerRef = useRef<HTMLDivElement>(null);
   function expToLevel(memberExp: number) {
     const 등급 = Math.floor(memberExp / 15);
     const 레벨 = memberExp % 15;
@@ -28,23 +39,22 @@ const UserImage = ({ userData }: { userData: IUser }) => {
     ...expToLevel(userData.memberExp),
   };
   return (
-    <div className={styles.userContainer} ref={userContainerRef}>
-      <Image
-        className={styles.profileImg}
+    <Container>
+      <ImageContainer
         src={userData.url}
         alt={`${userData.nickname}.png`}
         width={70}
         height={70}
+        priority
       />
-      <div className={styles.levelContainer}>
-        <Image
-          src={`/images/userLevel/${updatedUserData.등급 + 1}.png`}
-          alt="등급"
-          width={50}
-          height={50}
-        />
-      </div>
-    </div>
+      <LevelContainer
+        src={`/images/userLevel/${updatedUserData.등급 + 1}.png`}
+        alt="등급"
+        width={50}
+        height={50}
+        priority
+      />
+    </Container>
   );
 };
 

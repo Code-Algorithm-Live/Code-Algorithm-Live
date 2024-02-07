@@ -85,7 +85,7 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
       {/** TODO: 하단 알림 자세히 보기 클릭시 모달이 팝업  */}
       <ConfirmModal open={open} onClose={handleClose} onConfirm={handleConfirm}>
         <div>
-          {helpForm?.sender.name}
+          {helpForm?.sender.nickname}
           <br />
           {helpForm?.roomUuid}
           <br />

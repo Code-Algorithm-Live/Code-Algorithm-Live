@@ -25,6 +25,7 @@ const authOptions: NextAuthOptions = {
         updatedToken.SolvedId = session.user.SolvedId;
         updatedToken.kakaoName = session.user.kakaoName;
         updatedToken.email = session.user.email;
+        updatedToken.userExp = session.user.userExp;
       }
 
       return updatedToken;
@@ -46,6 +47,7 @@ const authOptions: NextAuthOptions = {
           SolvedId: token.SolvedId,
           kakaoName: token.kakaoName,
           email: token.email,
+          userExp: token.userExp,
         };
       }
       return updatedSession;
