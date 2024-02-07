@@ -29,6 +29,7 @@ interface HelpForm {
   receiver: Receiver;
   helpDto: HelpDto;
   roomUuid: RoomUuid;
+  success?: boolean; // 매칭 성공 여부
 }
 
 export type { HelpDto, Receiver, RoomUuid, Sender, HelpForm };
