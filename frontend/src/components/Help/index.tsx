@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import TextInput from '@/components/Common/TextInput';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
@@ -13,7 +13,9 @@ function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  const { data: session } = useSession();
+  const [middleNumber, setMiddleNumber] = useState<string>('');
+  const debouncedNumber = useDebounce(middleNumber, 5000);
+  // const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -22,6 +24,16 @@ function Form() {
   };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
+  // const sender = {
+  //   email: session?.user?.email,
+  //   image: session?.user?.image,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // kakaoname: session?.user?.kakaoName,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // solvedId: session?.user?.SolvedId,s
+  //   nickname: session?.user?.name,
+  // };
+
   const sender = {
     email: session?.user?.email,
     image: session?.user?.image,
@@ -35,7 +47,8 @@ function Form() {
   const roomUuid = generateUUID();
 
   const handleChangeNumber = (num: string) => {
-    setProblemNumber(num);
+    // setProblemNumber(num);
+    setMiddleNumber(num);
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
@@ -71,6 +84,10 @@ function Form() {
     localStorage.setItem('startTime', nowTime);
     localStorage.setItem('helpRequestTime', '0');
   };
+
+  useEffect(() => {
+    setProblemNumber(debouncedNumber);
+  }, [debouncedNumber]);
 
   return (
     <>
