@@ -105,6 +105,7 @@ const SignUp = () => {
           }),
         },
       );
+      console.log(response);
 
       if (response.ok && session) {
         //  회원가입이 완료된 경우 로그인 요청
