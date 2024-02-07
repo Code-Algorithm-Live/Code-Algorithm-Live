@@ -94,7 +94,13 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
   return (
     <Container>
       <UserContainer>
-        <UserImage userData={userData} />
+        <UserImage
+          userData={{
+            nickname: modalData.sender.nickname,
+            memberExp: modalData.sender.exp,
+            url: modalData.sender.image,
+          }}
+        />
         <NameText>{modalData.sender.nickname}</NameText>
       </UserContainer>
       <MiddleContainer>

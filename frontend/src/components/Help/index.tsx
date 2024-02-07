@@ -12,7 +12,7 @@ function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
   const sender = {
