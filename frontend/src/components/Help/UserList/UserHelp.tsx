@@ -4,21 +4,23 @@ import UserInfo from '@/components/Help/UserList/UserInfo';
 import styles from '@/components/Help/UserList/UserHelp.module.scss';
 import { HPReceiver } from '@/types/HelpMatching';
 import { Receiver, HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { instance } from '@/api/instance';
+// import { instance } from '@/api/instance';
 import { generateUUID } from '@/utils/uuid';
 import { useSession } from 'next-auth/react';
+import { fetchSendHelp } from '@/api/match';
+import { useMutation } from '@tanstack/react-query';
 
 interface IHelpUser {
   userData: HPReceiver;
   mainLanguage: string;
 }
 
-interface IFetchPostHelp {
-  sender: Sender;
-  receiver: Receiver;
-  roomUuid: RoomUuid;
-  helpDto: HelpDto;
-}
+// interface IFetchPostHelp {
+//   sender: Sender;
+//   receiver: Receiver;
+//   roomUuid: RoomUuid;
+//   helpDto: HelpDto;
+// }
 
 interface IData {
   nickname: string;
@@ -27,6 +29,7 @@ interface IData {
 }
 
 const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
+  const { data: session } = useSession();
   const data: IData = {
     nickname: userData.nickname,
     memberExp: userData.exp,
@@ -41,18 +44,19 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
     solvedId: userData.solvedId,
     kakaoname: userData.kakaoname,
     image: userData.image,
+    exp: 0,
   };
 
   const roomUuidData: RoomUuid = generateUUID();
 
   const senderData: Sender = {
-    email: session?.user?.email,
-    image: session?.user?.image,
+    email: session?.user?.email ?? ' ',
+    image: session?.user?.image ?? ' ',
+    kakaoname: session?.user?.kakaoName ?? ' ',
+    solvedId: session?.user?.SolvedId ?? ' ',
+    nickname: session?.user?.name ?? ' ',
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    kakaoname: session?.user?.kakaoName,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    solvedId: session?.user?.SolvedId,
-    nickname: session?.user?.name,
+    exp: session?.user?.userExp !== undefined ? session?.user?.userExp : 0,
   };
 
   const middleTitle = localStorage.getItem('title');
@@ -64,24 +68,39 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
     content: middleContent == null ? 'no content' : middleContent,
   };
 
+  const sendHelpMutation = useMutation({
+    mutationFn: fetchSendHelp,
+    // eslint-disable-next-line no-console
+    onSuccess: result => console.log('data', result.data),
+  });
   // TODO: 클릭시 서버와 주스탠드 연결, 클래스 이름 바꾸기
-
   const handleClick = () => {
-    const postHelpData: IFetchPostHelp = {
+    if (sendHelpMutation.isPending) return;
+
+    sendHelpMutation.mutate({
       sender: senderData,
       receiver: receiverData,
-      roomUuid: roomUuidData,
       helpDto: helpDtoData,
-    };
-    instance
-      .post<IFetchPostHelp>('/help/send', postHelpData)
-      .catch(Err => console.error(Err));
+      roomUuid: roomUuidData,
+    });
+
+    // const postHelpData: IFetchPostHelp = {
+    //   sender: senderData,
+    //   receiver: receiverData,
+    //   roomUuid: roomUuidData,
+    //   helpDto: helpDtoData,
+    // };
+    // instance
+    //   .post<IFetchPostHelp>('/help/send', postHelpData)
+    //   // eslint-disable-next-line no-console
+    //   .catch(Err => console.error(Err));
   };
   return (
     <div className={styles.container}>
       <UserInfo userData={data} mainLanguage={mainLanguage} />
       <button className={styles.help} onClick={handleClick}>
-        도움 요청하기
+        {sendHelpMutation.isPending && <>요청하는 중...</>}
+        {!sendHelpMutation.isPending && <>요청하기</>}
       </button>
     </div>
   );
