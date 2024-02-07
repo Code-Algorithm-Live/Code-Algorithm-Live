@@ -1,38 +1,14 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { HelpForm } from '@/utils/providers/AlarmProvider/type';
+import { instance } from '@/api/instance';
 import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import UserImage from '@/components/Home/Waiting/UserImage';
 import ModalContent from '@/components/Home/Waiting/ModalContent';
 
 interface WaitingQueueProps {
   activeTab: string;
-}
-
-interface QueueItem {
-  sender: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-    kakaoname: string;
-    solvedId: string;
-  };
-  receiver: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-    kakaoname: string;
-    solvedId: string;
-  };
-  helpDto: {
-    num: number;
-    title: string;
-    content: string;
-  };
-  roomUuid: string;
 }
 
 const Container = styled.div`
@@ -72,12 +48,6 @@ const TextContainer = styled.div`
   gap: 3px;
 `;
 
-const CompletedContainer = styled.div`
-  display: flex;
-  align-items: centerl;
-  gap: 10px;
-`;
-
 const NameText = styled.span`
   padding: 0px 20px 0px 20px;
   width: 130px;
@@ -106,9 +76,47 @@ const NumText = styled.span`
 const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
   const { data: session, status } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [modalData, setmodalData] = useState<QueueItem | null>(null);
-  const handleConfirm = () => console.log('confirm!!');
-  const [queueData, setQueueData] = useState<QueueItem[]>([]);
+  const [modalData, setmodalData] = useState<HelpForm | null>(null);
+  const [queueData, setQueueData] = useState<HelpForm[]>([]);
+
+  const handleConfirm = async () => {
+    try {
+      if (modalData) {
+        const bodyData = {
+          sender: {
+            email: modalData.sender.email,
+            image: modalData.sender.image,
+            kakaoname: modalData.sender.kakaoname,
+            nickname: modalData.sender.nickname,
+            exp: modalData.sender.exp,
+            solvedId: modalData.sender.solvedId,
+          },
+          receiver: {
+            email: session?.user.email,
+            image: session?.user.image,
+            kakaoname: session?.user.kakaoName,
+            nickname: session?.user.name,
+            exp: session?.user.userExp,
+            solvedId: session?.user.SolvedId,
+          },
+          helpDto: {
+            num: modalData.helpDto.num,
+            title: modalData.helpDto.title,
+            content: modalData.helpDto.content,
+          },
+          roomUuid: modalData.roomUuid,
+          success: true,
+        };
+
+        await instance.post<HelpForm>(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/help/accept`,
+          bodyData,
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,7 +137,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           },
         );
 
-        const responseData: unknown = await Response.json();
+        const responseData = (await Response.json()) as unknown as HelpForm;
         setQueueData(responseData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -160,9 +168,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           />
           <NameText>{queue.sender.nickname}</NameText>
           <TextContainer>
-            <CompletedContainer>
-              <NumText>문제 번호 {queue.helpDto.num}</NumText>
-            </CompletedContainer>
+            <NumText>문제 번호 {queue.helpDto.num}</NumText>
             <TitleText>{queue.helpDto.title}</TitleText>
           </TextContainer>
         </ItemContainer>
