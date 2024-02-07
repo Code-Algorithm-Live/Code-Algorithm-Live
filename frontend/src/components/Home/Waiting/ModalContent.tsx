@@ -1,36 +1,9 @@
 import styled from 'styled-components';
 import UserImage from '@/components/Home/Waiting/UserImage';
+import { HelpForm } from '@/types/Help';
 
 interface ModalContentProps {
-  modalData: ModalData | null;
-  userData: UserData;
-}
-
-interface UserData {
-  nickname: string;
-  memberExp: number;
-  url: string;
-}
-
-interface ModalData {
-  sender: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-  };
-  receiver: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-  };
-  helpDto: {
-    num: number;
-    title: string;
-    content: string;
-  };
-  roomUuid: string;
+  modalData: HelpForm | null;
 }
 
 const Container = styled.div`
@@ -89,7 +62,7 @@ const TitleDiv = styled.div`
   height: 100%;
 `;
 
-const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
+const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
   if (!modalData) {
     return null;
   }
@@ -97,7 +70,13 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
   return (
     <Container>
       <UserContainer>
-        <UserImage userData={userData} />
+        <UserImage
+          userData={{
+            nickname: modalData.sender.nickname,
+            memberExp: modalData.sender.exp,
+            url: modalData.sender.image,
+          }}
+        />
         <NameText>{modalData.sender.nickname}</NameText>
       </UserContainer>
       <MiddleContainer>
@@ -112,7 +91,9 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
             <Label>
               <label>상세 내용</label>
             </Label>
-            <TitleDiv>{modalData.helpDto.content}</TitleDiv>
+            <TitleDiv
+              dangerouslySetInnerHTML={{ __html: modalData.helpDto.content }}
+            />
           </ContentsContainer>
         </FormContainer>
         <div>문제 번호에 맞는 폼 생성 예정 : {modalData.helpDto.num}</div>
