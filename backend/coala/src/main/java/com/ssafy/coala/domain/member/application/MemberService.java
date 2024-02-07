@@ -25,4 +25,6 @@ public interface MemberService {
     Member getMemberByNickname(String name);
 
     List<Member> getMemberAllList();
+
+    List<MemberDto> getMemberByProblemId(int problemId);
 }

@@ -46,7 +46,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
         String refToken = redisStringTemplate.opsForValue().get("JWT_TOKEN:" + jwtUtil.getEmail(token));
         System.out.println(refToken+"로그인중인 토큰 있는지 확인");
-        if ( refToken == null) {
+        if (refToken == null) {
             System.out.println("만료된 토큰입니다");
             filterChain.doFilter(request,response);
             return;

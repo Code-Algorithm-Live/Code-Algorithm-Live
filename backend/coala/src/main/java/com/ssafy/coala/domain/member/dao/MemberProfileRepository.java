@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,4 +37,8 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
     @Transactional
     @Query("update MemberProfile m set m.lastRequest = CURRENT_TIMESTAMP where m.nickname = :nickname")
     void updateLastRequestByNickname(@Param("nickname") String nickname);
+
+    @Query(value = "select m.email, m.image_url, m.kakao_name, m.nick_name, m.exp, m.solved_id from member_profile m join member_problem_ mp on m.id = mp.member_id " +
+            "where mp.problem_id = :problemId and m.last_request >= (now() - interval 60 minute)", nativeQuery = true)
+    List<Object[]> findAccessMemberByProblemId(@Param("problemId") int problemId);
 }

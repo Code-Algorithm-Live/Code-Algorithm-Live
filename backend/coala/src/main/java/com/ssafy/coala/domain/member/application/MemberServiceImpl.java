@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -105,5 +106,17 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> getMemberAllList() {
         List<Member> list = memberRepository.findAll();
         return list;
+    }
+
+    @Override
+    public List<MemberDto> getMemberByProblemId(int problemId) {
+        List<Object[]> objList = memberProfileRepository.findAccessMemberByProblemId(problemId);
+        List<MemberDto> result = new ArrayList<>();
+        for (Object[] objarr:objList){
+            MemberDto memberDto = new MemberDto((String)objarr[0],(String)objarr[1],
+                    (String)objarr[2],(String)objarr[3],(int)objarr[4],(String)objarr[5]);
+            result.add(memberDto);
+        }
+        return result;
     }
 }
