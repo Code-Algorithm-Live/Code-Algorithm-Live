@@ -19,7 +19,7 @@ const Container = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--main-color);
+    background: var(--editorTypo-color);
     border-radius: 10px;
     background-clip: padding-box;
     border: 3px solid transparent;

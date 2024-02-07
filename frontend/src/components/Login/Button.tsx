@@ -9,6 +9,9 @@ type UserInfo = {
   nickname: string;
   imageUrl: string;
   jwtToken: string;
+  SolvedId: string;
+  email: string;
+  userExp: number;
 };
 
 const Button = () => {
@@ -70,11 +73,15 @@ const Button = () => {
 
               await update({
                 action: 'logIn',
-                name: userInfo.nickname,
-                image: userInfo.imageUrl,
-                jwtToken: token,
-                kakaoName: name,
-                SolvedId: userInfo.solvedId,
+                user: {
+                  name: userInfo.nickname,
+                  image: userInfo.imageUrl,
+                  jwtToken: token,
+                  kakaoName: name,
+                  SolvedId: userInfo.solvedId,
+                  email: email,
+                  userExp: userInfo.exp,
+                },
               });
 
               await router.push('/');

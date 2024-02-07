@@ -105,6 +105,7 @@ const SignUp = () => {
           }),
         },
       );
+      console.log(response);
 
       if (response.ok && session) {
         //  회원가입이 완료된 경우 로그인 요청
@@ -133,13 +134,19 @@ const SignUp = () => {
           );
           const userInfo = await userDataResponse.json();
 
+          console.log('userInfo', userInfo);
+
           await update({
             action: 'logIn',
-            name: userInfo.nickname,
-            image: userInfo.imageUrl,
-            jwtToken: token,
-            kakaoName: name,
-            SolvedId: userInfo.solvedId,
+            user: {
+              name: userInfo.nickname,
+              image: userInfo.imageUrl,
+              jwtToken: token,
+              kakaoName: name,
+              SolvedId: userInfo.solvedId,
+              email: email,
+              userExp: userInfo.exp,
+            },
           });
 
           await router.push('/');
@@ -160,7 +167,6 @@ const SignUp = () => {
 
       if (profileMessage === uuid) {
         // 회원가입(DB에 데이터 저장) 후, 홈으로 이동
-
         await sendProfileDataToBackend(
           userEmail,
           userImage,

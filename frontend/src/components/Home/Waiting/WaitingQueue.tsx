@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { HelpForm } from '@/types/Help';
+import { instance } from '@/api/instance';
 import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import UserImage from '@/components/Home/Waiting/UserImage';
 import ModalContent from '@/components/Home/Waiting/ModalContent';
@@ -20,7 +21,7 @@ const Container = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--main-color);
+    background: var(--editorTypo-color);
     border-radius: 10px;
     background-clip: padding-box;
     border: 3px solid transparent;
@@ -30,6 +31,7 @@ const Container = styled.div`
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  padding-left: 10px;
   height: 80px;
   border-radius: 10px;
   transition: background-color 0.3s;
@@ -44,27 +46,6 @@ const TextContainer = styled.div`
   flex-direction: column;
   width: 840px;
   gap: 3px;
-`;
-
-const CompletedContainer = styled.div`
-  display: flex;
-  align-items: centerl;
-  gap: 10px;
-`;
-
-const Completed = styled.span`
-  width: 80px;
-  height: 23px;
-  border-radius: 5px;
-  background-color: var(--point-color);
-
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--white-color);
-
-  text-align: center;
-  line-height: 23px;
 `;
 
 const NameText = styled.span`
@@ -95,129 +76,78 @@ const NumText = styled.span`
 const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
   const { data: session, status } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [modalData, setmodalData] = useState(null);
+  const [modalData, setmodalData] = useState<HelpForm | null>(null);
+  const [queueData, setQueueData] = useState<HelpForm[]>([]);
 
-  const handleConfirm = () => console.log('confirm!!');
+  const handleConfirm = async () => {
+    try {
+      if (modalData) {
+        const bodyData = {
+          sender: {
+            email: modalData.sender.email,
+            image: modalData.sender.image,
+            kakaoname: modalData.sender.kakaoname,
+            nickname: modalData.sender.nickname,
+            exp: modalData.sender.exp,
+            solvedId: modalData.sender.solvedId,
+          },
+          receiver: {
+            email: session?.user.email,
+            image: session?.user.image,
+            kakaoname: session?.user.kakaoName,
+            nickname: session?.user.name,
+            exp: session?.user.userExp,
+            solvedId: session?.user.SolvedId,
+          },
+          helpDto: {
+            num: modalData.helpDto.num,
+            title: modalData.helpDto.title,
+            content: modalData.helpDto.content,
+          },
+          roomUuid: modalData.roomUuid,
+          success: true,
+        };
 
-  // 임시 데이터
-  const queueData = [
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '박진아',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: '처우열',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '거고고',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: '기기기',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: 'ㅁㄴㅇㄴㅁㅇ',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: 'ㅇㅁㄴㅇㄴ',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-    {
-      sender: {
-        email: 'sender',
-        image: 'test',
-        nickname: '하하',
-        exp: 15,
-      },
-      receiver: {
-        email: 'receiver',
-        image: 'test',
-        nickname: 'ㅁㅁ',
-      },
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-    },
-  ];
-  const userData = {
-    nickname: '알라코1',
-    memberExp: 15,
-    url: '/images/coala/smile.png',
+        await instance.post<HelpForm>(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/help/accept`,
+          bodyData,
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
-  // const [queueData, setQueueData] = useState<unknown[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const token = session?.user?.jwtToken as string;
-  //       const url =
-  //         activeTab === 'tab1'
-  //           ? '/help/waitqueue'
-  //           : `/help/waitqueue/solvedlist?solvedId=${session?.user?.SolvedId}`;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = session?.user?.jwtToken as string;
+        const url =
+          activeTab === 'tab1'
+            ? '/help/waitqueue'
+            : `/help/waitqueue/solvedlist?solvedId=${session?.user?.SolvedId}`;
 
-  //       const Response = await fetch(
-  //         `${process.env.NEXT_PUBLIC_BASE_URL}${url}`,
-  //         {
-  //           method: 'GET',
-  //           headers: {
-  //             Authorization: token,
-  //           },
-  //         },
-  //       );
+        const Response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}${url}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
 
-  //       const responseData: unknown = await Response.json();
-  //       console.log(responseData);
+        const responseData = (await Response.json()) as unknown as HelpForm;
+        setQueueData(responseData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //       setQueueData(responseData);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-
-  //   if (status === 'authenticated') {
-  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //     fetchData();
-  //   }
-  // }, [session, status, activeTab]);
+    if (status === 'authenticated') {
+      fetchData();
+    }
+  }, [activeTab, session?.user?.jwtToken, session?.user?.SolvedId, status]);
 
   return (
     <Container>
@@ -229,13 +159,16 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
             setmodalData(queue);
           }}
         >
-          <UserImage userData={userData} />
+          <UserImage
+            userData={{
+              nickname: queue.sender.nickname,
+              memberExp: queue.sender.exp,
+              url: queue.sender.image,
+            }}
+          />
           <NameText>{queue.sender.nickname}</NameText>
           <TextContainer>
-            <CompletedContainer>
-              <NumText>문제 번호 {queue.helpDto.num}</NumText>
-              {activeTab !== 'tab1' && <Completed>내가 푼 문제</Completed>}
-            </CompletedContainer>
+            <NumText>문제 번호 {queue.helpDto.num}</NumText>
             <TitleText>{queue.helpDto.title}</TitleText>
           </TextContainer>
         </ItemContainer>
@@ -248,7 +181,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           setIsConfirmModalOpen(false);
         }}
       >
-        <ModalContent modalData={modalData} userData={userData} />
+        <ModalContent modalData={modalData} />
       </ConfirmModal>
     </Container>
   );
