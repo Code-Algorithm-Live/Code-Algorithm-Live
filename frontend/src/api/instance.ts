@@ -12,7 +12,7 @@ instance.interceptors.request.use(
     const session = await getSession();
     if (session) {
       // eslint-disable-next-line no-param-reassign
-      config.headers.Authorization = `${session?.user?.jwtToken}`; // FIXME: user 타입
+      config.headers.Authorization = `${session?.user?.jwtToken}`;
     }
     return config;
   },

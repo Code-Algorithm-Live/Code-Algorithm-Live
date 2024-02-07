@@ -2,30 +2,105 @@
 
 import UserInfo from '@/components/Help/UserList/UserInfo';
 import styles from '@/components/Help/UserList/UserHelp.module.scss';
+import { HPReceiver } from '@/types/HelpMatching';
+import { Receiver, HelpDto, RoomUuid, Sender } from '@/types/Help';
+// import { instance } from '@/api/instance';
+import { generateUUID } from '@/utils/uuid';
+import { useSession } from 'next-auth/react';
+import { fetchSendHelp } from '@/api/match';
+import { useMutation } from '@tanstack/react-query';
 
-interface Iuser {
+interface IHelpUser {
+  userData: HPReceiver;
+  mainLanguage: string;
+}
+
+// interface IFetchPostHelp {
+//   sender: Sender;
+//   receiver: Receiver;
+//   roomUuid: RoomUuid;
+//   helpDto: HelpDto;
+// }
+
+interface IData {
   nickname: string;
   memberExp: number;
   url: string;
 }
 
-interface IHelpUser {
-  userData: Iuser;
-  mainLanguage: string;
-}
-
 const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
-  // TODO: 도움 요청 여부 세션이나 주스탠드에 저장
+  const { data: session } = useSession();
+  const data: IData = {
+    nickname: userData.nickname,
+    memberExp: userData.exp,
+    url: userData.image,
+  };
 
+  // TODO: 도움 요청 여부 저장
+
+  const receiverData: Receiver = {
+    nickname: userData.nickname,
+    email: userData.email,
+    solvedId: userData.solvedId,
+    kakaoname: userData.kakaoname,
+    image: userData.image,
+    exp: 0,
+  };
+
+  const roomUuidData: RoomUuid = generateUUID();
+
+  const senderData: Sender = {
+    email: session?.user?.email ?? ' ',
+    image: session?.user?.image ?? ' ',
+    kakaoname: session?.user?.kakaoName ?? ' ',
+    solvedId: session?.user?.SolvedId ?? ' ',
+    nickname: session?.user?.name ?? ' ',
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    exp: session?.user?.userExp !== undefined ? session?.user?.userExp : 0,
+  };
+
+  const middleTitle = localStorage.getItem('title');
+  const middleContent = localStorage.getItem('content');
+
+  const helpDtoData: HelpDto = {
+    title: middleTitle == null ? 'no title' : middleTitle,
+    num: Number(localStorage.getItem('num')),
+    content: middleContent == null ? 'no content' : middleContent,
+  };
+
+  const sendHelpMutation = useMutation({
+    mutationFn: fetchSendHelp,
+    // eslint-disable-next-line no-console
+    onSuccess: result => console.log('data', result.data),
+  });
   // TODO: 클릭시 서버와 주스탠드 연결, 클래스 이름 바꾸기
   const handleClick = () => {
-    // 클릭
+    if (sendHelpMutation.isPending) return;
+
+    sendHelpMutation.mutate({
+      sender: senderData,
+      receiver: receiverData,
+      helpDto: helpDtoData,
+      roomUuid: roomUuidData,
+    });
+
+    // const postHelpData: IFetchPostHelp = {
+    //   sender: senderData,
+    //   receiver: receiverData,
+    //   roomUuid: roomUuidData,
+    //   helpDto: helpDtoData,
+    // };
+    // instance
+    //   .post<IFetchPostHelp>('/help/send', postHelpData)
+    //   // eslint-disable-next-line no-console
+    //   .catch(Err => console.error(Err));
   };
   return (
     <div className={styles.container}>
-      <UserInfo userData={userData} mainLanguage={mainLanguage} />
+      <UserInfo userData={data} mainLanguage={mainLanguage} />
       <button className={styles.help} onClick={handleClick}>
-        도움 요청하기
+        {sendHelpMutation.isPending && <>요청하는 중...</>}
+        {!sendHelpMutation.isPending && <>요청하기</>}
       </button>
     </div>
   );

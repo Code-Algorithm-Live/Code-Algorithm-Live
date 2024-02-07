@@ -44,6 +44,7 @@ const Nickname: React.FC<UserNameProps> = ({
     clearTimeout(debounceTimer);
     setDebounceTimer(
       setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         fetchData(text);
       }, 300),
     );
@@ -62,8 +63,12 @@ const Nickname: React.FC<UserNameProps> = ({
 
   useEffect(() => {
     // 컴포넌트가 마운트될 때 중복검사 실행
-    inputRef.current.value = userName;
-    fetchData(userName);
+    if (inputRef.current) {
+      // eslint-disable-next-line no-param-reassign
+      inputRef.current.value = userName;
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetchData(userName);
+    }
   }, [userName]);
 
   return (

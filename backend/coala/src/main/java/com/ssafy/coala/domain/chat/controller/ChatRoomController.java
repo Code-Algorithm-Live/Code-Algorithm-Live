@@ -1,58 +1,54 @@
 package com.ssafy.coala.domain.chat.controller;
 
-import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
+import com.ssafy.coala.domain.chat.application.ChatService;
+import com.ssafy.coala.domain.chat.domain.ChatRoom;
+import com.ssafy.coala.domain.chat.domain.CodeHistory;
+import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-@RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/chat")
+@RequiredArgsConstructor
 public class ChatRoomController {
 
-//    private final ChatRoomRepository chatRoomRepository;
-//    private final JwtTokenProvider jwtTokenProvider;
+    private final ChatService chatService;
 
-    @GetMapping("/room")
-    public String rooms() {
-        return "/chat/room";
-    }
-
-    @Operation(summary = "채팅방 생성", description = "도움을 요청할 때 채팅방이 생성된다.")
+    @Operation(summary = "채팅 방 생성", description = "수락 버튼을 누르면 채팅방 생성 ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    // 채팅방을 만드는 것 => 도움을 요청할 때 생성
-    // 상대방과 내가 들어가면 1:1, 일단은 1:1로 설계를 하고 여러명 채팅방은 나중에 설계해보자
-    @PostMapping("/create")
-    public ResponseEntity<ChatRoomDto> createRoom(@RequestParam String name){
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
-        return new ResponseEntity<ChatRoomDto>(chatRoomDto, HttpStatus.OK);
+    // 수락을 눌렀을 경우 상대방과 채팅방 생성
+    @PostMapping("/room")
+    public ResponseEntity<ChatRoom> createRoom(@RequestBody MakeRoomDto makeRoomDto){
+        ChatRoom chatRoom = chatService.createRoom(makeRoomDto);
+        return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
-
-    @Operation(summary = "채팅방 입장~", description = "사용자 2명이 채팅방에 입장한다.")
+    
+    
+    @Operation(summary = "특정 채팅 방 조회", description = "방 번호로 채팅 방 조회 ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    // 채팅방 입장~
-    @GetMapping("/enter/{roomId}")
-    public ResponseEntity<ChatRoomDto> enterRoom(@PathVariable String roomId){
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
-        return new ResponseEntity<ChatRoomDto>(chatRoomDto, HttpStatus.OK);
+    // 특정 채팅방 조회
+    @GetMapping("/room/{roomUuid}")
+    public ResponseEntity<?> findRoom(@PathVariable("roomUuid") UUID roomUuid){
+        return chatService.findRoom(roomUuid);
     }
 
-    // 채팅방 나가기
-//    @PostMapping("/out/{roomId}")
 }
