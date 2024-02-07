@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +37,13 @@ public class ProblemController {
             " 5분에 한번 호출가능. 약 5초정도 대기 필요")
     @GetMapping("curate/{solvedId}")
     public ResponseEntity<CurateInfo> curateMemberProblem(@PathVariable String solvedId){
-
-        CurateInfo result = problemService.getCurateProblem(solvedId);
-
-        return ResponseEntity.ok(result);
+        try {
+            CurateInfo result = problemService.getCurateProblem(solvedId);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            // DB 요청 실패에 대한 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @Operation(summary = "문제 크롤링", description = "해당 문제에 대한 백준 사이트 html을 크롤링한다. !!호출횟수 줄일 것!!")
@@ -64,14 +68,7 @@ public class ProblemController {
         return ResponseEntity.ok((problemService.getProblemByMember(solvedId)));
     }
 
-//    @Operation(summary = "문제를 푼 유저 리스트", description = "문제를 푼 유저 리스트를 시간순으로 가져온다.")
-//    @GetMapping("member/{problemId}")
-//    public ResponseEntity<List<String>> getMemberByProblem(@Parameter(description = "problemId", required = true, example = "1000")
-//                                                            @PathVariable int problemId){
-//        return ResponseEntity.ok((problemService.getRecentMemberProblem(problemId)));
-//    }
-
-    @Operation(summary = "모든 문제 리스트", description = "모든 문제에 대한 정보를 가져온다.")
+    @Operation(summary = "모든 문제 리스트", description = "모든 문제에 대한 정보를 가져온다. 미구현")
     @GetMapping("")
     public ResponseEntity<List<Problem>> getProblemList(){
         List<Problem> list = new ArrayList<>();
@@ -124,45 +121,5 @@ public class ProblemController {
 
         return ResponseEntity.ok(null);
     }
-
-
-
-    private static String generateRandomString(int length) {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] randomBytes = new byte[length];
-        secureRandom.nextBytes(randomBytes);
-
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
-    }
-
-
-
-//    private RecentProblem updateRecentProblem(String bojId){ //크롤링한 정보로 업데이트 요청한다.
-////        doc.select(".problem_title")
-//        RecentProblem result = new RecentProblem();
-////        https://www.acmicpc.net/status?problem_id=&user_id=col016&language_id=-1&result_id=4
-//        String URL = "https://www.acmicpc.net/status?problem_id=&user_id="+bojId+"&language_id=-1&result_id=4";
-//        try {
-//            Document doc = Jsoup.connect(URL).get();
-//            String[] problem = doc.select(".problem_title").text().split(" ");
-//            List<Integer> list = new ArrayList<>();//중복가능한 리스트, 순서를 유지하기 위해서 set는 쓰지 않는다.
-//
-//            for (String p:problem){//5개가 될때까지 센다.
-//                int pid = Integer.parseInt(p);
-//                if (!list.contains(pid)){
-//                    list.add(pid);
-//                    if (list.size()==5) break;;
-//                }
-//            }
-//
-//
-//
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return result;
-//    }
 
 }

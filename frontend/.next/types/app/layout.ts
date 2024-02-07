@@ -1,4 +1,4 @@
-// File: C:\2학기\공통 프로젝트\sub2\S10P12A709\frontend\src\app\layout.tsx
+// File: C:\Users\SSAFY\Documents\sub2\S10P12A709\frontend\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

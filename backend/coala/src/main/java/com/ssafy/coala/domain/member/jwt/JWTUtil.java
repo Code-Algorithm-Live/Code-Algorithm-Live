@@ -1,6 +1,11 @@
 package com.ssafy.coala.domain.member.jwt;
 
+import com.ssafy.coala.domain.member.application.MemberService;
+import com.ssafy.coala.domain.member.controller.MemberController;
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
+import com.ssafy.coala.domain.member.dao.MemberRepository;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +19,8 @@ import java.util.UUID;
 public class JWTUtil {
 
     private SecretKey secretKey;
-
+    @Autowired
+    private MemberProfileRepository memberProfileRepository;
     public JWTUtil(@Value("${spring.jwt.secretKey}")String secret) {
 
 
@@ -57,5 +63,9 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public void updateByJwt(String token){
+        memberProfileRepository.updateLastRequestByNickname(getNickname(token));
     }
 }

@@ -2,7 +2,6 @@ package com.ssafy.coala.domain.member.jwt;
 
 import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.member.dto.CustomUserDetails;
-import com.ssafy.coala.domain.member.domain.MemberProfile;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,10 +19,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisStringTemplate;
-
     public JWTFilter(JWTUtil jwtUtil, RedisTemplate<String, String> redisStringTemplate) {
         this.jwtUtil = jwtUtil;
         this.redisStringTemplate = redisStringTemplate;
+
     }
 
     @Override
@@ -70,9 +69,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 response.addHeader("Authorization", "Bearer " + newtoken);
                 System.out.println("리프레쉬 토큰 검증 후 새로운 토큰 헤더에 담아 응답");
             }
-
-
-
+//            jwtUtil.getNickname();
             filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료 (필수)
@@ -88,7 +85,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 .nickname(username)
                 .email(email)
                 .build();
-
         //UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
@@ -98,6 +94,6 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
-
+        jwtUtil.updateByJwt(token);
     }
 }

@@ -1,9 +1,11 @@
+'use client';
 
+import Form from '@/components/Help';
 
 export default function Help() {
   return (
-    <h1>
-      Help 
-    </h1>
+    <>
+      <Form></Form>
+    </>
   );
 }

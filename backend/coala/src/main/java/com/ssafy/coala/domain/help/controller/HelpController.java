@@ -7,6 +7,7 @@ import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.application.MatchingService;
 import com.ssafy.coala.domain.help.application.RedisService;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,6 +47,8 @@ public class HelpController {
     })
     @GetMapping("/solvedlist/{num}")
     public ResponseEntity<String> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
+        MemberDto memberDto = new MemberDto();
+
         return ResponseEntity.ok("문제번호 " + num);
     }
 
