@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
+import { useParams } from 'next/navigation';
 import { styled } from 'styled-components';
 import { Client } from '@stomp/stompjs';
 import Message from '@/components/Chat/Chatting/Message';
@@ -52,10 +52,6 @@ interface IMessage {
 const BASE_URL = process.env.NEXT_PUBLIC_SOCKET_BASE_URL;
 const brokerURL = `${BASE_URL}/ws/chat`;
 const userId = Math.random().toString();
-const roomId = 2;
-const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
-const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
-const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
 
 /**
  * {hour}:{minutes}로 포맷팅합니다.
@@ -67,6 +63,10 @@ const getHourMinutes = (timeStamp: Date) => {
 const Chatting = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const { roomId } = useParams<{ roomId: string }>();
+  const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
+  const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
+  const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {

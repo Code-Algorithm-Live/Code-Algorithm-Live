@@ -171,6 +171,13 @@ const RightContainer = styled.div`
   }
 `;
 
+const mockCode = `public class Main {
+  public static void main(String[] args) {
+      System.out.println("Hello, World!");
+  }
+}
+`;
+
 export default function Chat() {
   const [code] = useState('');
   const [output, setOutput] = useState('');
