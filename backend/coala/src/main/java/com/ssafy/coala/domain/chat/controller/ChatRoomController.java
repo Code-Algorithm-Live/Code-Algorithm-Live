@@ -3,6 +3,8 @@ package com.ssafy.coala.domain.chat.controller;
 import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
 import com.ssafy.coala.domain.chat.domain.CodeHistory;
+import com.ssafy.coala.domain.chat.dto.ChatHistoryDto;
+import com.ssafy.coala.domain.chat.dto.CodeHistoryDto;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -50,5 +53,31 @@ public class ChatRoomController {
     public ResponseEntity<?> findRoom(@PathVariable("roomUuid") UUID roomUuid){
         return chatService.findRoom(roomUuid);
     }
+
+    @Operation(summary = "채팅방 id로 히스토리 저장", description = "채팅방 id로 code history list를 서버에 저장")
+    @PutMapping("history/{roomUuid}")
+    public ResponseEntity<?> saveHistory(@PathVariable UUID roomUuid, @RequestBody List<CodeHistoryDto> codeHistoryDtoList){
+        try {
+            List<CodeHistory> codeHistoryList = new ArrayList<>();
+            for (CodeHistoryDto codeHistoryDto : codeHistoryDtoList){
+                codeHistoryList.add(codeHistoryDto.toCodeHistory(roomUuid));
+            }
+            chatService.saveHistory(codeHistoryList);
+            return ResponseEntity.ok("code history save success!");
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(null);
+        }    }
+
+    @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
+    @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
+    public ResponseEntity<?> findHistory(@PathVariable UUID roomUuid){
+        try {
+            return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+
 
 }

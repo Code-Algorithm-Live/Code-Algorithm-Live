@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +37,13 @@ public class ProblemController {
             " 5분에 한번 호출가능. 약 5초정도 대기 필요")
     @GetMapping("curate/{solvedId}")
     public ResponseEntity<CurateInfo> curateMemberProblem(@PathVariable String solvedId){
-
-        CurateInfo result = problemService.getCurateProblem(solvedId);
-
-        return ResponseEntity.ok(result);
+        try {
+            CurateInfo result = problemService.getCurateProblem(solvedId);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            // DB 요청 실패에 대한 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @Operation(summary = "문제 크롤링", description = "해당 문제에 대한 백준 사이트 html을 크롤링한다. !!호출횟수 줄일 것!!")

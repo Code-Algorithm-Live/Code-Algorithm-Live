@@ -8,6 +8,8 @@ import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
 //import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
 import com.ssafy.coala.domain.chat.domain.CodeHistory;
+import com.ssafy.coala.domain.chat.dto.ChatHistoryDto;
+import com.ssafy.coala.domain.chat.dto.CodeHistoryDto;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
 import jakarta.transaction.Transactional;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class ChatService {
     private final ObjectMapper objectMapper;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final CodeHistoryRepository codeHistoryRepository;
 
 //    private Map<String, ChatRoomDto> chatRooms;
 
@@ -86,6 +86,34 @@ public class ChatService {
         // 메시지를 메시지레포지토리에 저장해줌
         chatMessageRepository.save(chatMessage);
         chatRoom.get().getMessages().add(chatMessage);
+    }
+
+    public void saveHistory(List<CodeHistory> list){
+        codeHistoryRepository.saveAll(list);
+    }
+
+
+    public ChatHistoryDto findChatHistory(UUID roomUuid){
+        ChatHistoryDto chatHistoryDto = new ChatHistoryDto();
+
+        List<ChatMessage> chatMessageList = chatMessageRepository.findByRoomId(roomUuid);
+        List<MessageDto> messageDtoList = new ArrayList<>();
+
+        List<CodeHistory> codeHistoryList = codeHistoryRepository.findByRoomId(roomUuid);
+        List<CodeHistoryDto> codeHistoryDtoList = new ArrayList<>();
+
+        for (ChatMessage chatMessage : chatMessageList){
+            messageDtoList.add(new MessageDto(chatMessage));
+        }
+
+        for (CodeHistory codeHistory : codeHistoryList){
+            codeHistoryDtoList.add(new CodeHistoryDto(codeHistory));
+        }
+
+        chatHistoryDto.setMessageDto(messageDtoList);
+        chatHistoryDto.setHistoryDto(codeHistoryDtoList);
+
+        return chatHistoryDto;
     }
 
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ChatRoom {
     @Id
-    @Column(name = "room_id")
+    @Column(name = "room_id",length = 16)
     private UUID roomId;
 
     private String sender;
