@@ -5,14 +5,21 @@ import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
 import { generateUUID } from '@/utils/uuid';
+import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import { useSession } from 'next-auth/react';
-import { FetchRegistHelpRequest, fetchRegistHelp } from '@/api/help';
+import { instance } from '@/api/instance';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   const { data: session } = useSession();
+
+  type FetchRegistHelpRequest = {
+    sender: Sender;
+    helpDto: HelpDto;
+    roomUuid: RoomUuid;
+  };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
   const sender = {
@@ -44,20 +51,24 @@ function Form() {
     content: formContent,
   };
 
-  const handleSubmit = async () => {
-    // TODO: 주스탠드 저장
-
+  const handleSubmit = () => {
     const data = {
       sender,
       helpDto,
       roomUuid,
-    } as unknown as FetchRegistHelpRequest;
+    };
 
-    try {
-      await fetchRegistHelp(data);
-    } catch (err) {
-      console.log(err);
-    }
+    instance
+      .post<FetchRegistHelpRequest>('/help/waitqueue', data)
+      .catch(Err => console.error(Err));
+
+    /** 로컬 스토리지에 저장 */
+    const nowTime: string = Date.now().toString();
+    localStorage.setItem('title', formTitle);
+    localStorage.setItem('content', formContent);
+    localStorage.setItem('problemNumber', problemNumber);
+    localStorage.setItem('startTime', nowTime);
+    localStorage.setItem('helpRequestTime', '0');
   };
 
   return (
