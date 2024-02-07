@@ -12,17 +12,17 @@ function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
   const sender = {
     email: session?.user?.email,
     image: session?.user?.image,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // kakaoname: session?.user?.kakaoName,
+    kakaoname: session?.user?.kakaoName,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     solvedId: session?.user?.SolvedId,
-    name: session?.user?.name,
+    nickname: session?.user?.name,
   };
 
   const roomUuid = generateUUID();
@@ -33,8 +33,7 @@ function Form() {
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
   };
-  
-  
+
   const handleChangeContent = (content: string) => {
     setFormContent(content);
   };
@@ -87,7 +86,7 @@ function Form() {
           </div>
         </div>
         <div className={styles.linkForm}>
-          <LinkPreview />
+          <LinkPreview problemNumber={Number(problemNumber)} />
         </div>
       </div>
     </>
