@@ -7,6 +7,7 @@ import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.application.MatchingService;
 import com.ssafy.coala.domain.help.application.RedisService;
+import com.ssafy.coala.domain.member.application.MemberService;
 import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/help")
 @RestController
@@ -24,7 +27,7 @@ public class HelpController {
     private final RedisService redisService;
     private final MatchingService matchingService;
     private final ChatService chatService;
-
+    private final MemberService memberService;
 
     @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
     @ApiResponses({
@@ -46,10 +49,9 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @GetMapping("/solvedlist/{num}")
-    public ResponseEntity<String> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        MemberDto memberDto = new MemberDto();
+    public ResponseEntity<List<MemberDto>> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
 
-        return ResponseEntity.ok("문제번호 " + num);
+        return ResponseEntity.ok(memberService.getMemberByProblemId(num));
     }
 
     @Operation(summary = "질문 히스토리 리스트", description = "최근 질문 히스토리 리스트를 반환합니다")
