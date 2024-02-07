@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import styled from 'styled-components';
 import Link from 'next/link';
 import IconNotice from '@assets/svgs/notice.svg';
@@ -82,7 +84,7 @@ export default function Nav() {
 
       // 서버에서 로그아웃이 성공하면 클라이언트에서도 로그아웃
       if (response.ok) {
-        await signOut('kakao');
+        await signOut();
       } else {
         alert('로그아웃 실패');
       }

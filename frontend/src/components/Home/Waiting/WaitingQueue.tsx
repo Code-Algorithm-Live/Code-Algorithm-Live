@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -137,7 +138,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           },
         );
 
-        const responseData = (await Response.json()) as unknown as HelpForm;
+        const responseData = (await Response.json()) as HelpForm[];
         setQueueData(responseData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -145,6 +146,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
     };
 
     if (status === 'authenticated') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchData();
     }
   }, [activeTab, session?.user?.jwtToken, session?.user?.SolvedId, status]);

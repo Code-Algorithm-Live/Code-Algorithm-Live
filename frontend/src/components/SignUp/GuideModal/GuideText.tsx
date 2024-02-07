@@ -117,6 +117,7 @@ const GuideText: React.FC<GuideTextProps> = ({ solvedId, uuid }) => {
   const handleCopyClick = () => {
     setIsCopied(true);
     setIsdisabled(true);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     handleClick();
   };
 
