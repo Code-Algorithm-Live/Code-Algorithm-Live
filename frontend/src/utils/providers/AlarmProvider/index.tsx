@@ -7,15 +7,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import { fetchAcceptHelp } from '@/api/match';
-import { HelpForm } from '@/utils/providers/AlarmProvider/type';
+import { HelpForm } from '@/types/Help';
 import { BROKER_URL } from '@/libs/stomp';
+import useHelpFromStore from '@/store/helpForm';
 
 const AUTHENTICATED = 'authenticated';
 
 const StompProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
-  const [helpForm, setHelpForm] = useState<HelpForm>(); // TODO: 전역으로 관리
+  const { helpForm, setHelpForm } = useHelpFromStore();
   const acceptRequestMutation = useMutation({ mutationFn: fetchAcceptHelp });
   const session = useSession(); // 사용자의 아이디
 
@@ -85,8 +86,6 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
     if (!helpForm) return;
     const data = helpForm;
     acceptRequestMutation.mutate(data);
-
-    setHelpForm(undefined);
   };
 
   return (
@@ -95,7 +94,7 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
       {/** TODO: 하단 알림 자세히 보기 클릭시 모달이 팝업  */}
       <ConfirmModal open={open} onClose={handleClose} onConfirm={handleConfirm}>
         <div>
-          {helpForm?.sender.name}
+          {helpForm?.sender.nickname}
           <br />
           {helpForm?.roomUuid}
           <br />

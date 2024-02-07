@@ -11,6 +11,7 @@ type UserInfo = {
   jwtToken: string;
   SolvedId: string;
   email: string;
+  userExp: number;
 };
 
 const Button = () => {
@@ -79,6 +80,7 @@ const Button = () => {
                   kakaoName: name,
                   SolvedId: userInfo.solvedId,
                   email: email,
+                  userExp: userInfo.exp,
                 },
               });
 

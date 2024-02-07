@@ -8,6 +8,7 @@ type IUser = {
   kakaoName: string;
   SolvedId: string;
   email: string;
+  userExp: number;
 };
 
 declare module 'next-auth' {
@@ -25,5 +26,6 @@ declare module 'next-auth/jwt' {
     SolvedId: string;
     kakaoName: string;
     email: string;
+    userExp: number;
   }
 }

@@ -1,16 +1,18 @@
 interface Sender {
   email: string;
   image: string;
-  nickname: string;
-  solvedId: string;
   kakaoname: string;
+  nickname: string;
+  exp: number;
+  solvedId: string;
 }
 
 interface Receiver {
   email: string;
   image: string;
-  nickname: string;
   kakaoname: string;
+  nickname: string;
+  exp: number;
   solvedId: string;
 }
 

@@ -20,7 +20,6 @@ const UserInfo = ({ userData, mainLanguage }: IHelpUser) => {
         <p className={styles.name}>{userData.nickname}</p>
         <div className={styles.detailDesc}>
           <span>{mainLanguage} | </span>
-          {/* <span>{userData.도움_준_횟수}문제를 도와줌</span> */}
         </div>
       </div>
     </div>

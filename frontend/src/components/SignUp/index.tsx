@@ -134,6 +134,8 @@ const SignUp = () => {
           );
           const userInfo = await userDataResponse.json();
 
+          console.log('userInfo', userInfo);
+
           await update({
             action: 'logIn',
             user: {
@@ -143,6 +145,7 @@ const SignUp = () => {
               kakaoName: name,
               SolvedId: userInfo.solvedId,
               email: email,
+              userExp: userInfo.exp,
             },
           });
 
@@ -164,7 +167,6 @@ const SignUp = () => {
 
       if (profileMessage === uuid) {
         // 회원가입(DB에 데이터 저장) 후, 홈으로 이동
-
         await sendProfileDataToBackend(
           userEmail,
           userImage,
