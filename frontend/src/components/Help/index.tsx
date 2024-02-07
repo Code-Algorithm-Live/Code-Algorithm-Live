@@ -4,22 +4,15 @@ import TextInput from '@/components/Common/TextInput';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import axios from 'axios';
 import { generateUUID } from '@/utils/uuid';
-import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import { useSession } from 'next-auth/react';
+import { FetchRegistHelpRequest, fetchRegistHelp } from '@/api/help';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   // const { data: session } = useSession();
-
-  type FetchRegistHelpRequest = {
-    sender: Sender;
-    helpDto: HelpDto;
-    roomUuid: RoomUuid;
-  };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
   const sender = {
@@ -58,22 +51,13 @@ function Form() {
       sender,
       helpDto,
       roomUuid,
-    };
+    } as unknown as FetchRegistHelpRequest;
 
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const fetchRegistHelp = async (data: FetchRegistHelpRequest) => {
-      const request = await axios
-        .post<FetchRegistHelpRequest>(
-          'http://localhost:8080/help/waitqueue',
-          data,
-        )
-        .then(function helpForm(response) {
-          return response.data;
-        });
-      return request;
-    };
-    // FIXME: 세션 해결시 없어짐
-    await fetchRegistHelp(data);
+    try {
+      await fetchRegistHelp(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
