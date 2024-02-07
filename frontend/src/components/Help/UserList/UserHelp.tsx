@@ -27,6 +27,7 @@ interface IData {
 }
 
 const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
+  const { data: session } = useSession();
   const data: IData = {
     nickname: userData.nickname,
     memberExp: userData.exp,
@@ -41,18 +42,19 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
     solvedId: userData.solvedId,
     kakaoname: userData.kakaoname,
     image: userData.image,
+    exp: 0,
   };
 
   const roomUuidData: RoomUuid = generateUUID();
 
   const senderData: Sender = {
-    email: session?.user?.email,
-    image: session?.user?.image,
+    email: session?.user?.email ?? ' ',
+    image: session?.user?.image ?? ' ',
+    kakaoname: session?.user?.kakaoName ?? ' ',
+    solvedId: session?.user?.SolvedId ?? ' ',
+    nickname: session?.user?.name ?? ' ',
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    kakaoname: session?.user?.kakaoName,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    solvedId: session?.user?.SolvedId,
-    nickname: session?.user?.name,
+    exp: session?.user?.userExp !== undefined ? session?.user?.userExp : 0,
   };
 
   const middleTitle = localStorage.getItem('title');
@@ -75,6 +77,7 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
     };
     instance
       .post<IFetchPostHelp>('/help/send', postHelpData)
+      // eslint-disable-next-line no-console
       .catch(Err => console.error(Err));
   };
   return (

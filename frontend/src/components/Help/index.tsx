@@ -60,6 +60,7 @@ function Form() {
 
     instance
       .post<FetchRegistHelpRequest>('/help/waitqueue', data)
+      // eslint-disable-next-line no-console
       .catch(Err => console.error(Err));
 
     /** 로컬 스토리지에 저장 */
