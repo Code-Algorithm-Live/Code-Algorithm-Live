@@ -7,6 +7,7 @@ type IUser = {
   jwtToken: string;
   kakaoName: string;
   SolvedId: string;
+  email: string;
 };
 
 declare module 'next-auth' {
@@ -17,11 +18,12 @@ declare module 'next-auth' {
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT extends ExtendedJWT {
+  interface JWT {
     name: string;
-    jwtToken: string;
     image: string;
+    jwtToken: string;
     SolvedId: string;
     kakaoName: string;
+    email: string;
   }
 }

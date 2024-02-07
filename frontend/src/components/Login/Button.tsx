@@ -9,6 +9,8 @@ type UserInfo = {
   nickname: string;
   imageUrl: string;
   jwtToken: string;
+  SolvedId: string;
+  email: string;
 };
 
 const Button = () => {
@@ -76,6 +78,7 @@ const Button = () => {
                   jwtToken: token,
                   kakaoName: name,
                   SolvedId: userInfo.solvedId,
+                  email: email,
                 },
               });
 

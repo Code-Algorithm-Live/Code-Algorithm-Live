@@ -45,7 +45,7 @@ const Container = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--main-color);
+    background: var(--editorTypo-color);
     border-radius: 10px;
     background-clip: padding-box;
     border: 3px solid transparent;
@@ -55,6 +55,7 @@ const Container = styled.div`
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  padding-left: 10px;
   height: 80px;
   border-radius: 10px;
   transition: background-color 0.3s;
@@ -75,21 +76,6 @@ const CompletedContainer = styled.div`
   display: flex;
   align-items: centerl;
   gap: 10px;
-`;
-
-const Completed = styled.span`
-  width: 80px;
-  height: 23px;
-  border-radius: 5px;
-  background-color: var(--point-color);
-
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--white-color);
-
-  text-align: center;
-  line-height: 23px;
 `;
 
 const NameText = styled.span`
@@ -121,98 +107,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
   const { data: session, status } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [modalData, setmodalData] = useState<QueueItem | null>(null);
-
   const handleConfirm = () => console.log('confirm!!');
-
-  // 임시 데이터
-  // const queueData = [
-  //   {
-  //     sender: {
-  //       email: 'sender',
-  //       image: 'test',
-  //       nickname: '박진아',
-  //       exp: 15,
-  //     },
-  //     receiver: {
-  //       email: 'receiver',
-  //       image: 'test',
-  //       nickname: '처우열',
-  //       exp: 15,
-  //     },
-  //     helpDto: {
-  //       num: 1001,
-  //       title: '도와주세요2222',
-  //       content: '살려주세요333333ㅜㅜㅜㅜ',
-  //     },
-  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-  //   },
-  //   {
-  //     sender: {
-  //       email: 'sender',
-  //       image: 'test',
-  //       nickname: '거고고',
-  //       exp: 15,
-  //     },
-  //     receiver: {
-  //       email: 'receiver',
-  //       image: 'test',
-  //       nickname: '기기기',
-  //       exp: 15,
-  //     },
-  //     helpDto: {
-  //       num: 1001,
-  //       title: '도와주세요2222',
-  //       content: '살려주세요333333ㅜㅜㅜㅜ',
-  //     },
-  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-  //   },
-  //   {
-  //     sender: {
-  //       email: 'sender',
-  //       image: 'test',
-  //       nickname: 'ㅁㄴㅇㄴㅁㅇ',
-  //       exp: 15,
-  //     },
-  //     receiver: {
-  //       email: 'receiver',
-  //       image: 'test',
-  //       nickname: 'ㅇㅁㄴㅇㄴ',
-  //       exp: 15,
-  //     },
-  //     helpDto: {
-  //       num: 1001,
-  //       title: '도와주세요2222',
-  //       content: '살려주세요333333ㅜㅜㅜㅜ',
-  //     },
-  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-  //   },
-  //   {
-  //     sender: {
-  //       email: 'sender',
-  //       image: 'test',
-  //       nickname: '하하',
-  //       exp: 15,
-  //     },
-  //     receiver: {
-  //       email: 'receiver',
-  //       image: 'test',
-  //       nickname: 'ㅁㅁ',
-  //       exp: 15,
-  //     },
-  //     helpDto: {
-  //       num: 1001,
-  //       title: '도와주세요2222',
-  //       content: '살려주세요333333ㅜㅜㅜㅜ',
-  //     },
-  //     roomUuid: '4ec4f19c-2c4d-496a-bc0c-7dd8c5ac5956',
-  //   },
-  // ];
-  // const userData = {
-  //   nickname: '알라코1',
-  //   memberExp: 15,
-  //   url: '/images/coala/smile.png',
-  // };
-
   const [queueData, setQueueData] = useState<QueueItem[]>([]);
 
   useEffect(() => {
@@ -235,8 +130,6 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
         );
 
         const responseData: unknown = await Response.json();
-        console.log(responseData);
-
         setQueueData(responseData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -246,7 +139,7 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
     if (status === 'authenticated') {
       fetchData();
     }
-  }, [activeTab]);
+  }, [activeTab, session?.user?.jwtToken, session?.user?.SolvedId, status]);
 
   return (
     <Container>
@@ -269,7 +162,6 @@ const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
           <TextContainer>
             <CompletedContainer>
               <NumText>문제 번호 {queue.helpDto.num}</NumText>
-              {activeTab !== 'tab1' && <Completed>내가 푼 문제</Completed>}
             </CompletedContainer>
             <TitleText>{queue.helpDto.title}</TitleText>
           </TextContainer>
