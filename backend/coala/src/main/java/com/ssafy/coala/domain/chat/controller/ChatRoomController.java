@@ -5,6 +5,7 @@ import com.ssafy.coala.domain.chat.domain.ChatRoom;
 import com.ssafy.coala.domain.chat.domain.CodeHistory;
 import com.ssafy.coala.domain.chat.dto.ChatHistoryDto;
 import com.ssafy.coala.domain.chat.dto.CodeHistoryDto;
+import com.ssafy.coala.domain.chat.dto.HistoryRoomDto;
 import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -70,7 +71,7 @@ public class ChatRoomController {
 
     @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
     @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
-    public ResponseEntity<?> findHistory(@PathVariable UUID roomUuid){
+    public ResponseEntity<ChatHistoryDto> findHistory(@PathVariable UUID roomUuid){
         try {
             return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
         } catch (Exception e){
@@ -78,6 +79,9 @@ public class ChatRoomController {
         }
     }
 
-
+    public ResponseEntity<List<HistoryRoomDto>> listResponseEntity(int problemId){
+        List<HistoryRoomDto> historyRoomDtoList = new ArrayList<>();
+        return ResponseEntity.ok(historyRoomDtoList);
+    }
 
 }

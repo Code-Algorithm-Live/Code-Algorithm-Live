@@ -22,6 +22,12 @@ public class ChatRoom {
 
     private String sender;
     private String receiver;
+
+    private boolean isClose;
+    private String title;
+    private String content;
+    private int problemId;
+
 //isclose, title, content, problemId
     @JsonIgnore
     @OneToMany(mappedBy = "")

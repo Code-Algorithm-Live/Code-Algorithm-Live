@@ -54,7 +54,7 @@ public class HelpController {
     }
 
 
-    @Operation(summary = "도움 요청 대기열 문제 별 리스트 반환", description = "요청 대기열의 문제 별 리스트를 반환합니다.")
+    @Operation(summary = "도움 요청 대기열 문제 별 리스트 반환", description = "요청 대기열의 문제 별 리스트를 반환합니다.(List<waitDto>)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
