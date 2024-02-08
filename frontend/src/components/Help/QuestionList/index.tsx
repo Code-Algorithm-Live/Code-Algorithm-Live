@@ -1,18 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import NavBar from '@/components/Help/NavBar';
-import QuestionBoard from '@/components/Help/QuestionList/QuestionBoard';
-import Pagination from '@/components/Help/QuestionList/Pagination';
-import styles from '@/components/Help/QuestionList/index.module.scss';
+
 import { instance } from '@/api/instance';
+import NavBar from '@/components/Help/NavBar';
+import Pagination from '@/components/Help/QuestionList/Pagination';
+import QuestionBoard from '@/components/Help/QuestionList/QuestionBoard';
+import styles from '@/components/Help/QuestionList/index.module.scss';
 import { HistoryList } from '@/types/Chat';
+
+const getProblemNumber = () => {
+  if (typeof window === 'undefined') return '0';
+  return localStorage.getItem('problemNumber');
+};
 
 function Form() {
   const [problemHistoryList, setProblemHistoryList] =
     useState<HistoryListData>();
   const [currentPage, setCurrentPage] = useState(1);
-  const problemNumber = localStorage.getItem('problemNumber') ?? '0';
+  const problemNumber = getProblemNumber() as string;
   const problemId = Number(problemNumber);
   interface HistoryListData {
     data: HistoryList[];
