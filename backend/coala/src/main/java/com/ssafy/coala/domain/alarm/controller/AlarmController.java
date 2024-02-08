@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 public class AlarmController {
 
-    private AlarmService alarmService;
+    private final AlarmService alarmService;
 
     @Operation(summary = "도움요청 알람 리스트", description = "도움요청 알람 리스트를 반환합니다.")
     @ApiResponses({
@@ -27,10 +27,17 @@ public class AlarmController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
+
     @GetMapping("/help/{nickname}")
-    public ResponseEntity<?> helplist(@Parameter(description = "닉네임", required = true, example = "차승윤") @PathVariable String nickname) {
+    public ResponseEntity<?> helplist(@Parameter(description = "닉네임", required = true, example = "차승윤") @PathVariable("nickname") String nickname) {
         List<HelpAlarm> list = alarmService.getAlarms(nickname);
         return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("/help")
+    public String testhelp(){
+        System.out.println("Ee");
+        return "success";
     }
 
     @Operation(summary = "친구요청 알람 리스트", description = "친구요청 알람 리스트를 반환합니다.")
