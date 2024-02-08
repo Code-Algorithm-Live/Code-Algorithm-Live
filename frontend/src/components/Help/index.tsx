@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import TextInput from '@/components/Common/TextInput';
+import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
+import TextInput from '@/components/Common/TextInput';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import { generateUUID } from '@/utils/uuid';
+import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { useSession } from 'next-auth/react';
-import { instance } from '@/api/instance';
+import { generateUUID } from '@/utils/uuid';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
@@ -15,7 +17,7 @@ function Form() {
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
   const debouncedNumber = useDebounce(middleNumber, 5000);
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -23,23 +25,10 @@ function Form() {
     roomUuid: RoomUuid;
   };
 
-  // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
-  // const sender = {
-  //   email: session?.user?.email,
-  //   image: session?.user?.image,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   // kakaoname: session?.user?.kakaoName,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   // solvedId: session?.user?.SolvedId,s
-  //   nickname: session?.user?.name,
-  // };
-
   const sender = {
     email: session?.user?.email,
     image: session?.user?.image,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     kakaoname: session?.user?.kakaoName,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     solvedId: session?.user?.SolvedId,
     nickname: session?.user?.name,
   };
