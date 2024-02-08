@@ -1,9 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
-
 import style from '@/components/Help/Wait/StopWatch.module.scss';
+import { clearInterval } from 'stompjs';
+import { convertMillisecondsToTime, timerFormatter } from '@/utils/timer';
 
 const getStartTime = () => {
   if (typeof window === 'undefined') return '';
@@ -11,20 +12,23 @@ const getStartTime = () => {
 };
 
 const StopWatch = () => {
-  // 시작시간 기록(받기) - 2024-01-27 15:20:31
-  // 시작시간 부터 현재 시간 세기(표시)
-  // 입력 수정하기
-  // 대기 취소하기
   const [timeLap, setTimeLap] = useState(0);
 
   const startTime = Number(getStartTime());
-  // 1초마다 업데이트
-  setInterval(() => {
-    setTimeLap(Date.now() - Number(startTime));
-  }, 1000);
-  const hour = Math.floor(timeLap / 1000 / 60 / 60);
-  const minute = Math.floor((timeLap / 1000 / 60) % 60);
-  const second = Math.floor((timeLap / 1000) % 60);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (startTime) {
+        setTimeLap(Date.now() - startTime);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [startTime]);
+
+  const { hours, minutes, seconds } = convertMillisecondsToTime(timeLap);
+  const time = timerFormatter({ hours, minutes, seconds });
+
   const handleClickCancel = () => {
     if (typeof window === 'undefined') return;
 
@@ -36,10 +40,8 @@ const StopWatch = () => {
     <div className={style.StopWatch}>
       <p className={style.state}>기다리는 중</p>
       <div className={style.time}>
-        <a>경과시간: </a>
-        {hour > 0 ? `${hour} : ` : ''}
-        {`${minute} : `}
-        {second}
+        <span>경과시간 </span>
+        <span className="time">{time}</span>
       </div>
       <div className={style.buttons}>
         <button className={style.button}>
