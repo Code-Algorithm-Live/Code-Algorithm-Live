@@ -56,8 +56,9 @@ public class MatchingServiceImpl implements MatchingService{
         messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto);
         HelpAlarm helpAlarm = HelpAlarm.builder()
                 .sender(waitDto.getSender())
-                .receiverNickname(waitDto.getReceiver().getNickname())
-                .help(waitDto.getHelpDto())
+                .receiver(waitDto.getReceiver().getNickname())
+                .helpDto(waitDto.getHelpDto())
+                .roomUuid(waitDto.getRoomUuid())
                 .build();
         helpAlarmRepository.save(helpAlarm);
         System.out.println("알림 전송");
