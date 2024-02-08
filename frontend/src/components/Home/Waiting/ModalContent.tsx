@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import UserImage from '@/components/Home/Waiting/UserImage';
 import { Sender, Receiver, HelpDto, RoomUuid } from '@/types/Help';
+import LinkPreview from '@/components/Help/Wait/LinkPreview';
 
 interface ModalDataForm {
   sender: Sender;
@@ -29,13 +30,13 @@ const MiddleContainer = styled.div`
 const FormContainer = styled.div`
   width: 400px;
   height: 300px;
-  padding: 30px 0px;
 `;
 
 const UserContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 30px;
+  padding-bottom: 20px;
 `;
 
 const NameText = styled.span`
@@ -46,13 +47,13 @@ const NameText = styled.span`
 `;
 
 const TitleContainer = styled.div`
-  margin-bottom: 22px;
+  margin-bottom: 30px;
   height: 40px;
-  width: 400px;
+  width: 350px;
 `;
 
 const ContentsContainer = styled.div`
-  width: 400px;
+  width: 350px;
   height: 200px;
 `;
 
@@ -106,7 +107,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
             />
           </ContentsContainer>
         </FormContainer>
-        <div>문제 번호에 맞는 폼 생성 예정 : {modalData.helpDto.num}</div>
+        <LinkPreview problemNumber={modalData.helpDto.num} />
       </MiddleContainer>
     </Container>
   );

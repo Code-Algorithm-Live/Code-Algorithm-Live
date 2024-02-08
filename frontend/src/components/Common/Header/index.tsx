@@ -4,10 +4,13 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 import IconNotice from '@assets/svgs/notice.svg';
 import IconHistory from '@assets/svgs/history.svg';
 import IconLogout from '@assets/svgs/logout.svg';
-import { signOut, useSession } from 'next-auth/react';
+import { instance } from '@/api/instance';
+import { NoticeForm } from '@/types/NoticeForm';
 
 const NavContainer = styled.nav`
   display: flex;
@@ -94,49 +97,25 @@ const NoticeCount = styled.span`
 
 export default function Nav() {
   const { data: session } = useSession();
-  // const [noticeListData, setNoticeListData] = useState<
-  //   NoticeForm[] | undefined
-  // >();
+  const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await instance.get(
-  //         `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
-  //       );
-  //       if (response.data) {
-  //         setNoticeListData(response.data as NoticeForm[]);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
+        );
+        if (response.data) {
+          setNoticeListData(response.data as NoticeForm[]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //   fetchData();
-  // }, []);
-  const noticeListData = [
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-  ];
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchData();
+  }, []);
 
   const token = session?.user?.jwtToken;
   const RealSignOut = async () => {
@@ -171,9 +150,7 @@ export default function Nav() {
           <Link href="/notice">
             <NoticeContainer>
               <IconNotice />
-              {noticeListData && (
-                <NoticeCount>{noticeListData.length}</NoticeCount>
-              )}
+              <NoticeCount>{noticeListData.length}</NoticeCount>
             </NoticeContainer>
           </Link>
         </Item>

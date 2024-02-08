@@ -79,7 +79,7 @@ const NumText = styled.span`
 const WaitingQueue: React.FC<WaitingQueueProps> = ({ activeTab }) => {
   const { data: session, status } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [modalData, setmodalData] = useState<HelpForm | null>(null);
+  const [modalData, setmodalData] = useState<HelpForm | undefined>(undefined);
   const [queueData, setQueueData] = useState<HelpForm[]>([]);
 
   const handleConfirm = async () => {

@@ -12,6 +12,8 @@ import ModalContent from '@/components/Home/Waiting/ModalContent';
 
 interface NoticeListProps {
   noticeListData: NoticeForm[];
+  onSelect: (id: number) => void;
+  selectedIds: number[];
 }
 
 const Container = styled.div`
@@ -35,6 +37,7 @@ const ItemContainer = styled.div`
   display: flex;
   align-items: center;
   padding-left: 10px;
+  width: 1260px;
   height: 80px;
   border-radius: 10px;
   transition: background-color 0.3s;
@@ -49,7 +52,7 @@ const TextContainer = styled.div`
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  width: 1000px;
+  width: 900px;
   gap: 3px;
 `;
 
@@ -82,6 +85,7 @@ const DateContainer = styled.p`
   display: flex;
   flex-direction: column;
   text-align: end;
+  padding-end: 10px;
 
   font-family: Pretendard;
   font-size: 16px;
@@ -89,10 +93,23 @@ const DateContainer = styled.p`
   color: var(--sub-font-color);
 `;
 
-const NoticeList: React.FC<NoticeListProps> = ({ noticeListData }) => {
+const CheckContainer = styled.div`
+  display: flex;
+  gap: 30px;
+`;
+const CheckButton = styled.input.attrs({ type: 'checkbox' })`
+  margin: 30px;
+`;
+
+const NoticeList: React.FC<NoticeListProps> = ({
+  noticeListData,
+  onSelect,
+  selectedIds,
+}) => {
   const { data: session } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [modalData, setmodalData] = useState<NoticeForm>();
+
   const handleConfirm = async () => {
     try {
       if (modalData) {
@@ -134,31 +151,36 @@ const NoticeList: React.FC<NoticeListProps> = ({ noticeListData }) => {
 
   return (
     <Container>
-      {noticeListData.map((notice, index) => (
-        <ItemContainer
-          key={index}
-          onClick={() => {
-            setIsConfirmModalOpen(true);
-            setmodalData(notice);
-          }}
-        >
-          <UserImage
-            userData={{
-              nickname: notice.sender.nickname,
-              memberExp: notice.sender.exp,
-              url: notice.sender.image,
-            }}
+      {noticeListData.map(notice => (
+        <CheckContainer key={notice.id}>
+          <CheckButton
+            checked={selectedIds.includes(notice.id)}
+            onChange={() => onSelect(notice.id)}
           />
-          <NameText>{notice.sender.nickname}</NameText>
-          <TextContainer>
-            <NumText>문제 번호 {notice.helpDto.num}</NumText>
-            <TitleText>{notice.helpDto.title}</TitleText>
-          </TextContainer>
-          <DateContainer>
-            <span>{format(new Date(notice.sendDate), 'yyyy-MM-dd')}</span>
-            <span>{format(new Date(notice.sendDate), 'HH:mm:ss')}</span>
-          </DateContainer>
-        </ItemContainer>
+          <ItemContainer
+            onClick={() => {
+              setIsConfirmModalOpen(true);
+              setmodalData(notice);
+            }}
+          >
+            <UserImage
+              userData={{
+                nickname: notice.sender.nickname,
+                memberExp: notice.sender.exp,
+                url: notice.sender.image,
+              }}
+            />
+            <NameText>{notice.sender.nickname}</NameText>
+            <TextContainer>
+              <NumText>문제 번호 {notice.helpDto.num}</NumText>
+              <TitleText>{notice.helpDto.title}</TitleText>
+            </TextContainer>
+            <DateContainer>
+              <span>{format(new Date(notice.sendDate), 'yyyy-MM-dd')}</span>
+              <span>{format(new Date(notice.sendDate), 'HH:mm:ss')}</span>
+            </DateContainer>
+          </ItemContainer>
+        </CheckContainer>
       ))}
       <ConfirmModal
         open={isConfirmModalOpen}

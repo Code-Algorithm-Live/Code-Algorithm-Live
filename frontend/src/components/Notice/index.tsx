@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 'use client';
 
 import styled from 'styled-components';
@@ -40,6 +42,7 @@ const TabContainer = styled.div`
   display: flex;
   width: 1370px;
   position: relative;
+  align-items: center;
 
   font-family: Pretendard;
   font-size: 16px;
@@ -48,13 +51,8 @@ const TabContainer = styled.div`
 const TabButton = styled.button`
   color: var(--point-color);
   font-weight: 700;
-  padding: 10px 30px 15px 0px;
-  cursor: pointer;
+  padding: 0px 20px 10px 0px;
   border-bottom: 2px solid var(--point-color);
-
-  &:hover {
-    color: var(--point-color);
-  }
   z-index: 1;
 `;
 
@@ -67,211 +65,75 @@ const TabLine = styled.div`
   background-color: var(--editorTypo-color);
 `;
 
+const DeleteButton = styled.button`
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 60px;
+  height: 30px;
+  color: var(--white-color);
+  background-color: var(--main-color);
+  &:hover {
+    background-color: var(--main-hover-color);
+  }
+  transition: background-color 0.3s ease;
+`;
+
 const Notice = () => {
   const { data: session } = useSession();
-  // const [noticeListData, setNoticeListData] = useState<
-  //   NoticeForm[] | undefined
-  // >();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await instance.get(
-  //         `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
-  //       );
-  //       if (response.data) {
-  //         setNoticeListData(response.data as NoticeForm[]);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+  const handleSelect = (id: number) => {
+    setSelectedIds(prevSelectedIds => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter(selectedId => selectedId !== id);
+      }
+      return [...prevSelectedIds, id];
+    });
+  };
 
-  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //   fetchData();
-  // }, []);
-  const noticeListData = [
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-    {
-      id: 152,
-      sender: {
-        email: 'jaejin@naver.com',
-        image: '/images/userModal/Help.png',
-        kakaoname: 'adsasd',
-        nickname: '나는이재진',
-        exp: 0,
-        solvedId: 'wowhd45',
-      },
-      receiver: null,
-      helpDto: {
-        num: 1001,
-        title: '도와주세요2222',
-        content: '살려주세요333333ㅜㅜㅜㅜ',
-      },
-      sendDate: '2024-02-06T11:07:41.061076',
-      roomUuid: '12309321823890',
-      success: false,
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
+        );
+        if (response.data) {
+          setNoticeListData(response.data as NoticeForm[]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchData();
+  }, []);
+
+  const deleteNotice = async () => {
+    try {
+      const deletePromises = selectedIds.map(async id => {
+        await instance.delete(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${id}`,
+        );
+      });
+
+      await Promise.all(deletePromises);
+
+      const updatedData = await instance.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
+      );
+      if (updatedData.data) {
+        setNoticeListData(updatedData.data as NoticeForm[]);
+      }
+
+      setSelectedIds([]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   return (
     <Container>
       <HeaderContainer>
@@ -281,8 +143,15 @@ const Notice = () => {
       <TabContainer>
         <TabButton>전체 알림</TabButton>
         <TabLine />
+        <DeleteButton onClick={deleteNotice}>삭제</DeleteButton>
       </TabContainer>
-      {noticeListData && <NoticeList noticeListData={noticeListData} />}
+      {noticeListData && (
+        <NoticeList
+          noticeListData={noticeListData}
+          onSelect={handleSelect}
+          selectedIds={selectedIds}
+        />
+      )}
     </Container>
   );
 };
