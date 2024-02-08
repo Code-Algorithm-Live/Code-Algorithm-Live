@@ -79,27 +79,9 @@ public class ProblemController {
     }
 
 
-    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.(더미)")
+
+    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
     @GetMapping("{problemId}")
-    public ResponseEntity<String> getDummyProblem(@Parameter(description = "problemId", required = true, example = "1000")
-                                                  @PathVariable int problemId){
-        return ResponseEntity.ok("{\n" +
-                "    \"id\": 1000,\n" +
-                "    \"title\": \"A+B\",\n" +
-                "    \"accepted_user_count\": 276511,\n" +
-                "    \"level\": 1,\n" +
-                "    \"give_no_rating\": false,\n" +
-                "    \"average_tries\": 2.5356,\n" +
-                "    \"description\": \"두 정수 A와 B를 입력받은 다음, A+B를 출력하는 프로그램을 작성하시오.\",\n" +
-                "    \"tags\": [\n" +
-                "        \"구현\",\n" +
-                "        \"사칙연산\",\n" +
-                "        \"수학\"\n" +
-                "    ]\n" +
-                "}");
-    }
-//    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
-//    @GetMapping("{problemId}")
     public ResponseEntity<ProblemDto> getProblem(@Parameter(description = "problemId", required = true, example = "1000")
                                                   @PathVariable int problemId){
         Problem problem = problemService.getProblem(problemId);

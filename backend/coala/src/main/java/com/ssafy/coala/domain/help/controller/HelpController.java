@@ -29,17 +29,17 @@ public class HelpController {
     private final ChatService chatService;
     private final MemberService memberService;
 
-    @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping("/hint/{num}")
-    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        return ResponseEntity.ok("문제번호 " + num);
-    }
+//    @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
+//    @GetMapping("/hint/{num}")
+//    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
+//        return ResponseEntity.ok("문제번호 " + num);
+//    }
 
     @Operation(summary = "최근 푼 사람의 리스트", description = "해당 문제를 최근 푼 사람의 리스트를 반환합니다")
     @ApiResponses({
@@ -50,20 +50,7 @@ public class HelpController {
     })
     @GetMapping("/solvedlist/{num}")
     public ResponseEntity<List<MemberDto>> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-
         return ResponseEntity.ok(memberService.getMemberByProblemId(num));
-    }
-
-    @Operation(summary = "질문 히스토리 리스트", description = "최근 질문 히스토리 리스트를 반환합니다")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping("/questionlist/{id}")
-    public ResponseEntity<String> questionlist(@Parameter(description = "유저 아이디", required = true, example = "test") @PathVariable String id) {
-        return ResponseEntity.ok("아이디 " + id);
     }
 
 

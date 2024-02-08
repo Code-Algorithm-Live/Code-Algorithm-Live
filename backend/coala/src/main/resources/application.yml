@@ -34,3 +34,6 @@ spring:
     active: local
     include: jwt
 
+file:
+  upload:
+    directory: C:/coala/data/
