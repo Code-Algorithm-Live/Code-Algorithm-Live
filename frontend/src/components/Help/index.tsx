@@ -36,7 +36,6 @@ function Form() {
   const roomUuid = generateUUID();
 
   const handleChangeNumber = (num: string) => {
-    // setProblemNumber(num);
     setMiddleNumber(num);
   };
   const handleChangeTitle = (title: string) => {
