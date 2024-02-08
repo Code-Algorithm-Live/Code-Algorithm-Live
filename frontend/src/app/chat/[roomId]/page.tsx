@@ -8,6 +8,9 @@ import Timer from '@/components/Chat/Timer';
 import InputOutput from '@/components/Chat/InputOutput';
 import CodeEditor from '@/components/Chat/CodeEditor';
 import { fetchPostCompiler } from '@/api/chat';
+import useHelpFromStore from '@/store/helpForm';
+import QuestionModal from '@/components/Chat/QuestionModal';
+import { HelpForm } from '@/types/Help';
 
 const Container = styled.div`
   display: flex;
@@ -178,6 +181,8 @@ export default function Chat() {
     mutationFn: fetchPostCompiler,
     onSuccess: ({ data }) => setOutput(data),
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { helpForm } = useHelpFromStore();
 
   const handleRun = (input: string) => {
     if (!code) return;
@@ -186,63 +191,77 @@ export default function Chat() {
     compileMutation.mutate({ code, input });
   };
 
+  const handleClickShowMore = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const modalData = helpForm as HelpForm;
+
   return (
-    <Container>
-      <PairProgrammingContainer>
-        <HeaderContainer>
-          <p className="title">
-            <span className="rank"></span>
-            16666 마법사와 파이어볼
-          </p>
-
-          <div className="menu">
-            <Timer />
-
-            <div className="lang">
-              <select name="" id="">
-                <option value="">java</option>
-                <option value="">python</option>
-              </select>
-            </div>
-          </div>
-        </HeaderContainer>
-        <MainContainer>
-          <LeftContainer>
-            <div className="problemContainer"></div>
-            <div className="bottomMenuContainer">
-              <button>나가기</button>
-            </div>
-          </LeftContainer>
-          <CodeEditorContainer>
-            <CodeEditor />
-            <InputOutput
-              isRunning={compileMutation.isPending}
-              onRun={input => handleRun(input)}
-              output={output}
-            />
-          </CodeEditorContainer>
-        </MainContainer>
-      </PairProgrammingContainer>
-
-      <RightContainer>
-        <QuestionBannerContainer>
-          <div className="questionBanner">
-            <div className="titleContainer">
-              <p className="title">상어시리즈 좋아하시는 분 도와 주세요</p>
-              <button className="show">더보기</button>
-            </div>
-            <p className="content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum,
-              voluptatum. Aliquam tenetur eveniet doloribus, dolore ex, officiis
-              qui laudantium amet incidunt in rem, similique animi dolorum
-              suscipit quidem harum iusto? 도와줘어어
+    <>
+      <Container>
+        <PairProgrammingContainer>
+          <HeaderContainer>
+            <p className="title">
+              <span className="rank"></span>
+              {helpForm?.helpDto.num} 마법사와 파이어볼
             </p>
+
+            <div className="menu">
+              <Timer />
+
+              <div className="lang">
+                <select name="" id="">
+                  <option value="">java</option>
+                  <option value="">python</option>
+                </select>
+              </div>
+            </div>
+          </HeaderContainer>
+          <MainContainer>
+            <LeftContainer>
+              <div className="problemContainer"></div>
+              <div className="bottomMenuContainer">
+                <button>나가기</button>
+              </div>
+            </LeftContainer>
+            <CodeEditorContainer>
+              <CodeEditor />
+              <InputOutput
+                isRunning={compileMutation.isPending}
+                onRun={input => handleRun(input)}
+                output={output}
+              />
+            </CodeEditorContainer>
+          </MainContainer>
+        </PairProgrammingContainer>
+
+        <RightContainer>
+          <QuestionBannerContainer>
+            <div className="questionBanner">
+              <div className="titleContainer">
+                <p className="title">{helpForm?.helpDto.title}</p>
+                <button className="show" onClick={handleClickShowMore}>
+                  더보기
+                </button>
+              </div>
+              <p className="content">{helpForm?.helpDto.content}</p>
+            </div>
+          </QuestionBannerContainer>
+          <div className="chattingContainer">
+            <Chatting />
           </div>
-        </QuestionBannerContainer>
-        <div className="chattingContainer">
-          <Chatting />
-        </div>
-      </RightContainer>
-    </Container>
+        </RightContainer>
+      </Container>
+
+      <QuestionModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        modalData={modalData}
+      />
+    </>
   );
 }

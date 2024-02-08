@@ -1,21 +1,8 @@
 import styled from 'styled-components';
-import UserImage from '@/components/Home/Waiting/UserImage';
-import { Sender, Receiver, HelpDto, RoomUuid } from '@/types/Help';
+
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
-
-interface ModalDataForm {
-  sender: Sender;
-  receiver: Receiver | null;
-  helpDto: HelpDto;
-  roomUuid: RoomUuid;
-  success?: boolean;
-  id?: number;
-  sendDate?: string;
-}
-
-interface ModalContentProps {
-  modalData: ModalDataForm | undefined;
-}
+import UserImage from '@/components/Home/Waiting/UserImage';
+import { ModalContentProps } from '@/components/Home/Waiting/type';
 
 const Container = styled.div`
   width: 800px;
