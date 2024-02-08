@@ -1,10 +1,13 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import style from '@/components/Help/Wait/StopWatch.module.scss';
 import { clearInterval } from 'stompjs';
 import { convertMillisecondsToTime, timerFormatter } from '@/utils/timer';
+import { instance } from '@/api/instance';
+import { HelpDto, Sender } from '@/types/Help';
 
 const getStartTime = () => {
   if (typeof window === 'undefined') return '';
@@ -13,6 +16,7 @@ const getStartTime = () => {
 
 const StopWatch = () => {
   const [timeLap, setTimeLap] = useState(0);
+  const { data: session } = useSession();
 
   const startTime = Number(getStartTime());
 
@@ -34,7 +38,32 @@ const StopWatch = () => {
 
     localStorage.removeItem('startTime');
     localStorage.removeItem('helpRequestTime');
-    // TODO: 서버 연결
+
+    const defaultNumber: number = 0;
+
+    const sender: Sender = {
+      email: session?.user?.email ? session?.user?.email : 'null',
+      image: session?.user?.image ? session?.user?.image : 'null',
+      kakaoname: session?.user?.kakaoName ? session?.user?.kakaoName : 'null',
+      solvedId: session?.user?.SolvedId ? session?.user?.SolvedId : 'null',
+      nickname: session?.user?.name ? session?.user?.name : 'null',
+      exp: session?.user?.userExp ? session?.user?.userExp : defaultNumber,
+    };
+
+    const helpDto: HelpDto = {
+      title: localStorage.getItem('title') ?? 'null',
+      num: Number(localStorage.getItem('problemNumber')),
+      content: localStorage.getItem('content') ?? 'null',
+    };
+
+    const data = {
+      sender,
+      helpDto,
+    };
+    instance
+      .delete<Sender>('/help/waitqueue', { data })
+      // eslint-disable-next-line no-console
+      .catch(Err => console.error(Err));
   };
   return (
     <div className={style.StopWatch}>
