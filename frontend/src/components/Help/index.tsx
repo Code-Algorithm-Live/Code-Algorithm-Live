@@ -1,18 +1,22 @@
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import TextInput from '@/components/Common/TextInput';
+import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
+import TextInput from '@/components/Common/TextInput';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import { generateUUID } from '@/utils/uuid';
+import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { useSession } from 'next-auth/react';
-import { instance } from '@/api/instance';
+import { generateUUID } from '@/utils/uuid';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
+  const [middleNumber, setMiddleNumber] = useState<string>('');
+  const debouncedNumber = useDebounce(middleNumber, 5000);
   const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
@@ -22,6 +26,16 @@ function Form() {
   };
 
   // FIXME: 세션 해결하기, eslint 무시 처리해도 .kakaoName과 SolvedId type 문제로 일단 주석처리
+  // const sender = {
+  //   email: session?.user?.email,
+  //   image: session?.user?.image,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // kakaoname: session?.user?.kakaoName,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   // solvedId: session?.user?.SolvedId,s
+  //   nickname: session?.user?.name,
+  // };
+
   const sender = {
     email: session?.user?.email,
     image: session?.user?.image,
@@ -35,7 +49,8 @@ function Form() {
   const roomUuid = generateUUID();
 
   const handleChangeNumber = (num: string) => {
-    setProblemNumber(num);
+    // setProblemNumber(num);
+    setMiddleNumber(num);
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
@@ -60,6 +75,7 @@ function Form() {
 
     instance
       .post<FetchRegistHelpRequest>('/help/waitqueue', data)
+      // eslint-disable-next-line no-console
       .catch(Err => console.error(Err));
 
     /** 로컬 스토리지에 저장 */
@@ -70,6 +86,10 @@ function Form() {
     localStorage.setItem('startTime', nowTime);
     localStorage.setItem('helpRequestTime', '0');
   };
+
+  useEffect(() => {
+    setProblemNumber(debouncedNumber);
+  }, [debouncedNumber]);
 
   return (
     <>

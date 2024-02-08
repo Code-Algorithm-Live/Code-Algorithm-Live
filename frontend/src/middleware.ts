@@ -1,6 +1,5 @@
 import { getToken } from 'next-auth/jwt';
-import { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const secret = process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET;
 
@@ -14,6 +13,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
   }
+  return undefined;
 }
 
 export const config = {
