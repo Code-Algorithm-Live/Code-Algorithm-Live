@@ -11,6 +11,7 @@ import ReactCodeMirror, {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
+
 import { YorkieDoc } from '@/components/Chat/CodeEditor/type';
 
 const Container = styled.div`
@@ -106,7 +107,7 @@ const CodeEditor = () => {
       apiKey: YORKIE_API_KEY,
     }),
   );
-  const [doc] = useState(new yorkie.Document<YorkieDoc>(DOC_NAME));
+  const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
   const [maxHeight, setMaxHeight] = useState('');
   const [history, setHistory] = useState<History[]>([]);
