@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import TextInput from '@/components/Common/TextInput';
+import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
+import TextInput from '@/components/Common/TextInput';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import styles from '@/components/Help/index.module.scss';
-import { generateUUID } from '@/utils/uuid';
+import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
-import { useSession } from 'next-auth/react';
-import { instance } from '@/api/instance';
+import { generateUUID } from '@/utils/uuid';
 
 function Form() {
   const [problemNumber, setProblemNumber] = useState<string>('');
@@ -15,7 +17,7 @@ function Form() {
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
   const debouncedNumber = useDebounce(middleNumber, 5000);
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   type FetchRegistHelpRequest = {
     sender: Sender;

@@ -1,22 +1,27 @@
 'use client';
 
-import UserHelp from '@/components/Help/UserList/UserHelp';
-import NavBar from '@/components/Help/NavBar';
-import styles from '@/components/Help/UserList/index.module.scss';
-import Refresh from '@/components/Help/UserList/Refresh';
-import { instance } from '@/api/instance';
-// import { Sender, Receiver, RoomUuid } from '@/types/Help';
-import { HPReceiver } from '@/types/HelpMatching';
 import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
+import NavBar from '@/components/Help/NavBar';
+import Refresh from '@/components/Help/UserList/Refresh';
+import UserHelp from '@/components/Help/UserList/UserHelp';
+import styles from '@/components/Help/UserList/index.module.scss';
+import { HPReceiver } from '@/types/HelpMatching';
 
 interface IData {
   data: HPReceiver[];
 }
 
+const getProblemNumber = () => {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('title');
+};
+
 function Form() {
   const [userList, setUserList] = useState<IData>();
   const mainLanguage = 'java';
-  const problemNumber: number = Number(localStorage.getItem('title'));
+  const problemNumber: number = Number(getProblemNumber());
   const helpNumber = 0;
 
   useEffect(() => {
