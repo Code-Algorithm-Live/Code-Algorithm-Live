@@ -1,15 +1,12 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-type UserInfo = {
-  nickname: string;
-  imageUrl: string;
-  jwtToken: string;
-};
+import { UserInfo } from '@/types/UserInfo';
 
 const Button = () => {
   const { data: session, update } = useSession();
@@ -66,18 +63,22 @@ const Button = () => {
                   },
                 },
               );
-              const userInfo: UserInfo = await userDataResponse.json();
+              const userInfo = (await userDataResponse.json()) as UserInfo;
 
               await update({
                 action: 'logIn',
-                name: userInfo.nickname,
-                image: userInfo.imageUrl,
-                jwtToken: token,
-                kakaoName: name,
-                SolvedId: userInfo.solvedId,
+                user: {
+                  name: userInfo.nickname,
+                  image: userInfo.imageUrl,
+                  jwtToken: token,
+                  kakaoName: name,
+                  SolvedId: userInfo.solvedId,
+                  email,
+                  userExp: userInfo.exp,
+                },
               });
 
-              await router.push('/');
+              router.push('/');
             }
           }
         } catch (error) {
@@ -87,6 +88,7 @@ const Button = () => {
     };
 
     if (session) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       kakaoLogin();
     }
   }, [session, router]);

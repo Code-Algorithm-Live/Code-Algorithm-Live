@@ -1,8 +1,10 @@
 import KakaoProvider from 'next-auth/providers/kakao';
 // import NaverProvider from 'next-auth/providers/naver';
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
+import type { NextAuthOptions } from 'next-auth';
 
-const authOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     KakaoProvider({
       clientId: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID ?? '',
@@ -14,30 +16,46 @@ const authOptions = {
     // }),
   ],
   callbacks: {
-    jwt({ token, trigger, session }: any) {
-      if (trigger === 'update' && session?.action === 'logIn') {
-        token.name = session.name;
-        token.jwtToken = session.jwtToken;
-        token.image = session.image;
-        token.SolvedId = session.SolvedId;
-        token.kakaoName = session.kakaoName;
-      }
-      return token;
-    },
-    session({ session, token }: any) {
-      if (token?.name && token?.image && token?.jwtToken) {
-        session.user.name = token.name;
-        session.user.image = token.image;
-        session.user.jwtToken = token.jwtToken;
-        session.user.SolvedId = token.SolvedId;
-        session.user.kakaoName = token.kakaoName;
+    jwt({ token, session }: { token: JWT; session?: Session }) {
+      const updatedToken: JWT = { ...token };
+      if (session?.action === 'logIn') {
+        updatedToken.name = session.user.name;
+        updatedToken.jwtToken = session.user.jwtToken;
+        updatedToken.image = session.user.image;
+        updatedToken.SolvedId = session.user.SolvedId;
+        updatedToken.kakaoName = session.user.kakaoName;
+        updatedToken.email = session.user.email;
+        updatedToken.userExp = session.user.userExp;
       }
 
-      return session;
+      return updatedToken;
+    },
+    session({ token, session }: { token: JWT; session: Session }) {
+      const updatedSession: Session = { ...session };
+      if (
+        token.name &&
+        token.image &&
+        token.jwtToken &&
+        token.SolvedId &&
+        token.kakaoName &&
+        token.email
+      ) {
+        updatedSession.user = {
+          name: token.name,
+          image: token.image,
+          jwtToken: token.jwtToken,
+          SolvedId: token.SolvedId,
+          kakaoName: token.kakaoName,
+          email: token.email,
+          userExp: token.userExp,
+        };
+      }
+      return updatedSession;
     },
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

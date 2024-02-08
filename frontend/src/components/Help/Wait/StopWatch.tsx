@@ -1,8 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
+
 import style from '@/components/Help/Wait/StopWatch.module.scss';
+
+const getStartTime = () => {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('startTime');
+};
 
 const StopWatch = () => {
   // 시작시간 기록(받기) - 2024-01-27 15:20:31
@@ -11,17 +17,20 @@ const StopWatch = () => {
   // 대기 취소하기
   const [timeLap, setTimeLap] = useState(0);
 
-  const start: string = '2024-01-27 15:20:31';
-  const startTime: Date = new Date(start);
+  const startTime = Number(getStartTime());
   // 1초마다 업데이트
   setInterval(() => {
-    setTimeLap(Date.now() - startTime.getTime());
+    setTimeLap(Date.now() - Number(startTime));
   }, 1000);
   const hour = Math.floor(timeLap / 1000 / 60 / 60);
   const minute = Math.floor((timeLap / 1000 / 60) % 60);
   const second = Math.floor((timeLap / 1000) % 60);
   const handleClickCancel = () => {
-    // 기록 삭제하기
+    if (typeof window === 'undefined') return;
+
+    localStorage.removeItem('startTime');
+    localStorage.removeItem('helpRequestTime');
+    // TODO: 서버 연결
   };
   return (
     <div className={style.StopWatch}>

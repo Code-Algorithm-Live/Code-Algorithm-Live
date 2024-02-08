@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 'use client';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -5,6 +7,7 @@ import { styled } from 'styled-components';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { UserInfo } from '@/types/UserInfo';
 import Header from '@/components/SignUp/Header';
 import ProfileImage from '@/components/SignUp/ProfileImage';
 import Nickname from '@/components/SignUp/Nickname';
@@ -105,10 +108,9 @@ const SignUp = () => {
           }),
         },
       );
-
       if (response.ok && session) {
         //  회원가입이 완료된 경우 로그인 요청
-        const { name, email }: { name: string; email: string } = session.user;
+        const { name }: { name: string } = session.user;
         const loginResponse = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
           {
@@ -116,7 +118,7 @@ const SignUp = () => {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams({ username: name, password: email }),
+            body: new URLSearchParams({ username: name, password: userEmail }),
           },
         );
         if (loginResponse.ok) {
@@ -131,25 +133,28 @@ const SignUp = () => {
               },
             },
           );
-          const userInfo = await userDataResponse.json();
+          const userInfo = (await userDataResponse.json()) as UserInfo;
 
           await update({
             action: 'logIn',
-            name: userInfo.nickname,
-            image: userInfo.imageUrl,
-            jwtToken: token,
-            kakaoName: name,
-            SolvedId: userInfo.solvedId,
+            user: {
+              name: userInfo.nickname,
+              image: userInfo.imageUrl,
+              jwtToken: token,
+              kakaoName: name,
+              SolvedId: userInfo.solvedId,
+              email: userEmail,
+              userExp: userInfo.exp,
+            },
           });
 
-          await router.push('/');
+          router.push('/');
         }
       } else {
         alert('로그인 실패');
       }
     } catch (error) {
       alert('로그인 실패');
-      console.error('Error:', error);
     }
   };
 
@@ -160,7 +165,6 @@ const SignUp = () => {
 
       if (profileMessage === uuid) {
         // 회원가입(DB에 데이터 저장) 후, 홈으로 이동
-
         await sendProfileDataToBackend(
           userEmail,
           userImage,
@@ -174,10 +178,11 @@ const SignUp = () => {
 
   useEffect(() => {
     if (session) {
-      setUserImage(session?.user?.image || '');
-      setUserName(session?.user?.name || '');
-      setUserEmail(session?.user?.email || '');
+      setUserImage(session?.user?.image);
+      setUserName(session?.user?.name);
+      setUserEmail(session?.user?.email);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // isInputId 또는 isUnique 값이 변경될 때마다 버튼 활성화 여부 체크
