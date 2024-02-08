@@ -71,7 +71,7 @@ public class ChatRoomController {
 
     @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
     @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
-    public ResponseEntity<ChatHistoryDto> findHistory(@PathVariable UUID roomUuid){
+    public ResponseEntity<ChatHistoryDto> findHistoryByRoomId(@PathVariable UUID roomUuid){
         try {
             return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
         } catch (Exception e){
@@ -79,7 +79,7 @@ public class ChatRoomController {
         }
     }
 
-    public ResponseEntity<List<HistoryRoomDto>> listResponseEntity(int problemId){
+    public ResponseEntity<List<HistoryRoomDto>> findHistoryListByProblemId(int problemId){
         List<HistoryRoomDto> historyRoomDtoList = new ArrayList<>();
         return ResponseEntity.ok(historyRoomDtoList);
     }
