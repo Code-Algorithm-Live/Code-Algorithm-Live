@@ -19,8 +19,8 @@ public class AlarmServiceImpl implements AlarmService{
     private FriendAlarmRepository friendAlarmRepository;
 
     @Override
-    public List<HelpAlarm> getAlarms(String nickname) {
-        return helpAlarmRepository.findByReceiverNickname(nickname);
+    public List<HelpAlarm> getAlarms(String receiver) {
+        return helpAlarmRepository.findByReceiver(receiver);
     }
 
     @Override
