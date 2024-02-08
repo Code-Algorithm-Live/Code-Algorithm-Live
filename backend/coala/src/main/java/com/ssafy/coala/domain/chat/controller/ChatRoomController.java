@@ -79,8 +79,12 @@ public class ChatRoomController {
         }
     }
 
-    public ResponseEntity<List<HistoryRoomDto>> findHistoryListByProblemId(int problemId){
+    @Operation(summary = "problem id로 히스토리 받기", description = "problem id로 history list 호출")
+    @GetMapping("history/list/{problemId}")
+    public ResponseEntity<List<HistoryRoomDto>> findHistoryListByProblemId(@PathVariable int problemId){
         List<HistoryRoomDto> historyRoomDtoList = new ArrayList<>();
         return ResponseEntity.ok(historyRoomDtoList);
     }
+
+
 }
