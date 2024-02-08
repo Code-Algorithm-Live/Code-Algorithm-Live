@@ -8,10 +8,7 @@ import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.domain.ChatRoom;
 //import com.ssafy.coala.domain.chat.dto.ChatRoomDto;
 import com.ssafy.coala.domain.chat.domain.CodeHistory;
-import com.ssafy.coala.domain.chat.dto.ChatHistoryDto;
-import com.ssafy.coala.domain.chat.dto.CodeHistoryDto;
-import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
-import com.ssafy.coala.domain.chat.dto.MessageDto;
+import com.ssafy.coala.domain.chat.dto.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,6 +111,18 @@ public class ChatService {
         chatHistoryDto.setHistoryDto(codeHistoryDtoList);
 
         return chatHistoryDto;
+    }
+
+    public List<HistoryRoomDto> findHistoryList(int problemId){
+        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomByProblemId(problemId);
+        List<HistoryRoomDto> result = new ArrayList<>();
+        for (ChatRoom chatRoom:chatRoomList){
+            result.add(new HistoryRoomDto(chatRoom.getRoomId(),
+                    chatRoom.getSender(),chatRoom.getTitle()
+                    , chatRoom.getProblemId(), chatRoom.getDate()));
+        }
+
+        return result;
     }
 
 }

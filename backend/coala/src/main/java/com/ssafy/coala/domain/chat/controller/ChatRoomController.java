@@ -70,8 +70,8 @@ public class ChatRoomController {
         }    }
 
     @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
-    @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
-    public ResponseEntity<ChatHistoryDto> findHistoryByRoomId(@PathVariable UUID roomUuid){
+    @GetMapping("history/chat/{roomUuid}")//paging 필요할 수 있음
+    public ResponseEntity<ChatHistoryDto> findChatHistoryByRoomId(@PathVariable UUID roomUuid){
         try {
             return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
         } catch (Exception e){
@@ -79,12 +79,27 @@ public class ChatRoomController {
         }
     }
 
-    @Operation(summary = "problem id로 히스토리 받기", description = "problem id로 history list 호출")
+    @Operation(summary = "problem id로 히스토리 받기",
+            description = "problem id로 history list 호출 receiver, content 없음")
     @GetMapping("history/list/{problemId}")
     public ResponseEntity<List<HistoryRoomDto>> findHistoryListByProblemId(@PathVariable int problemId){
-        List<HistoryRoomDto> historyRoomDtoList = new ArrayList<>();
-        return ResponseEntity.ok(historyRoomDtoList);
+
+        try {
+            return ResponseEntity.ok(chatService.findHistoryList(problemId));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
+//
+//    @Operation(summary = "채팅방 id로 방정보 받기", description = "채팅방 id로 끝난 채팅방정보 호출")
+//    @GetMapping("history/room/{roomUuid}")
+//    public ResponseEntity<HistoryRoomDto> findHistoryByRoomId(@PathVariable UUID roomUuid){
+//        try {
+//            return null;
+//        } catch (Exception e){
+//            return ResponseEntity.internalServerError().body(null);
+//        }
+//    }
 
 
 }
