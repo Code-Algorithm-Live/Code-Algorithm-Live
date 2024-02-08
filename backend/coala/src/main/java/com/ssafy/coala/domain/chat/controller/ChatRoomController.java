@@ -83,5 +83,4 @@ public class ChatRoomController {
         List<HistoryRoomDto> historyRoomDtoList = new ArrayList<>();
         return ResponseEntity.ok(historyRoomDtoList);
     }
-
 }
