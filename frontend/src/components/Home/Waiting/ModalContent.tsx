@@ -1,9 +1,19 @@
 import styled from 'styled-components';
 import UserImage from '@/components/Home/Waiting/UserImage';
-import { HelpForm } from '@/types/Help';
+import { Sender, Receiver, HelpDto, RoomUuid } from '@/types/Help';
+
+interface ModalDataForm {
+  sender: Sender;
+  receiver: Receiver | null;
+  helpDto: HelpDto;
+  roomUuid: RoomUuid;
+  success?: boolean;
+  id?: number;
+  sendDate?: string;
+}
 
 interface ModalContentProps {
-  modalData: HelpForm | null;
+  modalData: ModalDataForm | undefined;
 }
 
 const Container = styled.div`
