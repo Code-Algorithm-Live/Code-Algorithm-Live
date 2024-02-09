@@ -29,5 +29,6 @@ test:
       - frontend/node_modules 
   script:
     - cd frontend
+    - ls
     - docker build -t front .
 
