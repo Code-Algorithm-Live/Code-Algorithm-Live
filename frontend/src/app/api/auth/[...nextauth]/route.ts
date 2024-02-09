@@ -1,8 +1,8 @@
 import KakaoProvider from 'next-auth/providers/kakao';
 // import NaverProvider from 'next-auth/providers/naver';
+import type { NextAuthOptions } from 'next-auth';
 import NextAuth, { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import type { NextAuthOptions } from 'next-auth';
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -14,6 +14,7 @@ const authOptions: NextAuthOptions = {
     //   clientId: process.env.NAVER_CLIENT_ID || '',
     //   clientSecret: process.env.NAVER_CLIENT_SECRET || '',
     // }),
+    secret: process.env.SECRET
   ],
   callbacks: {
     jwt({ token, session }: { token: JWT; session?: Session }) {
