@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         corsRegistry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")
-                .allowedOrigins("https://coala-delta.vercel.app/");
+                .allowedOrigins("https://coala-delta.vercel.app");
     }
 
 }
