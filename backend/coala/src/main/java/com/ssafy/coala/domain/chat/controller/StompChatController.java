@@ -4,6 +4,7 @@ import com.ssafy.coala.domain.chat.application.ChatService;
 import com.ssafy.coala.domain.chat.domain.ChatMessage;
 import com.ssafy.coala.domain.chat.dto.MessageDto;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,11 @@ public class StompChatController {
     public void ExitChat(MessageDto message){
         message.setMessage("퇴장하셨습니다.");
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
+    }
+
+    @PostMapping("/api/v1/test")
+    public String test(){
+        System.out.println("test success");
+        return "test success";
     }
 }
