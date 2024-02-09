@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    @Query("select c from ChatMessage c where c.chatRoom = :roomId")
+    @Query("select c from ChatMessage c where c.chatRoom.roomId = :roomId")
     List<ChatMessage> findByRoomId(@Param("roomId") UUID roomId);
 }

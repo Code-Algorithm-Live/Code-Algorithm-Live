@@ -72,11 +72,12 @@ public class ChatRoomController {
     @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
     @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
     public ResponseEntity<ChatHistoryDto> findChatHistoryByRoomId(@PathVariable UUID roomUuid){
-        try {
-            return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(null);
-        }
+        return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
+
+//        try {
+//        } catch (Exception e){
+//            return ResponseEntity.internalServerError().body(null);
+//        }
     }
 
     @Operation(summary = "problem id로 히스토리 받기",
