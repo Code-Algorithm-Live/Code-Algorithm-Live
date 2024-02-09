@@ -15,4 +15,9 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID> {
     @Query("select c from chatRoom c where c.problemId =:problemId and c.isClose = true order by c.date desc")
     List<ChatRoom> findRoomByProblemId(@Param("problemId") Integer problemId);
 
+    @Query("select c from chatRoom c where c.sender =:sender and c.isClose = true order by c.date desc")
+    List<ChatRoom> findRoomBySender(@Param("sender") String sender);
+
+    @Query("select c from chatRoom c where c.receiver =:receiver and c.isClose = true order by c.date desc")
+    List<ChatRoom> findRoomByReceiver(@Param("receiver") String receiver);
 }
