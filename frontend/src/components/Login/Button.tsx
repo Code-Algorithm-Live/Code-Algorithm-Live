@@ -98,11 +98,10 @@ const Button = () => {
       <button onClick={() => signIn('kakao')} style={{ zIndex: 1 }}>
         <Image
           src="/images/kakao/kakao_login_button.png"
-          width={256}
-          height={200}
+          width={300}
+          height={45}
           alt="kakao login button"
           priority
-          style={{ width: '100%', height: 'auto' }}
         />
       </button>
     </>
