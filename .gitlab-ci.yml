@@ -26,7 +26,8 @@ test:
     - develop
   cache:
     paths:
-      - frontend/node_modules  # node_modules 디렉토리가 frontend 디렉토리에 있을 것으로 예상됩니다.
+      - frontend/node_modules 
   script:
     - cd frontend
-    - echo Hello
+    - docker build -t front .
+
