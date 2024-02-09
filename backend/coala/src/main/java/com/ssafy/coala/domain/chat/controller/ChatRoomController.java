@@ -70,7 +70,7 @@ public class ChatRoomController {
         }    }
 
     @Operation(summary = "채팅방 id로 히스토리 받기", description = "채팅방 id로 code/chat history 호출")
-    @GetMapping("history/chat/{roomUuid}")//paging 필요할 수 있음
+    @GetMapping("history/{roomUuid}")//paging 필요할 수 있음
     public ResponseEntity<ChatHistoryDto> findChatHistoryByRoomId(@PathVariable UUID roomUuid){
         try {
             return ResponseEntity.ok(chatService.findChatHistory(roomUuid));
@@ -80,7 +80,7 @@ public class ChatRoomController {
     }
 
     @Operation(summary = "problem id로 히스토리 받기",
-            description = "problem id로 history list 호출 receiver, content 없음")
+            description = "problem id로 history list 반환 페이징 필요?")
     @GetMapping("history/list/{problemId}")
     public ResponseEntity<List<HistoryRoomDto>> findHistoryListByProblemId(@PathVariable int problemId){
 
