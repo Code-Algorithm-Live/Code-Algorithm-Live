@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface HelpAlarmRepository extends JpaRepository<HelpAlarm,Integer> {
 
-    List<HelpAlarm> findByReceiverNickname(String nickname);
+    List<HelpAlarm> findByReceiver(String receiver);
 
     void deleteById(Long id);
 }
