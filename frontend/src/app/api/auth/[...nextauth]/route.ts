@@ -1,8 +1,8 @@
 import KakaoProvider from 'next-auth/providers/kakao';
 // import NaverProvider from 'next-auth/providers/naver';
+import type { NextAuthOptions } from 'next-auth';
 import NextAuth, { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import type { NextAuthOptions } from 'next-auth';
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -53,6 +53,7 @@ const authOptions: NextAuthOptions = {
       return updatedSession;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

@@ -4,9 +4,13 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 import IconNotice from '@assets/svgs/notice.svg';
 import IconHistory from '@assets/svgs/history.svg';
-import { signOut, useSession } from 'next-auth/react';
+import IconLogout from '@assets/svgs/logout.svg';
+import { instance } from '@/api/instance';
+import { NoticeForm } from '@/types/NoticeForm';
 
 const NavContainer = styled.nav`
   display: flex;
@@ -55,19 +59,63 @@ const Item = styled.div`
 `;
 
 const ProfileImage = styled.div<{ $userImage: string | undefined }>`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   background-image: url(${({ $userImage }) => $userImage});
   background-position: center;
   background-size: cover;
   border: 2px solid var(--white-color);
   border-radius: 50%;
-  cursor: pointer;
   transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 9px 5px;
+  margin-left: auto;
+`;
+
+const NoticeContainer = styled.div`
+  position: relative;
+`;
+
+const NoticeCount = styled.span`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -3px;
+  right: -3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--important-color);
+
+  font-family: Pretendard;
+  font-size: 10px;
+  color: var(--white-color);
 `;
 
 export default function Nav() {
   const { data: session } = useSession();
+  const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${session?.user.name}`,
+        );
+        if (response.data) {
+          setNoticeListData(response.data as NoticeForm[]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchData();
+  }, []);
 
   const token = session?.user?.jwtToken;
   const RealSignOut = async () => {
@@ -100,7 +148,10 @@ export default function Nav() {
       <IconContainer>
         <Item>
           <Link href="/notice">
-            <IconNotice />
+            <NoticeContainer>
+              <IconNotice />
+              <NoticeCount>{noticeListData.length}</NoticeCount>
+            </NoticeContainer>
           </Link>
         </Item>
         <Item>
@@ -108,12 +159,12 @@ export default function Nav() {
             <IconHistory />
           </Link>
         </Item>
-        <Item>
-          <Link href="/profile">
-            <ProfileImage $userImage={session?.user?.image} />
-          </Link>
+        <Item onClick={RealSignOut}>
+          <IconLogout
+            style={{ color: 'var(--white-color)', cursor: 'pointer' }}
+          />
         </Item>
-        <button onClick={RealSignOut}>로그아웃 버튼</button>
+        <ProfileImage $userImage={session?.user?.image} />
       </IconContainer>
     </NavContainer>
   );

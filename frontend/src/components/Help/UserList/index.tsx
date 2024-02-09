@@ -15,7 +15,7 @@ interface IData {
 
 const getProblemNumber = () => {
   if (typeof window === 'undefined') return '';
-  return localStorage.getItem('title');
+  return localStorage.getItem('problemNumber');
 };
 
 function Form() {
