@@ -31,17 +31,4 @@ npm:
       - frontend/node_modules  # node_modules 디렉토리가 frontend 디렉토리에 있을 것으로 예상됩니다.
   script:
     - cd frontend
-    - npm install
-
-build:
-  stage: build
-  only:
-    - front-develop
-    - develop
-  cache:
-    paths:
-      - frontend/.next
-  script:
-    - npm run build
-
-    - runner-dev
+    - docker build -t coala-front .
