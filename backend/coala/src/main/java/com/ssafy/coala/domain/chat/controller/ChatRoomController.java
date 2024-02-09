@@ -90,6 +90,31 @@ public class ChatRoomController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+
+    @Operation(summary = "해당 유저가 질문한 히스토리 리스트",
+            description = "{sender}=sender 인 history list 반환(sender 는 반환하지 않음)")
+    @GetMapping("history/sender/{sender}")
+    public ResponseEntity<List<HistoryRoomDto>> findHistoryListBySender(@PathVariable String sender){
+
+        try {
+            return ResponseEntity.ok(chatService.findHistoryBySender(sender));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @Operation(summary = "해당 유저가 도와준 히스토리 리스트",
+            description = "{receiver}=receiver 인 history list 반환(sender 는 반환하지 않음)")
+    @GetMapping("history/receiver/{receiver}")
+    public ResponseEntity<List<HistoryRoomDto>> findHistoryListByReceiver(@PathVariable String receiver){
+
+        try {
+            return ResponseEntity.ok(chatService.findHistoryByReceiver(receiver));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
 //
 //    @Operation(summary = "채팅방 id로 방정보 받기", description = "채팅방 id로 끝난 채팅방정보 호출")
 //    @GetMapping("history/room/{roomUuid}")

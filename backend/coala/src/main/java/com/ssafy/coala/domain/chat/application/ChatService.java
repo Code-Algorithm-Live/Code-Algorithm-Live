@@ -123,16 +123,48 @@ public class ChatService {
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),
-                    chatRoom.getSender(),chatRoom.getTitle()
-                    , chatRoom.getProblemId(), chatRoom.getDate()));
+                    chatRoom.getSender(),chatRoom.getTitle(),
+                    chatRoom.getProblemId(), chatRoom.getDate()));
         }
 
         //더미
         result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
                 "1000번 도움!",1000, LocalDateTime.now())));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender2",
                 "20000번 너무어렵다..",20000, LocalDateTime.now())));
 
+        return result;
+    }
+
+    public List<HistoryRoomDto> findHistoryBySender(String sender){
+        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(sender);
+        List<HistoryRoomDto> result = new ArrayList<>();
+        for (ChatRoom chatRoom:chatRoomList){
+            result.add(new HistoryRoomDto(chatRoom.getRoomId(),
+                    null, chatRoom.getTitle(),
+                    chatRoom.getProblemId(), chatRoom.getDate()));
+        }
+        //더미
+        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
+                "1000번 도움!",1000, LocalDateTime.now())));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
+                "1001번도 도움!",1001, LocalDateTime.now())));
+        return result;
+    }
+
+    public List<HistoryRoomDto> findHistoryByReceiver(String receiver){
+        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(receiver);
+        List<HistoryRoomDto> result = new ArrayList<>();
+        for (ChatRoom chatRoom:chatRoomList){
+            result.add(new HistoryRoomDto(chatRoom.getRoomId(),
+                    null, chatRoom.getTitle(),
+                    chatRoom.getProblemId(), chatRoom.getDate()));
+        }
+        //더미
+        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
+                "20000번 너무어렵다..",20000, LocalDateTime.now())));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
+                "상어초등학교 도와주셈",21608, LocalDateTime.now())));
         return result;
     }
 
