@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -89,7 +90,6 @@ public class ChatService {
         codeHistoryRepository.saveAll(list);
     }
 
-
     public ChatHistoryDto findChatHistory(UUID roomUuid){
         ChatHistoryDto chatHistoryDto = new ChatHistoryDto();
 
@@ -106,6 +106,11 @@ public class ChatService {
         for (CodeHistory codeHistory : codeHistoryList){
             codeHistoryDtoList.add(new CodeHistoryDto(codeHistory));
         }
+        //더미
+        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender1", "1", LocalDateTime.now()));
+        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender2", "2", LocalDateTime.now()));
+        codeHistoryDtoList.add(new CodeHistoryDto(0, "","1",LocalDateTime.now()));
+        codeHistoryDtoList.add(new CodeHistoryDto(0, "1","",LocalDateTime.now()));
 
         chatHistoryDto.setMessageDto(messageDtoList);
         chatHistoryDto.setHistoryDto(codeHistoryDtoList);
@@ -121,6 +126,12 @@ public class ChatService {
                     chatRoom.getSender(),chatRoom.getTitle()
                     , chatRoom.getProblemId(), chatRoom.getDate()));
         }
+
+        //더미
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
+                "1000번 도움!",1000, LocalDateTime.now())));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
+                "20000번 너무어렵다..",20000, LocalDateTime.now())));
 
         return result;
     }
