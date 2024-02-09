@@ -8,7 +8,7 @@ import ReactCodeMirror, {
   Transaction,
   ViewUpdate,
 } from '@uiw/react-codemirror';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
 
@@ -102,11 +102,7 @@ function addHistory({
 const CodeEditor = () => {
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
-  const client = useRef(
-    new yorkie.Client(yorkieBaseURL, {
-      apiKey: YORKIE_API_KEY,
-    }),
-  );
+
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
   const [maxHeight, setMaxHeight] = useState('');
@@ -155,62 +151,65 @@ const CodeEditor = () => {
   };
 
   // local change를 브로드캐스트
-  const handleChange = useCallback(
-    (value: string, viewUpdate: ViewUpdate) => {
-      if (viewUpdate.docChanged) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const tr of viewUpdate.transactions) {
-          const events = ['select', 'input', 'delete', 'move', 'undo', 'redo'];
-          if (!events.map(event => tr.isUserEvent(event)).some(Boolean)) {
-            continue;
-          }
-          if (tr.annotation(Transaction.remote)) {
-            continue;
-          }
-
-          let preStr = '';
-          let nextStr = '';
-
-          preStr = doc.getRoot().content.toString();
-
-          let adj = 0;
-          // eslint-disable-next-line @typescript-eslint/no-shadow,
-          tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
-            const insertText = inserted.toJSON().join('\n');
-
-            doc.update(root => {
-              root.content.edit(fromA + adj, toA + adj, insertText);
-            }, `update content byA ${client.current.getID()}`);
-
-            adj += insertText.length - (toA - fromA);
-
-            nextStr = doc.getRoot().content.toString();
-            handleAddHistory({ preStr, nextStr });
-          });
+  const handleChange = (value: string, viewUpdate: ViewUpdate) => {
+    if (viewUpdate.docChanged) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const tr of viewUpdate.transactions) {
+        const events = ['select', 'input', 'delete', 'move', 'undo', 'redo'];
+        if (!events.map(event => tr.isUserEvent(event)).some(Boolean)) {
+          continue;
         }
-      }
-    },
-    [doc],
-  );
+        if (tr.annotation(Transaction.remote)) {
+          continue;
+        }
 
-  const syncText = () => {
-    const text = doc.getRoot().content;
-    codeMirrorView.current.view?.dispatch({
-      changes: {
-        from: 0,
-        to: codeMirrorView.current.view?.state.doc.length,
-        insert: text.toString(),
-      },
-      annotations: [Transaction.remote.of(true)],
-    });
+        let preStr = '';
+        let nextStr = '';
+
+        preStr = doc.getRoot().content.toString();
+
+        let adj = 0;
+        // eslint-disable-next-line @typescript-eslint/no-shadow,
+        tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+          const insertText = inserted.toJSON().join('\n');
+          console.log('insertText', insertText);
+
+          doc.update(root => {
+            console.log('root.content', root.content);
+            root.content.edit(fromA + adj, toA + adj, insertText);
+          }, `update content byA `);
+
+          adj += insertText.length - (toA - fromA);
+
+          nextStr = doc.getRoot().content.toString();
+          handleAddHistory({ preStr, nextStr });
+        });
+      }
+    }
   };
 
   // create a document then attach it into the client.
   useEffect(() => {
-    const attachDoc = async () => {
-      await client.current.activate();
+    const client = new yorkie.Client(yorkieBaseURL, {
+      apiKey: YORKIE_API_KEY,
+    });
 
-      await client.current.attach(doc);
+    const syncText = () => {
+      const text = doc.getRoot().content;
+      codeMirrorView.current.view?.dispatch({
+        changes: {
+          from: 0,
+          to: codeMirrorView.current.view?.state.doc.length,
+          insert: text.toString(),
+        },
+        annotations: [Transaction.remote.of(true)],
+      });
+    };
+
+    const attachDoc = async () => {
+      await client.activate();
+
+      await client.attach(doc);
 
       doc.update(root => {
         if (!root.content) {
@@ -234,13 +233,13 @@ const CodeEditor = () => {
         }
       });
 
-      await client.current.sync();
+      await client.sync();
       syncText();
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     attachDoc();
-  });
+  }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
   useEffect(() => {
