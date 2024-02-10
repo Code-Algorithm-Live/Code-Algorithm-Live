@@ -17,10 +17,11 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # 작업의 단계 목록 및 실행 순서
-  - test
+  - lib
 
 test:
-  stage: test
+  stage: lib
+  image: node:latest
   only:
     - front-develop
     - develop
@@ -28,7 +29,7 @@ test:
     paths:
       - frontend/node_modules 
   script:
-    - cd frontend
-    - ls
-    - docker build -t front .
+    - npm i
+    - npm run build
+    - echo hello
 
