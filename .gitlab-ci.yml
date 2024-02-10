@@ -29,6 +29,7 @@ test:
     paths:
       - frontend/node_modules 
   script:
+    - cd frontend
     - npm i
     - npm run build
     - echo hello
