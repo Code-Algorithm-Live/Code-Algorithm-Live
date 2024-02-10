@@ -14,7 +14,6 @@ const authOptions: NextAuthOptions = {
     //   clientId: process.env.NAVER_CLIENT_ID || '',
     //   clientSecret: process.env.NAVER_CLIENT_SECRET || '',
     // }),
-    secret: process.env.SECRET
   ],
   callbacks: {
     jwt({ token, session }: { token: JWT; session?: Session }) {
@@ -54,6 +53,7 @@ const authOptions: NextAuthOptions = {
       return updatedSession;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

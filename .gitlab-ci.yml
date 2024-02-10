@@ -17,31 +17,35 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # 작업의 단계 목록 및 실행 순서
-  - libs
   - build
   - deploy
-
-npm:
-  stage: libs
-  only:
-    - front-develop
-    - develop
-  cache:
-    paths:
-      - frontend/node_modules  # node_modules 디렉토리가 frontend 디렉토리에 있을 것으로 예상됩니다.
-  script:
-    - cd frontend
-    - npm install
-
 build:
   stage: build
+  image: node:latest
   only:
     - front-develop
     - develop
   cache:
     paths:
-      - frontend/.next
+      - frontend/node_modules 
   script:
+    - cd frontend
+    - npm i
     - npm run build
-
-    - runner-dev
+  artifacts:
+    paths:
+      - frontend/.next/ 
+deploy:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker pull nginx # Nginx 이미지를 다운로드
+    - docker run -d --name coala-front-container nginx # Nginx 컨테이너 실행
+    - docker cp coala-front-container:/usr/share/nginx/html frontend/.next # 컨테이너에서 빌드된 파일을 로컬로 복사
+  artifacts:
+    paths:
+      - frontend/.next/
+  only:
+    - develop # master 브랜치에 push될 때만 배포
