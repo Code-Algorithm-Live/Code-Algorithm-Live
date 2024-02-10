@@ -35,7 +35,7 @@ function addHistory({
     idx: preIdx,
     pre: preStr.substring(preIdx, preStr.length - reverseIdx + 1),
     next: nextStr.substring(preIdx, nextStr.length - reverseIdx + 1),
-    duration: new Date().getTime(),
+    time: new Date().getTime(),
   };
 
   // eslint-disable-next-line consistent-return
