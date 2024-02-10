@@ -12,7 +12,8 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
 
-import { YorkieDoc } from '@/components/Chat/CodeEditor/type';
+import { History, YorkieDoc } from '@/components/Chat/CodeEditor/type';
+import { addHistory } from '@/components/Chat/CodeEditor/util';
 
 const Container = styled.div`
   position: relative;
@@ -40,63 +41,12 @@ const DOC_NAME = `hamster-${new Date()
   .toISOString()
   .substring(0, 10)
   .replace(/-/g, '')}`;
-
-interface History {
-  idx: number; // 변경이 일어날 인덱스위치
-  pre: string; // 변경 되기 이전 위치의 텍스트
-  next: string; // 변경된 이후 텍스트
-  duration: number; // 채팅방 생성 후 ~ 변경이 생겼을 때
-}
-
-/**
- * history 적정량 쌓은 후 flush
- */
-
-/**
- * @param preStr 변경이 일어나기 전 값
- * @param nextStr 변경이 일어난 후 값
- * @param startTime 채팅방 개설 시간
- * @returns
- */
-function addHistory({
-  preStr,
-  nextStr,
-}: {
-  preStr: string;
-  nextStr: string;
-}): History | undefined {
-  let preIdx = 0;
-  let reverseIdx = 1;
-  const shortLen =
-    preStr.length < nextStr.length ? preStr.length : nextStr.length;
-
-  while (preIdx < shortLen && preStr[preIdx] === nextStr[preIdx]) {
-    preIdx += 1;
-  }
-
-  if (preIdx === preStr.length && preIdx === nextStr.length) return;
-
-  while (
-    preIdx <= shortLen - reverseIdx &&
-    preStr[preStr.length - reverseIdx] === nextStr[nextStr.length - reverseIdx]
-  ) {
-    reverseIdx += 1;
-  }
-
-  const data = {
-    idx: preIdx,
-    pre: preStr.substring(preIdx, preStr.length - reverseIdx + 1),
-    next: nextStr.substring(preIdx, nextStr.length - reverseIdx + 1),
-    duration: new Date().getTime(),
-  };
-
-  // eslint-disable-next-line consistent-return
-  return data;
-}
+const MAX_HISTORY = 10;
 
 /** TODO:
  * sender 호출
  * sender onChange || remote 변화가 일어날 때
+ * history 적정량 쌓은 후 flush
  */
 
 const CodeEditor = () => {
