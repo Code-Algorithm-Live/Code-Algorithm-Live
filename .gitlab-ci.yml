@@ -17,10 +17,10 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # 작업의 단계 목록 및 실행 순서
-  - lib
-
-test:
-  stage: lib
+  - build
+  - deploy
+build:
+  stage: build
   image: node:latest
   only:
     - front-develop
@@ -32,5 +32,22 @@ test:
     - cd frontend
     - npm i
     - npm run build
-    - echo hello
-
+  artifacts:
+    paths:
+      - dist/ 
+deploy:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t coala-front
+    - docker run -d --name coala-front-container coala-front
+    - docker cp coala-front-container:/usr/share/nginx/html ./dist # 컨테이너에서 빌드된 파일을 로컬로 복사
+    - docker build -t coala-front-app . # Nginx 애플리케이션을 위한 이미지 빌드
+    - docker run -d --name coala-front-container -p 3000:3000 coala-front-app # Nginx 애플리케이션을 실행한 컨테이너 생성
+  artifacts:
+    paths:
+      - dist/ # 배포된 파일을 artifact로 저장할 경로
+  only:
+    - develop # master 브랜치에 push될 때만 배포
