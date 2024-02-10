@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { HelpForm } from '@/types/Help';
 
 interface IHelpFormStore {
@@ -7,7 +8,7 @@ interface IHelpFormStore {
 }
 
 /**
- * receiver, sender 모두 도움요청 폼 저장
+ * 도움요청 폼
  */
 const useHelpFromStore = create<IHelpFormStore>(set => ({
   helpForm: undefined,

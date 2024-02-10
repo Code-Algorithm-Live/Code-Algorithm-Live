@@ -1,10 +1,11 @@
-import { instance } from '@/api/instance';
 import {
-  FetchPostCompilerResponse,
+  FetchCreateCodeHistory,
   FetchPostCompilerRequest,
+  FetchPostCompilerResponse,
   FetchProblemCrawlRequest,
   FetchProblemCrawlResponse,
 } from '@/api/chat/type';
+import { instance } from '@/api/instance';
 
 /**
  * 코드를 컴파일 합니다.
@@ -25,4 +26,12 @@ const fetchProblemCrawl = async ({ problemId }: FetchProblemCrawlRequest) => {
   return res;
 };
 
-export { fetchPostCompiler, fetchProblemCrawl };
+const fetchCreateCodeHistory = async ({
+  roomUuid,
+  ...data
+}: FetchCreateCodeHistory) => {
+  const res = await instance.post(`/history/${roomUuid}`, data);
+  return res;
+};
+
+export { fetchCreateCodeHistory, fetchPostCompiler, fetchProblemCrawl };
