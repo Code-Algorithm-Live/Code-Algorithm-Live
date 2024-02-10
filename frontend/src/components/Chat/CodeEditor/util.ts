@@ -1,3 +1,5 @@
+import { EditorState } from '@codemirror/state';
+
 import { History } from '@/components/Chat/CodeEditor/type';
 
 /**
@@ -42,4 +44,20 @@ function addHistory({
   return data;
 }
 
-export { addHistory };
+/**
+ * 편집 중인 코드 라인을 반환합니다.
+ */
+function getSelectedLineNumbers(state: EditorState) {
+  const selectedLines: number[] = [];
+
+  state.selection.ranges.forEach(range => {
+    if (range.empty) {
+      const { number } = state.doc.lineAt(range.head);
+      selectedLines.push(number);
+    }
+  });
+
+  return selectedLines;
+}
+
+export { addHistory, getSelectedLineNumbers };

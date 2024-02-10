@@ -17,7 +17,10 @@ import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
 
 import { fetchCreateCodeHistory } from '@/api/chat';
 import { History, YorkieDoc } from '@/components/Chat/CodeEditor/type';
-import { addHistory } from '@/components/Chat/CodeEditor/util';
+import {
+  addHistory,
+  getSelectedLineNumbers,
+} from '@/components/Chat/CodeEditor/util';
 import useHelpFromStore from '@/store/helpForm';
 
 const Container = styled.div`
@@ -127,6 +130,8 @@ const CodeEditor = () => {
           continue;
         }
 
+        console.log(getSelectedLineNumbers(tr.state));
+
         let preStr = '';
         let nextStr = '';
 
@@ -139,6 +144,7 @@ const CodeEditor = () => {
 
           doc.update(root => {
             root.content.edit(fromA + adj, toA + adj, insertText);
+            // presence.set({cursor: value})
           }, `update content byA `);
 
           adj += insertText.length - (toA - fromA);
@@ -184,14 +190,19 @@ const CodeEditor = () => {
         if (event.type === DocEventType.Snapshot) syncText();
       });
 
-      // remote change 이벤트 발생
       doc.subscribe('$.content', event => {
+        // remote change 이벤트 발생
         if (event.type === DocEventType.RemoteChange) {
           const { operations } = event.value;
           handleOperations(operations);
           // FIXME: remote change발생시 history 추가
           const nextStr = doc.getRoot().content.toString();
           handleAddHistory({ preStr: preContent.current, nextStr });
+        }
+
+        // 사용자 커서 이벤트
+        if (event.type === DocEventType.PresenceChanged) {
+          console.log('presence changed', event.value);
         }
       });
 
