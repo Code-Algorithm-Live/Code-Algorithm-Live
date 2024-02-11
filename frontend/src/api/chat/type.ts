@@ -8,7 +8,7 @@ type FetchPostCompilerResponse = string;
 interface FetchProblemCrawlRequest {
   problemId: string;
 }
-interface FetchProblemCrawlResponse {}
+type FetchProblemCrawlResponse = string;
 
 export type {
   FetchPostCompilerRequest,
