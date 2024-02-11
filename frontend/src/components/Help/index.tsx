@@ -18,6 +18,7 @@ function Form() {
   const [middleNumber, setMiddleNumber] = useState<string>('');
   const debouncedNumber = useDebounce(middleNumber, 5000);
   const { data: session } = useSession();
+  const [problemNum, setProblemNum] = useState(''); // FIXME: 입력한 문제 번호가 0으로 넘어가는 이슈 해결 위한 임시 값입니다. 이슈 해결 후 삭제 해주세요.
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -37,6 +38,7 @@ function Form() {
 
   const handleChangeNumber = (num: string) => {
     setMiddleNumber(num);
+    setProblemNum(num)
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
@@ -47,7 +49,7 @@ function Form() {
   };
 
   const helpDto = {
-    num: Number(problemNumber),
+    num: Number(problemNum),
     title: formTitle,
     content: formContent,
   };
