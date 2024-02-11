@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 import { HelpForm } from '@/types/Help';
 
@@ -10,9 +11,16 @@ interface IHelpFormStore {
 /**
  * 도움요청 폼
  */
-const useHelpFromStore = create<IHelpFormStore>(set => ({
-  helpForm: undefined,
-  setHelpForm: (helpForm?: HelpForm) => set({ helpForm }),
-}));
+const useHelpFromStore = create<IHelpFormStore>()(
+  persist(
+    set => ({
+      helpForm: undefined,
+      setHelpForm: (helpForm?: HelpForm) => set({ helpForm }),
+    }),
+    {
+      name: 'helpForm',
+    },
+  ),
+);
 
 export default useHelpFromStore;

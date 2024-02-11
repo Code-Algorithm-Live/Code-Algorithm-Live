@@ -11,7 +11,7 @@ type FetchPostCompilerResponse = string;
 interface FetchProblemCrawlRequest {
   problemId: string;
 }
-interface FetchProblemCrawlResponse {}
+type FetchProblemCrawlResponse = string;
 
 interface FetchCreateCodeHistory {
   roomUuid: RoomUuid;

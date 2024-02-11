@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import styled from 'styled-components';
-import Chatting from '@/components/Chat/Chatting';
-import Timer from '@/components/Chat/Timer';
-import InputOutput from '@/components/Chat/InputOutput';
-import CodeEditor from '@/components/Chat/CodeEditor';
 import { fetchPostCompiler } from '@/api/chat';
-import useHelpFromStore from '@/store/helpForm';
+import Chatting from '@/components/Chat/Chatting';
+import CodeEditor from '@/components/Chat/CodeEditor';
+import InputOutput from '@/components/Chat/InputOutput';
+import ProblemView from '@/components/Chat/ProblemView';
 import QuestionModal from '@/components/Chat/QuestionModal';
+import Timer from '@/components/Chat/Timer';
+import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
@@ -223,7 +224,7 @@ export default function Chat() {
           </HeaderContainer>
           <MainContainer>
             <LeftContainer>
-              <div className="problemContainer"></div>
+              <ProblemView />
               <div className="bottomMenuContainer">
                 <button>나가기</button>
               </div>
