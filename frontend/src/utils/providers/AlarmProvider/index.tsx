@@ -1,15 +1,15 @@
 'use client';
 
-import { Client, IMessage } from '@stomp/stompjs';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import { fetchAcceptHelp } from '@/api/match';
-import { HelpForm } from '@/types/Help';
+import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
 import { BROKER_URL } from '@/libs/stomp';
 import useHelpFromStore from '@/store/helpForm';
+import { HelpForm } from '@/types/Help';
+import { Client, IMessage } from '@stomp/stompjs';
+import { useMutation } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 const AUTHENTICATED = 'authenticated';
 
@@ -43,12 +43,11 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
           response.body,
         ) as IMessage as unknown as HelpForm;
 
-        console.log('message', message);
-
         // 매칭 완료
         if (message.success) {
           const onMatchSuccess = () => {
-            router.push(`/chat?roomId=${message.roomUuid}`);
+            setHelpForm(message);
+            router.push(`/chat/${message.roomUuid}`);
           };
           onMatchSuccess();
           return;
@@ -69,10 +68,6 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
     };
     return () => disconnect();
   }, []);
-
-  useEffect(() => {
-    if (helpForm) setIsOpen(true);
-  }, [helpForm]);
 
   const handleClose = () => {
     setIsOpen(false);
