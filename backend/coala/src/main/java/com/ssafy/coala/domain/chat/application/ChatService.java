@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -109,8 +110,8 @@ public class ChatService {
         //더미
         messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender1", "1", LocalDateTime.now()));
         messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender2", "2", LocalDateTime.now()));
-        codeHistoryDtoList.add(new CodeHistoryDto(0, "","1",LocalDateTime.now()));
-        codeHistoryDtoList.add(new CodeHistoryDto(0, "1","",LocalDateTime.now()));
+        codeHistoryDtoList.add(new CodeHistoryDto(0, "","1",Timestamp.valueOf(LocalDateTime.now())));
+        codeHistoryDtoList.add(new CodeHistoryDto(0, "1","",Timestamp.valueOf(LocalDateTime.now())));
 
         chatHistoryDto.setMessageDto(messageDtoList);
         chatHistoryDto.setHistoryDto(codeHistoryDtoList);
@@ -124,14 +125,14 @@ public class ChatService {
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),
                     chatRoom.getSender(),chatRoom.getTitle(),
-                    chatRoom.getProblemId(), chatRoom.getDate()));
+                    chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
 
         //더미
         result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
-                "1000번 도움!",1000, LocalDateTime.now())));
+                "1000번 도움!",1000,Timestamp.valueOf(LocalDateTime.now()))));
         result.add((new HistoryRoomDto(UUID.randomUUID(), "sender2",
-                "20000번 너무어렵다..",20000, LocalDateTime.now())));
+                "20000번 너무어렵다..",20000, Timestamp.valueOf(LocalDateTime.now()))));
 
         return result;
     }
@@ -142,13 +143,13 @@ public class ChatService {
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),
                     null, chatRoom.getTitle(),
-                    chatRoom.getProblemId(), chatRoom.getDate()));
+                    chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
         //더미
         result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "1000번 도움!",1000, LocalDateTime.now())));
+                "1000번 도움!",1000, Timestamp.valueOf(LocalDateTime.now()))));
         result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "1001번도 도움!",1001, LocalDateTime.now())));
+                "1001번도 도움!",1001, Timestamp.valueOf(LocalDateTime.now()))));
         return result;
     }
 
@@ -158,13 +159,13 @@ public class ChatService {
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),
                     null, chatRoom.getTitle(),
-                    chatRoom.getProblemId(), chatRoom.getDate()));
+                    chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
         //더미
         result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "20000번 너무어렵다..",20000, LocalDateTime.now())));
+                "20000번 너무어렵다..",20000, Timestamp.valueOf(LocalDateTime.now()))));
         result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "상어초등학교 도와주셈",21608, LocalDateTime.now())));
+                "상어초등학교 도와주셈",21608, Timestamp.valueOf(LocalDateTime.now()))));
         return result;
     }
 
