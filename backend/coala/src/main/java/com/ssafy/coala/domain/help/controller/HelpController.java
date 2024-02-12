@@ -7,6 +7,8 @@ import com.ssafy.coala.domain.chat.dto.MakeRoomDto;
 import com.ssafy.coala.domain.help.dto.WaitDto;
 import com.ssafy.coala.domain.help.application.MatchingService;
 import com.ssafy.coala.domain.help.application.RedisService;
+import com.ssafy.coala.domain.member.application.MemberService;
+import com.ssafy.coala.domain.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/help")
@@ -23,19 +27,19 @@ public class HelpController {
     private final RedisService redisService;
     private final MatchingService matchingService;
     private final ChatService chatService;
+    private final MemberService memberService;
 
-
-    @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping("/hint/{num}")
-    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        return ResponseEntity.ok("문제번호 " + num);
-    }
+//    @Operation(summary = "GPT에게 힌트 받기", description = "Chat GPT에게 문제에 대한 힌트를 받습니다.")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "OK !!"),
+//            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+//            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+//    })
+//    @GetMapping("/hint/{num}")
+//    public ResponseEntity<String> GPTHint(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
+//        return ResponseEntity.ok("문제번호 " + num);
+//    }
 
     @Operation(summary = "최근 푼 사람의 리스트", description = "해당 문제를 최근 푼 사람의 리스트를 반환합니다")
     @ApiResponses({
@@ -45,24 +49,12 @@ public class HelpController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @GetMapping("/solvedlist/{num}")
-    public ResponseEntity<String> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
-        return ResponseEntity.ok("문제번호 " + num);
-    }
-
-    @Operation(summary = "질문 히스토리 리스트", description = "최근 질문 히스토리 리스트를 반환합니다")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK !!"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping("/questionlist/{id}")
-    public ResponseEntity<String> questionlist(@Parameter(description = "유저 아이디", required = true, example = "test") @PathVariable String id) {
-        return ResponseEntity.ok("아이디 " + id);
+    public ResponseEntity<List<MemberDto>> solvedlist(@Parameter(description = "문제 번호", required = true, example = "1000") @PathVariable int num) {
+        return ResponseEntity.ok(memberService.getMemberByProblemId(num));
     }
 
 
-    @Operation(summary = "도움 요청 대기열 문제 별 리스트 반환", description = "요청 대기열의 문제 별 리스트를 반환합니다.")
+    @Operation(summary = "도움 요청 대기열 문제 별 리스트 반환", description = "요청 대기열의 문제 별 리스트를 반환합니다.(List<waitDto>)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK !!"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
@@ -152,5 +144,21 @@ public class HelpController {
     public ResponseEntity<String> accept(@Parameter(description = "도움 요청 수락 - sender : 필수, receiver : 필수, helpDto : 필수, roomUuid : 필수, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto) {
         matchingService.notifyMatching(waitDto);
         return ResponseEntity.ok("매칭 수락!!! 페어프로그래밍으로 이동");
+    }
+    @Operation(summary = "도움 요청 폼 변경", description = "대기열에서 도움 요청 폼을 변경한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @PutMapping("/waitqueue")
+    public ResponseEntity<String> waitqueuemodify(@Parameter(description = "도움 요청 폼 변경 - sender : 필수, receiver : 안보냄, helpDto : 필수, roomUuid : 안보내도됨, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto){
+        if (redisService.modifying(waitDto)){
+            return ResponseEntity.ok("도움 요청 폼 변경 완료!!!");
+        } else {
+            return ResponseEntity.internalServerError().body("도움 요청 폼 변경 실패!!!");
+        }
+
     }
 }

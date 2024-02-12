@@ -1,13 +1,17 @@
 package com.ssafy.coala.domain.member.dto;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 //member_profile 정보들 담는 용도의 DTO
 @Data
 @ToString
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberDto {
 
     private String email;

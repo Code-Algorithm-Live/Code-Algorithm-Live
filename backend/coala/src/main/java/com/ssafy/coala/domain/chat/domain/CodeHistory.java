@@ -17,12 +17,13 @@ public class CodeHistory {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "room_id")
     private UUID roomId;
 
     private int idx;
     private String pre;
     private String next;
-    private LocalDateTime duration;
+    private LocalDateTime time;
 
 
 }

@@ -1,5 +1,6 @@
 package com.ssafy.coala.config;
 
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.jwt.JWTFilter;
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
 import com.ssafy.coala.domain.member.jwt.LoginFilter;
@@ -26,7 +27,6 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-
     private final RedisTemplate<String, String> redisStringTemplate;
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,  RedisTemplate<String, String> redisStringTemplate) {
 
