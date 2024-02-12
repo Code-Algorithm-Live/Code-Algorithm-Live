@@ -5,7 +5,7 @@ stages:          # 작업의 단계 목록 및 실행 순서
   - docker-pull
 
 variables:
-  DOCKER_COMPOSE_FILE: ./frontend/docker-compose.yml
+  DOCKER_COMPOSE_FILE: docker-compose.yml
 
 create-env:
   stage: create-env
@@ -56,17 +56,20 @@ docker-build:
 
 docker-pull:
   stage: docker-pull
+  image: docker/compose:latest
   script:
+    - cd frontend
+    - ls
     # login again
     - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     # container removal
     - docker stop $(docker ps -q --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
     - docker rm $(docker ps -aq --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
-    - docker-compose -f $DOCKER_COMPOSE_FILE down || true
+    - docker-compose -f docker-compose.yml down || true
     - docker rmi $(docker images -q ${DOCKER_HUB_USER}/frontend:frontend-latest) || true
     # deploy
-    - docker-compose -f $DOCKER_COMPOSE_FILE pull
-    - docker-compose -f $DOCKER_COMPOSE_FILE up -d
+    - docker-compose -f docker-compose.yml pull
+    - docker-compose -f docker-compose.yml up -d
     - docker image prune -f
   only:
     - develop # master 브랜치에 push될 때만 배포
