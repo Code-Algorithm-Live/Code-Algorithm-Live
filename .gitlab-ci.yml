@@ -57,6 +57,7 @@ docker-build:
 docker-pull:
   stage: docker-pull
   script:
+    - sudo docker-compose -v
     - cd frontend
     - ls
     # login again
