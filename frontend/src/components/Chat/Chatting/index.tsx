@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { styled } from 'styled-components';
-import { Client } from '@stomp/stompjs';
+import Input from '@/components/Chat/Chatting/Input';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-import Input from '@/components/Chat/Chatting/Input';
 import { generateUUID } from '@/utils/uuid';
+import { Client } from '@stomp/stompjs';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { styled } from 'styled-components';
 
 const Container = styled.div`
   position: relative;
@@ -21,6 +21,7 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
+  height: calc(100% - 80px); // 채팅 입력창 만큼 높이를 조정
   padding: 7px;
   overflow-y: scroll;
 

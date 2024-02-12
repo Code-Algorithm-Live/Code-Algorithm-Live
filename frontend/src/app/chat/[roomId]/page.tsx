@@ -172,6 +172,7 @@ const RightContainer = styled.div`
 
   .chattingContainer {
     flex: 1;
+    height: calc(100% - 112px); // 도움 요청 폼 더보기 높이값 뺀 만큼 조정
   }
 `;
 
