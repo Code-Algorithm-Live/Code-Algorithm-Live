@@ -68,12 +68,25 @@ const Chatting = () => {
   const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
   const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
   const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+  const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /**
+     * 채팅방 스크롤바를 항상 하단으로 고정
+     */
+    const scrollToBottom = () => {
+      if (!messageContainerRef.current) return;
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    };
+
+    scrollToBottom();
+  }, [messages]);
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {
     const msgTime = getHourMinutes(new Date());
     const chatId = generateUUID();
-
     setMessages(prev => [
       ...prev,
       {
@@ -148,7 +161,7 @@ const Chatting = () => {
 
   return (
     <Container>
-      <MessageContainer>
+      <MessageContainer ref={messageContainerRef}>
         {messages.map(({ chatId, type, sender, date, message }, idx) => {
           if (type !== MessageType.TALK) return <></>;
 
