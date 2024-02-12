@@ -69,4 +69,5 @@ docker-pull:
     - docker-compose -f $DOCKER_COMPOSE_FILE up -d
     - docker image prune -f
   only:
-    - fe-deploy
+    - develop # master 브랜치에 push될 때만 배포
+    - front-develop
