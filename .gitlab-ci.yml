@@ -58,6 +58,7 @@ docker-pull:
   stage: docker-pull
   script:
     - cd frontend
+    - ls
     # login again
     - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     # container removal
