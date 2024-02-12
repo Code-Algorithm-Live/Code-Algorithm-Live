@@ -35,6 +35,8 @@ frontend-build:
   artifacts:
     paths:
       - frontend/.next/
+      - frontend/public
+      - frontend/.next/static
   only:
     - develop # master 브랜치에 push될 때만 배포
     - front-develop
