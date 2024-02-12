@@ -1,14 +1,23 @@
 FROM node:18-alpine
 
-RUN mkdir -p /usr/app
-WORKDIR /usr/app
+WORKDIR /usr/src/app
 
-# Install dependencies based on the preferred package manager
-COPY ./ ./
+COPY ./.next ./
 
 RUN npm install 
 RUN npm run build
 
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
+
+# 애플리케이션 실행을 위한 사용자 권한 설정
+USER nextjs
+
+# 애플리케이션에 할당할 포트
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# 한국 시간으로 설정
+ENV TZ Asia/Seoul
+
+# 애플리케이션 실행 명령어
+CMD ["node", "server.js"]
