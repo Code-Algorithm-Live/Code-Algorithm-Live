@@ -17,11 +17,17 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ChatRoom {
     @Id
-    @Column(name = "room_id")
+    @Column(name = "room_id",length = 16)
     private UUID roomId;
 
     private String sender;
     private String receiver;
+
+    private boolean isClose;
+    private String title;
+    private String content;
+    private int problemId;
+
 //isclose, title, content, problemId
     @JsonIgnore
     @OneToMany(mappedBy = "")

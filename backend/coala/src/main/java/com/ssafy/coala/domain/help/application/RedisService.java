@@ -26,4 +26,6 @@ public interface RedisService {
 
 
     List<Object> getSolvedListUsers(String solvedId);
+
+    boolean modifying(WaitDto waitDto);
 }

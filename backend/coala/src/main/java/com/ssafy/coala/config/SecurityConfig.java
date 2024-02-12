@@ -1,5 +1,6 @@
 package com.ssafy.coala.config;
 
+import com.ssafy.coala.domain.member.dao.MemberProfileRepository;
 import com.ssafy.coala.domain.member.jwt.JWTFilter;
 import com.ssafy.coala.domain.member.jwt.JWTUtil;
 import com.ssafy.coala.domain.member.jwt.LoginFilter;
@@ -26,7 +27,6 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-
     private final RedisTemplate<String, String> redisStringTemplate;
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,  RedisTemplate<String, String> redisStringTemplate) {
 
@@ -87,7 +87,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/ws/**","/login", "/api/**", "/member/**", "/chat/**","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs", "/api-docs/**", "/swagger-ui/**", "/favicon.ico", "/api/authenticate").permitAll()
+                        .requestMatchers("/member/auth/**","/ws/**","/login","/member/login","/member/signup", "/member/dupcheck/**","/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
 

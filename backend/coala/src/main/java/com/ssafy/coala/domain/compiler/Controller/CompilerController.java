@@ -2,6 +2,7 @@ package com.ssafy.coala.domain.compiler.Controller;
 
 import com.ssafy.coala.domain.compiler.Dto.CompileRequest;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,10 @@ import java.util.concurrent.TimeUnit;
 public class CompilerController {
     int numOfDirectory = 20;
     Queue<Integer> directoryPool;
+
+    @Value("${file.upload.directory}")
+    private String directoryPath;
+
     @PostConstruct
     private void construct(){
         directoryPool = new ArrayDeque<>();
@@ -53,15 +58,15 @@ public class CompilerController {
         return ResponseEntity.ok(result);
     }
 
-    private static final String OUTPUT_DIRECTORY = "compiled_code";
+    private final String OUTPUT_DIRECTORY = "compiled_code";
 
     //Docker에서 기본적인 보안은 해결해준다?
-    public static String compileAndExecute(String code, String input, int num) {
+    public String compileAndExecute(String code, String input, int num) {
         try {
             // Create a directory for compiled code if it doesn't exist
-            File outputDirectory = new File(OUTPUT_DIRECTORY+num);
+            File outputDirectory = new File(directoryPath+OUTPUT_DIRECTORY+num);
             if (!outputDirectory.exists()) {
-                outputDirectory.mkdir();
+                outputDirectory.mkdirs();
             }
 
             // Write code to a temporary file in the specified directory
@@ -82,7 +87,7 @@ public class CompilerController {
         }
     }
 
-    private static boolean compileCode(File sourceFile) throws IOException {
+    private boolean compileCode(File sourceFile) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
@@ -110,7 +115,7 @@ public class CompilerController {
         return success;
     }
 
-    private static String executeCompiledCode(String className, String input, File outputDirectory)
+    private String executeCompiledCode(String className, String input, File outputDirectory)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder("java", "-cp", outputDirectory.getPath(), className)
                 .redirectInput(ProcessBuilder.Redirect.PIPE)
