@@ -45,11 +45,11 @@ docker-build:
     - create-env
     - frontend-build
   script:
-    - docker rmi ${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest || true
-    - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+    - docker rmi ${DOCKER_HUB_USER}/frontend:frontend-latest || true
+    - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     - cd frontend
-    - docker build -t ${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest -f Dockerfile .
-    - docker push ${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest
+    - docker build -t ${DOCKER_HUB_USER}/frontend:frontend-latest -f Dockerfile .
+    - docker push ${DOCKER_HUB_USER}/frontend:frontend-latest
   only:
     - develop # master 브랜치에 push될 때만 배포
     - front-develop
@@ -58,12 +58,12 @@ docker-pull:
   stage: docker-pull
   script:
     # login again
-    - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+    - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     # container removal
-    - docker stop $(docker ps -q --filter ancestor=${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest) || true
-    - docker rm $(docker ps -aq --filter ancestor=${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest) || true
+    - docker stop $(docker ps -q --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
+    - docker rm $(docker ps -aq --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
     - docker-compose -f $DOCKER_COMPOSE_FILE down || true
-    - docker rmi $(docker images -q ${DOCKER_USERNAME}/${DOCKER_REPO}:frontend-latest) || true
+    - docker rmi $(docker images -q ${DOCKER_HUB_USER}/frontend:frontend-latest) || true
     # deploy
     - docker-compose -f $DOCKER_COMPOSE_FILE pull
     - docker-compose -f $DOCKER_COMPOSE_FILE up -d
