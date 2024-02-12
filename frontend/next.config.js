@@ -23,5 +23,6 @@ module.exports = {
   //     },
   //   ];
   // },
-  reactStrictMode: false
+  reactStrictMode: false,
+  output:'standalone'
 };
