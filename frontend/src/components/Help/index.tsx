@@ -38,7 +38,7 @@ function Form() {
 
   const handleChangeNumber = (num: string) => {
     setMiddleNumber(num);
-    setProblemNum(num)
+    setProblemNum(num);
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
