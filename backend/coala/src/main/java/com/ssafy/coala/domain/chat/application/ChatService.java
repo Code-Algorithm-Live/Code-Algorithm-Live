@@ -108,8 +108,8 @@ public class ChatService {
             codeHistoryDtoList.add(new CodeHistoryDto(codeHistory));
         }
         //더미
-        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender1", "1", LocalDateTime.now()));
-        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender2", "2", LocalDateTime.now()));
+        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender1", "1", Timestamp.valueOf(LocalDateTime.now())));
+        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender2", "2", Timestamp.valueOf(LocalDateTime.now())));
         codeHistoryDtoList.add(new CodeHistoryDto(0, "","1",Timestamp.valueOf(LocalDateTime.now())));
         codeHistoryDtoList.add(new CodeHistoryDto(0, "1","",Timestamp.valueOf(LocalDateTime.now())));
 

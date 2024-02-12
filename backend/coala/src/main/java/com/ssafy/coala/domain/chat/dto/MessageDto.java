@@ -26,13 +26,13 @@ public class MessageDto {
     //내용
     private String message;
 
-    private LocalDateTime date;
+    private Timestamp date;
 
     public MessageDto(ChatMessage chatMessage){
         sender = chatMessage.getSender();
         type = chatMessage.getType();
         message = chatMessage.getMessage();
-        date = chatMessage.getDate();
+        date = Timestamp.valueOf(chatMessage.getDate());
     }
 
 }
