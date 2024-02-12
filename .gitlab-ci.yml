@@ -58,7 +58,6 @@ docker-pull:
   stage: docker-pull
   image: docker/compose:latest
   script:
-    - sudo docker-compose -v
     - cd frontend
     - ls
     # login again
