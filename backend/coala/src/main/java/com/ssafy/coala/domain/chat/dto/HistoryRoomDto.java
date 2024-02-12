@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -19,5 +20,5 @@ public class HistoryRoomDto {
     private String title;
 //    private String content;//list x
     private int problemId;
-    private LocalDateTime date;
+    private Timestamp date;
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,16 +18,16 @@ public class CodeHistoryDto {
     private int idx;
     private String pre;
     private String next;
-    private LocalDateTime time;
+    private Timestamp time;
 
     public CodeHistoryDto(CodeHistory codeHistory){
         idx = codeHistory.getIdx();
         pre = codeHistory.getPre();
         next = codeHistory.getNext();
-        time = codeHistory.getTime();
+        time = Timestamp.valueOf(codeHistory.getTime());
     }
 
     public CodeHistory toCodeHistory(UUID roomUuid){
-        return new CodeHistory(null, roomUuid, idx, pre, next, time);
+        return new CodeHistory(null, roomUuid, idx, pre, next, time.toLocalDateTime());
     }
 }
