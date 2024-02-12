@@ -59,9 +59,5 @@ public class StompChatController {
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
     }
 
-    @PostMapping("/api/v1/test")
-    public String test(){
-        System.out.println("test success");
-        return "test success";
-    }
+
 }
