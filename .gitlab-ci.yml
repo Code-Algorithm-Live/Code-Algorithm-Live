@@ -25,23 +25,6 @@ create-env:
     - front-develop
     - develop
 
-build:
-  stage: build
-  image: node:latest
-  only:
-    - front-develop
-    - develop
-  cache:
-    paths:
-      - frontend/node_modules 
-  script:
-    - cd frontend
-    - npm i
-    - npm run build
-  artifacts:
-    paths:
-      - frontend/.next/ 
-
 frontend-build:
   stage: frontend-build
   image: node:18-alpine
