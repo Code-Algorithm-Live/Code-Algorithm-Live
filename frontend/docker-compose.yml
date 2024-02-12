@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    image: ${DOCKER_HUB_USER}/frontend:frontend-latest
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./.env

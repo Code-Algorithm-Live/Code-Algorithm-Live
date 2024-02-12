@@ -1,0 +1,76 @@
+stages:          # 작업의 단계 목록 및 실행 순서
+  - create-env
+  - frontend-build
+  - docker-build
+  - docker-pull
+
+variables:
+  DOCKER_COMPOSE_FILE: docker-compose.yml
+
+create-env:
+  stage: create-env
+  script:
+  - echo "NEXT_PUBLIC_KAKAO_CLIENT_ID = ${NEXT_PUBLIC_KAKAO_CLIENT_ID}" >> .env
+  - echo "NEXT_PUBLIC_KAKAO_CLIENT_SECRET = ${NEXT_PUBLIC_KAKAO_CLIENT_SECRET}" >> .env
+  - echo "NEXT_PUBLIC_BASE_URL = ${NEXT_PUBLIC_BASE_URL}" >> .env
+  - echo "NEXT_PUBLIC_SOCKET_BASE_URL = ${NEXT_PUBLIC_SOCKET_BASE_URL}" >> .env
+  - echo "NEXT_PUBLIC_BROKER_URL = ${NEXT_PUBLIC_BROKER_URL}" >> .env
+  - echo "NEXT_PUBLIC_YORKIE_BASE_URL = ${NEXT_PUBLIC_YORKIE_BASE_URL}" >> .env
+  - echo "NEXT_PUBLIC_YORKIE_API_KEY = ${NEXT_PUBLIC_YORKIE_API_KEY}" >> .env
+  - echo "NEXTAUTH_SECRET = ${NEXTAUTH_SECRET}" >> .env
+  artifacts:
+    paths:
+      - .env
+  only: 
+    - front-develop
+    - develop
+
+frontend-build:
+  stage: frontend-build
+  image: node:18-alpine
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/.next/
+  only:
+    - develop # master 브랜치에 push될 때만 배포
+    - front-develop
+  
+docker-build:
+  stage: docker-build
+  dependencies:
+    - create-env
+    - frontend-build
+  script:
+    - docker rmi ${DOCKER_HUB_USER}/frontend:frontend-latest || true
+    - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
+    - cd frontend
+    - docker build -t ${DOCKER_HUB_USER}/frontend:frontend-latest -f Dockerfile .
+    - docker push ${DOCKER_HUB_USER}/frontend:frontend-latest
+  only:
+    - develop # master 브랜치에 push될 때만 배포
+    - front-develop
+
+docker-pull:
+  stage: docker-pull
+  image: docker/compose:latest
+  script:
+    - cd frontend
+    - ls
+    # login again
+    - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
+    # container removal
+    - docker stop $(docker ps -q --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
+    - docker rm $(docker ps -aq --filter ancestor=${DOCKER_HUB_USER}/frontend:frontend-latest) || true
+    - docker-compose -f docker-compose.yml down || true
+    - docker rmi $(docker images -q ${DOCKER_HUB_USER}/frontend:frontend-latest) || true
+    # deploy
+    - docker-compose -f docker-compose.yml pull
+    - docker-compose -f docker-compose.yml up -d
+    - docker image prune -f
+  only:
+    - develop # master 브랜치에 push될 때만 배포
+    - front-develop

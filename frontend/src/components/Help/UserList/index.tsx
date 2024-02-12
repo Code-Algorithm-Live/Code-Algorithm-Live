@@ -1,49 +1,36 @@
 'use client';
 
-import UserHelp from '@/components/Help/UserList/UserHelp';
+import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
 import NavBar from '@/components/Help/NavBar';
-import styles from '@/components/Help/UserList/index.module.scss';
 import Refresh from '@/components/Help/UserList/Refresh';
+import UserHelp from '@/components/Help/UserList/UserHelp';
+import styles from '@/components/Help/UserList/index.module.scss';
+import { HPReceiver } from '@/types/HelpMatching';
+
+interface IData {
+  data: HPReceiver[];
+}
+
+const getProblemNumber = () => {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('problemNumber');
+};
 
 function Form() {
-  // TODO: 서버와 연결 > 친구와 유저리스트 데이타 받아오기
-  // TODO: 경험치로 등급, 레벨 환산 필요
-  // 유저 도움 준 횟수와 도움 받은 횟수 db에 저장 안 함
-
-  // FIXME: 유저별로 가져오기, db에 있는지 확인 필요
+  const [userList, setUserList] = useState<IData>();
   const mainLanguage = 'java';
-
-  const userData = {
-    data: [
-      {
-        nickname: '알라코1',
-        memberExp: 15,
-        url: '/images/coala/smile.png',
-      },
-      {
-        nickname: '알라코2',
-        memberExp: 30,
-        url: '/images/coala/smile.png',
-      },
-    ],
-  };
-
-  const FriendData = {
-    data: [
-      {
-        nickname: '알라코3',
-        memberExp: 30,
-        url: '/images/coala/smile.png',
-      },
-      {
-        nickname: '알라코4',
-        memberExp: 100,
-        url: '/images/coala/smile.png',
-      },
-    ],
-  };
-
+  const problemNumber: number = Number(getProblemNumber());
   const helpNumber = 0;
+
+  useEffect(() => {
+    instance
+      .get<IData>(`/help/solvedlist/${problemNumber}`)
+      .then(({ data }: { data: IData }) => setUserList(data))
+      // eslint-disable-next-line no-console
+      .catch(err => console.log(err));
+  }, [problemNumber]);
 
   return (
     <div className={styles.containerBase}>
@@ -53,17 +40,11 @@ function Form() {
         <Refresh helpNumber={helpNumber} />
       </div>
       <div>
-        {userData.data.map((user, index) => (
-          <UserHelp key={index} userData={user} mainLanguage={mainLanguage} />
-        ))}
-      </div>
-      <div className={styles.sort}>
-        <span className={styles.people}>내 친구</span>
-      </div>
-      <div>
-        {FriendData.data.map((user, index) => (
-          <UserHelp key={index} userData={user} mainLanguage={mainLanguage} />
-        ))}
+        {userList != null &&
+          userList.data &&
+          userList.data.map((user, index) => (
+            <UserHelp key={index} userData={user} mainLanguage={mainLanguage} />
+          ))}
       </div>
     </div>
   );

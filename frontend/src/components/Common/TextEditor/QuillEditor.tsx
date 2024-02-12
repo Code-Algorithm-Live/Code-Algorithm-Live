@@ -1,13 +1,14 @@
-import ReactQuill from 'react-quill';
-// import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
+import { useMemo, useState } from 'react';
+
 import 'react-quill/dist/quill.snow.css'; // 테마 스타일
-// import { useRef, useState, useMemo } from 'react';
-import { useState, useMemo } from 'react';
 import './QuilEditor.scss';
 
 type TInputEditor = {
   onChange: (value: string) => void;
 };
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const QuillEditor = ({ onChange }: TInputEditor) => {
   // const QuilRef = useRef<ReactQuill>();

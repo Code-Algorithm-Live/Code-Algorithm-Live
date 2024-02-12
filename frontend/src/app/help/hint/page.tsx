@@ -1,10 +1,3 @@
-
-
 export default function Hint() {
-    return (
-      <h1>
-        Hint 
-      </h1>
-    )
-  }
-  
+  return <h1>Hint</h1>;
+}

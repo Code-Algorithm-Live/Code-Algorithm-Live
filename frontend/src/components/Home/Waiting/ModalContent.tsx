@@ -1,37 +1,8 @@
 import styled from 'styled-components';
+
+import LinkPreview from '@/components/Help/Wait/LinkPreview';
 import UserImage from '@/components/Home/Waiting/UserImage';
-
-interface ModalContentProps {
-  modalData: ModalData | null;
-  userData: UserData;
-}
-
-interface UserData {
-  nickname: string;
-  memberExp: number;
-  url: string;
-}
-
-interface ModalData {
-  sender: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-  };
-  receiver: {
-    email: string;
-    image: string;
-    nickname: string;
-    exp: number;
-  };
-  helpDto: {
-    num: number;
-    title: string;
-    content: string;
-  };
-  roomUuid: string;
-}
+import { ModalContentProps } from '@/components/Home/Waiting/type';
 
 const Container = styled.div`
   width: 800px;
@@ -46,13 +17,13 @@ const MiddleContainer = styled.div`
 const FormContainer = styled.div`
   width: 400px;
   height: 300px;
-  padding: 30px 0px;
 `;
 
 const UserContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 30px;
+  padding-bottom: 20px;
 `;
 
 const NameText = styled.span`
@@ -63,13 +34,13 @@ const NameText = styled.span`
 `;
 
 const TitleContainer = styled.div`
-  margin-bottom: 22px;
+  margin-bottom: 30px;
   height: 40px;
-  width: 400px;
+  width: 350px;
 `;
 
 const ContentsContainer = styled.div`
-  width: 400px;
+  width: 350px;
   height: 200px;
 `;
 
@@ -89,7 +60,7 @@ const TitleDiv = styled.div`
   height: 100%;
 `;
 
-const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
+const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
   if (!modalData) {
     return null;
   }
@@ -97,7 +68,13 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
   return (
     <Container>
       <UserContainer>
-        <UserImage userData={userData} />
+        <UserImage
+          userData={{
+            nickname: modalData.sender.nickname,
+            memberExp: modalData.sender.exp,
+            url: modalData.sender.image,
+          }}
+        />
         <NameText>{modalData.sender.nickname}</NameText>
       </UserContainer>
       <MiddleContainer>
@@ -112,10 +89,12 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData, userData }) => {
             <Label>
               <label>상세 내용</label>
             </Label>
-            <TitleDiv>{modalData.helpDto.content}</TitleDiv>
+            <TitleDiv
+              dangerouslySetInnerHTML={{ __html: modalData.helpDto.content }}
+            />
           </ContentsContainer>
         </FormContainer>
-        <div>문제 번호에 맞는 폼 생성 예정 : {modalData.helpDto.num}</div>
+        <LinkPreview problemNumber={modalData.helpDto.num} />
       </MiddleContainer>
     </Container>
   );

@@ -1,81 +1,75 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { instance } from '@/api/instance';
 import NavBar from '@/components/Help/NavBar';
-import QuestionBoard from '@/components/Help/QuestionList/QuestionBoard';
-// import Pagination from './Pagination';
 import Pagination from '@/components/Help/QuestionList/Pagination';
+import QuestionBoard from '@/components/Help/QuestionList/QuestionBoard';
 import styles from '@/components/Help/QuestionList/index.module.scss';
+import { HistoryList } from '@/types/Chat';
+
+const getProblemNumber = () => {
+  if (typeof window === 'undefined') return '0';
+  return localStorage.getItem('problemNumber');
+};
 
 function Form() {
-  // TODO: 서버와 연결
-  // data 구조
-  const response = {
-    data: [
-      {
-        nickname: '우아앙1',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-      {
-        nickname: '우아앙12',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-      {
-        nickname: '우아앙1',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-      {
-        nickname: '우아앙1',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-      {
-        nickname: '우아앙51',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-      {
-        nickname: '우아앙16',
-        title: '틀렸 1 맞왜?',
-        recommend: 7,
-        registDate: '2024-01-06',
-        id: 'anjswlahfmrpTdj01',
-      },
-    ],
-  };
+  const [problemHistoryList, setProblemHistoryList] =
+    useState<HistoryListData>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const problemNumber = getProblemNumber() as string;
+  const problemId = Number(problemNumber);
+  interface HistoryListData {
+    data: HistoryList[];
+  }
+  useEffect(() => {
+    instance
+      .get<HistoryListData>(`/chat/history/list/${problemId}`)
+      .then(({ data }: { data: HistoryListData }) =>
+        setProblemHistoryList(data),
+      )
+      // eslint-disable-next-line no-console
+      .catch(Error => console.log(Error));
+  }, [problemId]);
+
+  let currentPageData: HistoryList[] = [];
+  let totalPage = 0;
+
+  if (!problemHistoryList || !problemHistoryList.data) {
+    return (
+      <div>
+        <strong>
+          <NavBar sort={problemNumber} />
+        </strong>
+        <div className={styles.container}>
+          <div className={styles.sort}>질문 히스토리 보기</div>
+          <div>질문 히스토리가 없습니다.</div>
+        </div>
+      </div>
+    );
+  }
 
   // 페이지당 문제 개수
   const limit = 2;
   // 현재 페이지
-  const [currentPage, setCurrentPage] = useState(1);
   // 페이지 변경
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
-
   // 현재 페이지 데이터 계산
-  const startIndex = (currentPage - 1) * limit;
-  const endIndex = startIndex + limit;
-  const currentPageData = response.data.slice(startIndex, endIndex);
+  const startIndex: number = (currentPage - 1) * limit;
+  let endIndex: number = startIndex + limit;
+  if (endIndex > problemHistoryList.data.length) {
+    endIndex = problemHistoryList.data.length;
+  }
+  currentPageData = problemHistoryList.data.slice(startIndex, endIndex);
+  totalPage = Math.ceil(problemHistoryList.data.length / limit);
 
-  const totalPage = Math.ceil(response.data.length / limit);
   return (
     <div>
       <strong>
-        <NavBar sort={'1553번 문제'} />
+        <NavBar sort={problemNumber} />
       </strong>
       <div className={styles.container}>
         <div className={styles.sort}>질문 히스토리 보기</div>

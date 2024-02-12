@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -26,12 +27,14 @@ public class HelpAlarm {
     @Column(insertable=false, updatable=false)
     private MemberDto sender;
 
-    private String receiverNickname;
+    private String receiver;
 
     @Embedded
     @Column(insertable=false, updatable=false)
-    private HelpDto help;
+    private HelpDto helpDto;
 
     @CreatedDate
     private LocalDateTime sendDate;
+
+    private UUID roomUuid;
 }

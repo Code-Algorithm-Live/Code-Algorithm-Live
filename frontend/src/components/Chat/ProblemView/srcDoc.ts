@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 export const srcDoc = `"C:\Program Files\Java\jdk-17\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.3.2\lib\idea_rt.jar=52091:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.3.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Users\SSAFY\Documents\test\crawling\out\production\crawling;C:\Users\SSAFY\Downloads\jsoup-1.17.2.jar Main
 <!doctype html>
 <html lang="ko">

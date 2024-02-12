@@ -66,7 +66,7 @@ const Recommended = () => {
         for (
           let i = 0;
           i < Math.max(curateFromQuestionCnt.length, curateFromRecent.length);
-          i++
+          i += 1
         ) {
           if (i < curateFromQuestionCnt.length) {
             combinedProblems.push({
@@ -87,7 +87,7 @@ const Recommended = () => {
 
         setProblems(combinedProblems);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.log(error);
       }
     };
 

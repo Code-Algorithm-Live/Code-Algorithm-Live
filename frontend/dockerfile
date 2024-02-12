@@ -1,0 +1,20 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+COPY ./.next ./
+
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
+
+# 애플리케이션 실행을 위한 사용자 권한 설정
+USER nextjs
+
+# 애플리케이션에 할당할 포트
+EXPOSE 3000
+
+# 한국 시간으로 설정
+ENV TZ Asia/Seoul
+
+# 애플리케이션 실행 명령어
+CMD ["node", "server.js"]
