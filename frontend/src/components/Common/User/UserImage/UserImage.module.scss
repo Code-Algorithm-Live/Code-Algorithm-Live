@@ -1,0 +1,56 @@
+.userContainer {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+.profileImg {
+  border-radius: 50%;
+  position: relative;
+  margin-right: 6%;
+}
+
+.connected {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  position: absolute;
+  margin: 24px;
+  background-color: var(--connect-color);
+}
+.unconnected {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  position: absolute;
+  margin: 24px;
+  background-color: var(--unconnected-color);
+}
+
+.right {
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  left: 38px;
+  z-index: 3;
+}
+.left {
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  right: 172px;
+  z-index: 3;
+}
+
+.shadow {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+
+  background: rgba(0, 0, 0, 0.58);
+}

@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CodeHistoryRepository extends JpaRepository <CodeHistory, Long> {
-
+    @Query("select c from CodeHistory c where roomId = :roomId")
     List<CodeHistory> findByRoomId(UUID roomId);
 }

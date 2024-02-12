@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -40,4 +41,5 @@ public class MemberProfile {
     // 소셜 로그인 타입-> 카카오만 사용할거면 필요 x
     private String socialId;
 
+    private LocalDateTime lastRequest;
 }

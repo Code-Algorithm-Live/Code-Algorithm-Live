@@ -36,5 +36,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": [".eslintrc.js"]
+  "ignorePatterns": [".eslintrc.js", "src/components/Common/QuillEditor.jsx"]
 }
