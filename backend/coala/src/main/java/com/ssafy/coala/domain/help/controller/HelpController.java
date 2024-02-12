@@ -145,4 +145,20 @@ public class HelpController {
         matchingService.notifyMatching(waitDto);
         return ResponseEntity.ok("매칭 수락!!! 페어프로그래밍으로 이동");
     }
+    @Operation(summary = "도움 요청 폼 변경", description = "대기열에서 도움 요청 폼을 변경한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+    @PutMapping("/waitqueue")
+    public ResponseEntity<String> waitqueuemodify(@Parameter(description = "도움 요청 폼 변경 - sender : 필수, receiver : 안보냄, helpDto : 필수, roomUuid : 안보내도됨, success : 안보냄", required = true, example = "test") @RequestBody WaitDto waitDto){
+        if (redisService.modifying(waitDto)){
+            return ResponseEntity.ok("도움 요청 폼 변경 완료!!!");
+        } else {
+            return ResponseEntity.internalServerError().body("도움 요청 폼 변경 실패!!!");
+        }
+
+    }
 }

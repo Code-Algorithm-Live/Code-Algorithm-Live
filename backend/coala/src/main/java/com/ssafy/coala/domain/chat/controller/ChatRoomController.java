@@ -57,7 +57,7 @@ public class ChatRoomController {
     }
 
     @Operation(summary = "채팅방 id로 히스토리 저장", description = "채팅방 id로 code history list를 서버에 저장")
-    @PutMapping("history/{roomUuid}")
+    @PostMapping("history/{roomUuid}")
     public ResponseEntity<?> saveHistory(@PathVariable UUID roomUuid, @RequestBody List<CodeHistoryDto> codeHistoryDtoList){
         try {
             List<CodeHistory> codeHistoryList = new ArrayList<>();
