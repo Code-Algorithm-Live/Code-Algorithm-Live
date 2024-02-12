@@ -15,6 +15,7 @@ const Bubble = styled.div`
   padding: 10px 8px;
 
   width: fit-content;
+  max-width: 230px;
 
   border-radius: 15px;
   background: var(--main-color, #5471a5);
