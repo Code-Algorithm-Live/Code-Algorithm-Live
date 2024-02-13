@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface HelpAlarmRepository extends JpaRepository<HelpAlarm,Integer> {
+public interface HelpAlarmRepository extends JpaRepository<HelpAlarm,Long> {
 
     List<HelpAlarm> findByReceiver(String receiver);
 
