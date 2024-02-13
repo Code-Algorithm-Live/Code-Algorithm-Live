@@ -55,7 +55,7 @@ const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
 const MAX_HISTORY = 10;
 
-const CodeEditor = () => {
+const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
   const { roomId } = useParams<{ roomId: string }>();
   const DOC_NAME = `${roomId}-${new Date()
     .toISOString()
@@ -179,7 +179,19 @@ const CodeEditor = () => {
       });
     };
 
-    const attachDoc = async () => {
+    const attachDoc = async ({
+      onRemoteChange,
+      onDocChange,
+    }: {
+      onRemoteChange: ({
+        preStr,
+        nextStr,
+      }: {
+        preStr: string;
+        nextStr: string;
+      }) => void;
+      onDocChange: (content: string) => void;
+    }) => {
       await client.activate();
 
       await client.attach(doc);
@@ -196,23 +208,40 @@ const CodeEditor = () => {
         if (event.type === DocEventType.Snapshot) syncText();
       });
 
-      // remote change 이벤트 발생
       doc.subscribe('$.content', event => {
+        if (event.type === DocEventType.LocalChange) {
+          onDocChange(doc.getRoot().content.toString());
+        }
+
+        // remote change 이벤트 발생
         if (event.type === DocEventType.RemoteChange) {
           const { operations } = event.value;
           handleOperations(operations);
-          // FIXME: remote change발생시 history 추가
           const nextStr = doc.getRoot().content.toString();
-          handleAddHistory({ preStr: preContent.current, nextStr });
+          onRemoteChange({ preStr: preContent.current, nextStr });
+          onDocChange(doc.getRoot().content.toString());
         }
       });
 
       await client.sync();
       syncText();
+
+      onDocChange(doc.getRoot().content.toString());
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    attachDoc();
+    attachDoc({
+      onRemoteChange: ({
+        preStr,
+        nextStr,
+      }: {
+        preStr: string;
+        nextStr: string;
+      }) => handleAddHistory({ preStr, nextStr }),
+      onDocChange: (content: string) => {
+        onChange(content);
+      },
+    });
   }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
