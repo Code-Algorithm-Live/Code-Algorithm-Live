@@ -96,7 +96,7 @@ const NoticeCount = styled.span`
 `;
 
 export default function Nav() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function Nav() {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchData();
-  }, []);
+  }, [status]);
 
   const token = session?.user?.jwtToken;
   const RealSignOut = async () => {
@@ -151,7 +151,9 @@ export default function Nav() {
           <Link href="/notice">
             <NoticeContainer>
               <IconNotice />
-              <NoticeCount>{noticeListData.length}</NoticeCount>
+              {noticeListData.length > 0 && (
+                <NoticeCount>{noticeListData.length}</NoticeCount>
+              )}
             </NoticeContainer>
           </Link>
         </Item>
