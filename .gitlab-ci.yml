@@ -55,8 +55,9 @@ docker-build:
     - docker rmi ${DOCKER_HUB_USER}/frontend:frontend-latest || true
     - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     - cd frontend
+    - docker images
     - docker ps -q --filter "name=${DOCKER_HUB_USER}/frontend" | grep -q . && docker stop ${DOCKER_HUB_USER}/frontend && docker rm ${DOCKER_HUB_USER}/frontend | true
-    - docker run -d -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt/ -v /home/ubuntu/certbot/www:/var/www/certbot --name ${DOCKER_HUB_USER}/frontend frontend
+    - docker run -d -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt/ -v /home/ubuntu/certbot/www:/var/www/certbot --name ${DOCKER_HUB_USER}/frontend
     - docker rmi -f $(docker images -f "dangling=true" -q) || true
     
   only:
