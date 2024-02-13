@@ -1,5 +1,5 @@
 # 기반 이미지
-FROM node:18-alpine as build-stage
+FROM node:18-alpine
 
 # 작업 디렉토리 설정
 WORKDIR /usr/src/app
@@ -16,13 +16,11 @@ RUN addgroup --system --gid 1001 nodejs \
 # 애플리케이션 실행을 위한 사용자 권한 설정
 USER nextjs
 
+# 애플리케이션에 할당할 포트
+EXPOSE 3000
+
+# 한국 시간으로 설정
+ENV TZ Asia/Seoul
+
 # 애플리케이션 실행 명령어
 CMD ["node", "server.js"]
-
-RUN ls
-
-FROM nginx:stable-alpine
-COPY --from=build-stage /usr/src/app /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 3000
-CMD ["nginx", "-g", "daemon off;"]
