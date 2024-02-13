@@ -32,8 +32,8 @@ const InputBox = styled.div`
 `;
 
 const SignUp = () => {
-  const { data: session, update } = useSession();
   const router = useRouter();
+  const { data: session, update } = useSession();
   const [userImage, setUserImage] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
@@ -44,6 +44,13 @@ const SignUp = () => {
   const [uuid, setUuid] = useState<string>('');
   const solvedIdRef = useRef<HTMLInputElement>(null);
   const nicknameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (session?.user.jwtToken) {
+      router.push('/');
+    }
+  }, [session]);
+
   // userImage 상태 업데이트 함수
   const handleUserImageChange = (newUserImage: string) => {
     setUserImage(newUserImage);
