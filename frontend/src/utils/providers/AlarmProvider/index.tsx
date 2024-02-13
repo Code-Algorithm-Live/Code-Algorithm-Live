@@ -99,7 +99,7 @@ const IconNoticePoint = styled(IconNotice)`
 const StompProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
-  const [showPopup, setshowPopup] = useState(true);
+  const [showPopup, setshowPopup] = useState(false);
   const { helpForm, setHelpForm } = useHelpFromStore();
   const acceptRequestMutation = useMutation({ mutationFn: fetchAcceptHelp });
   const session = useSession(); // 사용자의 아이디
@@ -111,14 +111,20 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setshowPopup(false);
-    }, 5000);
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    if (showPopup) {
+      timeoutId = setTimeout(() => {
+        setshowPopup(false);
+      }, 5000);
+    }
 
     return () => {
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
-  }, []);
+  }, [showPopup]);
 
   useEffect(() => {
     if (session.status !== AUTHENTICATED) return;
@@ -148,6 +154,7 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         setHelpForm(message);
+        setshowPopup(true);
       });
     };
 
