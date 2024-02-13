@@ -20,7 +20,7 @@ USER nextjs
 FROM nginx:stable-alpine as production-stage
 # stable-alpine 버전의 nginx 기본 베이스로 설정
 
-COPY /etc/nginx/default.conf /etc/nginx/nginx.conf
+COPY ./etc/nginx/default.conf /etc/nginx/nginx.conf
 # 로컬에서 만든 default.conf(nginx 설정)을 nginx의 서버에 복사
 
 COPY --from=build-stage /usr/src/app /usr/share/nginx/html
