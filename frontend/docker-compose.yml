@@ -1,14 +1,6 @@
 version: '3'
 
 services:
-  nginx_proxy:
-    image: nginx:1.21.5-alpine
-    container_name: nginx_proxy    
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      
   app:
     image: ${DOCKER_HUB_USER}/frontend:frontend-latest
     ports:
@@ -16,6 +8,7 @@ services:
     env_file:
       - ./.env
 
-  
+      
+
 
 
