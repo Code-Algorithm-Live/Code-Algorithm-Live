@@ -114,7 +114,7 @@ public class RedisServiceImpl implements RedisService {
 
     //현재 매칭 대기열에 존재하는지 검사
     @Override
-    public boolean isExist(WaitDto waitDto){
+    public boolean modifying(WaitDto waitDto){
         if(isExist(waitDto)){
             List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
             if (list != null) {
@@ -148,7 +148,7 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public boolean modifying(WaitDto waitDto){
+    public boolean isExist(WaitDto waitDto){
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
         if (list != null) {
             ObjectMapper objectMapper = new ObjectMapper();
