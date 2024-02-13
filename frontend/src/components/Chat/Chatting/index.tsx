@@ -67,6 +67,7 @@ const Chatting = () => {
   const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
   const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
   const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+  const storeDestination = `/pub/chat/message`;
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {
@@ -112,6 +113,16 @@ const Chatting = () => {
 
     client.current.publish({
       destination: pubDestination,
+      body: JSON.stringify({
+        type: MessageType.TALK,
+        roomId,
+        sender: userId,
+        message,
+      }),
+    });
+
+    client.current.publish({
+      destination: storeDestination,
       body: JSON.stringify({
         type: MessageType.TALK,
         roomId,
