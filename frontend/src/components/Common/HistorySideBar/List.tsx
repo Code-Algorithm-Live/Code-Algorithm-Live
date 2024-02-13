@@ -2,13 +2,16 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 interface ListItem {
-  main: string;
-  sub: string;
-  href: string;
+  roomId: string;
+  sender: null;
+  title: string;
+  problemId: number;
+  date: string;
 }
 
 interface ListProps {
   historyList: ListItem[];
+  selectedValue: string;
 }
 
 const Container = styled.div`
@@ -59,14 +62,17 @@ const SubText = styled.p`
   text-overflow: ellipsis;
 `;
 
-const List: React.FC<ListProps> = ({ historyList }) => {
+const List: React.FC<ListProps> = ({ historyList, selectedValue }) => {
   return (
     <Container>
       {historyList.map((history, index) => (
-        <Link key={index} href={history.href}>
+        <Link
+          key={index}
+          href={`/history/${selectedValue}/${history.problemId}`}
+        >
           <SidebarLink>
-            <MainText>{history.main}</MainText>
-            <SubText>{history.sub}</SubText>
+            <MainText>{history.title}</MainText>
+            <SubText>{history.problemId}번 문제</SubText>
           </SidebarLink>
         </Link>
       ))}
