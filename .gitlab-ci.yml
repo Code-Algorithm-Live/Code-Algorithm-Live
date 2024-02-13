@@ -22,7 +22,7 @@ create-env:
   - cat .env
   artifacts:
     paths:
-      - frontend/.env
+      - .env
   only: 
     - front-develop
     - develop
@@ -36,6 +36,7 @@ frontend-build:
     - npm run build
   artifacts:
     paths:
+      - .env
       - frontend/.next/
       - frontend/public
       - frontend/.next/static
