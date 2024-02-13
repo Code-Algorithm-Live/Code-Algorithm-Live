@@ -248,12 +248,22 @@ export default function Chat() {
           <QuestionBannerContainer>
             <div className="questionBanner">
               <div className="titleContainer">
-                <p className="title">{helpForm?.helpDto.title}</p>
+                <p
+                  className="title"
+                  dangerouslySetInnerHTML={{
+                    __html: helpForm?.helpDto.title as TrustedHTML,
+                  }}
+                />
                 <button className="show" onClick={handleClickShowMore}>
                   더보기
                 </button>
               </div>
-              <p className="content">{helpForm?.helpDto.content}</p>
+              <p
+                className="content"
+                dangerouslySetInnerHTML={{
+                  __html: helpForm?.helpDto.content as TrustedHTML,
+                }}
+              />
             </div>
           </QuestionBannerContainer>
           <div className="chattingContainer">
