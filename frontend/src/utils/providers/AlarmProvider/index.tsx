@@ -1,21 +1,105 @@
 'use client';
 
-import { fetchAcceptHelp } from '@/api/match';
-import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
-import { BROKER_URL } from '@/libs/stomp';
-import useHelpFromStore from '@/store/helpForm';
-import { HelpForm } from '@/types/Help';
+import styled, { keyframes } from 'styled-components';
+import IconNotice from '@assets/svgs/notice.svg';
 import { Client, IMessage } from '@stomp/stompjs';
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { fetchAcceptHelp } from '@/api/match';
+import useHelpFromStore from '@/store/helpForm';
+import { BROKER_URL } from '@/libs/stomp';
+import { HelpForm } from '@/types/Help';
+import ConfirmModal from '@/components/Common/Modal/ConfirmModal';
+import ModalContent from '@/components/Home/Waiting/ModalContent';
 
 const AUTHENTICATED = 'authenticated';
+
+const slideUp = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideDown = keyframes`
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(200%);
+  }
+`;
+
+const NotificationContainer = styled.div`
+  width: 300px;
+  height: 135px;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background-color: var(--white-color);
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  animation:
+    ${slideUp} 1s ease-in-out,
+    ${slideDown} 2s 4s ease-in-out;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--sub-font-color);
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 15px 30px 0px 10px;
+  width: 280px;
+  height: 100px;
+`;
+
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  gap: 5px;
+`;
+
+const TitleText = styled.span`
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const ContentText = styled.span`
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  padding-bottom: 3px;
+`;
+
+const BoldEffect = styled.span`
+  font-size: 17px;
+  font-weight: 600;
+`;
+
+const IconNoticePoint = styled(IconNotice)`
+  background-color: var(--point-color);
+  border-radius: 50%;
+`;
 
 const StompProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setIsOpen] = useState(false);
+  const [showPopup, setshowPopup] = useState(true);
   const { helpForm, setHelpForm } = useHelpFromStore();
   const acceptRequestMutation = useMutation({ mutationFn: fetchAcceptHelp });
   const session = useSession(); // 사용자의 아이디
@@ -25,6 +109,16 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
       brokerURL: BROKER_URL,
     }),
   );
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setshowPopup(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     if (session.status !== AUTHENTICATED) return;
@@ -71,7 +165,11 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleClose = () => {
     setIsOpen(false);
-    setHelpForm(undefined);
+  };
+
+  const handleCloseButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setshowPopup(false);
   };
 
   const handleConfirm = () => {
@@ -83,22 +181,37 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
     acceptRequestMutation.mutate(data);
   };
 
+  const handleNoticeClick = () => {
+    setIsOpen(true);
+  };
+
   return (
     <>
       {children}
-      {/** TODO: 하단 알림 자세히 보기 클릭시 모달이 팝업  */}
+      {/** 알림 팝업을 클릭하면 모달 열기 */}
+      {showPopup && (
+        <NotificationContainer onClick={handleNoticeClick}>
+          <CloseButton onClick={handleCloseButtonClick}>&times;</CloseButton>
+          <TextContainer>
+            <TitleContainer>
+              <IconNoticePoint />
+              <TitleText>
+                <BoldEffect>{helpForm?.sender.nickname}</BoldEffect> 님의 도움
+                요청
+              </TitleText>
+            </TitleContainer>
+            <ContentText>
+              <BoldEffect>{helpForm?.helpDto.num}번</BoldEffect> 문제의 도움
+              요청이 도착했습니다.
+            </ContentText>
+            <ContentText>{helpForm?.helpDto.title}</ContentText>
+          </TextContainer>
+        </NotificationContainer>
+      )}
+
+      {/** 모달 open  */}
       <ConfirmModal open={open} onClose={handleClose} onConfirm={handleConfirm}>
-        <div>
-          {helpForm?.sender.nickname}
-          <br />
-          {helpForm?.roomUuid}
-          <br />
-          {helpForm?.helpDto.num}
-          <br />
-          {helpForm?.helpDto.title}
-          <br />
-          {helpForm?.helpDto.content}
-        </div>
+        <ModalContent modalData={helpForm} />
       </ConfirmModal>
     </>
   );
