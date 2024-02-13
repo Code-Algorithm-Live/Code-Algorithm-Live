@@ -124,15 +124,15 @@ public class ChatService {
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),
-                    chatRoom.getSender(),chatRoom.getTitle(),
-                    chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
+                    chatRoom.getSender(),chatRoom.getReceiver(),chatRoom.getTitle(),
+                    chatRoom.getContent(),chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
 
         //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1",
-                "1000번 도움!",1000,Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender2",
-                "20000번 너무어렵다..",20000, Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
+                "1000번 도움!","어려웡",1000,Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender2","receiver2",
+                "20000번 너무어렵다..","어려웡",20000, Timestamp.valueOf(LocalDateTime.now()))));
 
         return result;
     }
@@ -141,31 +141,31 @@ public class ChatService {
         List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(sender);
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList){
-            result.add(new HistoryRoomDto(chatRoom.getRoomId(),
-                    null, chatRoom.getTitle(),
+            result.add(new HistoryRoomDto(chatRoom.getRoomId(),chatRoom.getSender(),
+                    chatRoom.getReceiver(), chatRoom.getTitle(), chatRoom.getContent(),
                     chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
         //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "1000번 도움!",1000, Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "1001번도 도움!",1001, Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
+                "1000번 도움!","어려웡",1000,Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
+                "1001번도 도움!","어려웡",1001, Timestamp.valueOf(LocalDateTime.now()))));
         return result;
     }
 
     public List<HistoryRoomDto> findHistoryByReceiver(String receiver){
         List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(receiver);
         List<HistoryRoomDto> result = new ArrayList<>();
-        for (ChatRoom chatRoom:chatRoomList){
-            result.add(new HistoryRoomDto(chatRoom.getRoomId(),
-                    null, chatRoom.getTitle(),
+        for (ChatRoom chatRoom:chatRoomList) {
+            result.add(new HistoryRoomDto(chatRoom.getRoomId(), chatRoom.getSender(),
+                    chatRoom.getReceiver(), chatRoom.getTitle(), chatRoom.getContent(),
                     chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
         //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "20000번 너무어렵다..",20000, Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), null,
-                "상어초등학교 도와주셈",21608, Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
+                "20000번 너무어렵다..","어려웡",20000, Timestamp.valueOf(LocalDateTime.now()))));
+        result.add((new HistoryRoomDto(UUID.randomUUID(),"sender1","receiver1",
+                "상어초등학교 도와주셈","어려웡",21608, Timestamp.valueOf(LocalDateTime.now()))));
         return result;
     }
 
