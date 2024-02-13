@@ -1,6 +1,7 @@
 'use client';
 
 import { java } from '@codemirror/lang-java';
+import { useMutation } from '@tanstack/react-query';
 import { atomone } from '@uiw/codemirror-theme-atomone';
 import ReactCodeMirror, {
   EditorView,
@@ -8,11 +9,16 @@ import ReactCodeMirror, {
   Transaction,
   ViewUpdate,
 } from '@uiw/react-codemirror';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
 
-import { YorkieDoc } from '@/components/Chat/CodeEditor/type';
+import { fetchCreateCodeHistory } from '@/api/chat';
+import { History, YorkieDoc } from '@/components/Chat/CodeEditor/type';
+import { addHistory } from '@/components/Chat/CodeEditor/util';
+import useHelpFromStore from '@/store/helpForm';
 
 const Container = styled.div`
   position: relative;
@@ -40,77 +46,29 @@ const DOC_NAME = `hamster-${new Date()
   .toISOString()
   .substring(0, 10)
   .replace(/-/g, '')}`;
-
-interface History {
-  idx: number; // 변경이 일어날 인덱스위치
-  pre: string; // 변경 되기 이전 위치의 텍스트
-  next: string; // 변경된 이후 텍스트
-  duration: number; // 채팅방 생성 후 ~ 변경이 생겼을 때
-}
-
-/**
- * history 적정량 쌓은 후 flush
- */
-
-/**
- * @param preStr 변경이 일어나기 전 값
- * @param nextStr 변경이 일어난 후 값
- * @param startTime 채팅방 개설 시간
- * @returns
- */
-function addHistory({
-  preStr,
-  nextStr,
-}: {
-  preStr: string;
-  nextStr: string;
-}): History | undefined {
-  let preIdx = 0;
-  let reverseIdx = 1;
-  const shortLen =
-    preStr.length < nextStr.length ? preStr.length : nextStr.length;
-
-  while (preIdx < shortLen && preStr[preIdx] === nextStr[preIdx]) {
-    preIdx += 1;
-  }
-
-  if (preIdx === preStr.length && preIdx === nextStr.length) return;
-
-  while (
-    preIdx <= shortLen - reverseIdx &&
-    preStr[preStr.length - reverseIdx] === nextStr[nextStr.length - reverseIdx]
-  ) {
-    reverseIdx += 1;
-  }
-
-  const data = {
-    idx: preIdx,
-    pre: preStr.substring(preIdx, preStr.length - reverseIdx + 1),
-    next: nextStr.substring(preIdx, nextStr.length - reverseIdx + 1),
-    duration: new Date().getTime(),
-  };
-
-  // eslint-disable-next-line consistent-return
-  return data;
-}
-
-/** TODO:
- * sender 호출
- * sender onChange || remote 변화가 일어날 때
- */
+const MAX_HISTORY = 10;
 
 const CodeEditor = () => {
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
-
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
   const [eleOffset, setEleOffset] = useState({ width: '', height: '' });
   const [history, setHistory] = useState<History[]>([]);
+  const { roomId } = useParams<{ roomId: string }>();
+  const createHistoryMutation = useMutation({
+    mutationFn: fetchCreateCodeHistory,
+  });
+  const { helpForm } = useHelpFromStore();
+  const isSender = useSession().data?.user.email === helpForm?.sender.email;
 
-  useEffect(() => {
-    console.log(history);
-  }, [history]);
+  const flushHistory = () => {
+    createHistoryMutation.mutate({ roomUuid: roomId, list: history });
+    if (createHistoryMutation.isSuccess) {
+      console.log('flush');
+      setHistory([]);
+    }
+  };
 
   const handleAddHistory = ({
     preStr,
@@ -119,8 +77,14 @@ const CodeEditor = () => {
     preStr: string;
     nextStr: string;
   }) => {
-    const newHistory = addHistory({ preStr, nextStr });
+    // sender인 유저에서 history 기록
+    if (!isSender) return;
 
+    if (history.length === MAX_HISTORY) {
+      flushHistory();
+    }
+
+    const newHistory = addHistory({ preStr, nextStr });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     if (!newHistory) return;
     setHistory(pre => [...pre, newHistory]);
@@ -172,10 +136,8 @@ const CodeEditor = () => {
         // eslint-disable-next-line @typescript-eslint/no-shadow,
         tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
           const insertText = inserted.toJSON().join('\n');
-          console.log('insertText', insertText);
 
           doc.update(root => {
-            console.log('root.content', root.content);
             root.content.edit(fromA + adj, toA + adj, insertText);
           }, `update content byA `);
 
