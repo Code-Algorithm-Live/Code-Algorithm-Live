@@ -1,7 +1,9 @@
 package com.ssafy.coala.domain.chat.dto;
 
 import com.ssafy.coala.domain.chat.domain.ChatMessage;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageDto {
 
     private ChatMessage.MessageType type;
@@ -23,5 +27,12 @@ public class MessageDto {
     private String message;
 
     private Timestamp date;
+
+    public MessageDto(ChatMessage chatMessage){
+        sender = chatMessage.getSender();
+        type = chatMessage.getType();
+        message = chatMessage.getMessage();
+        date = Timestamp.valueOf(chatMessage.getDate());
+    }
 
 }

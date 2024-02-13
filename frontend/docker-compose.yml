@@ -2,8 +2,8 @@ version: '3'
 
 services:
   app:
-    build: .
-    image: front
+    image: ${DOCKER_HUB_USER}/frontend:frontend-latest
     ports:
       - '3000:3000'
-    command: 'npm run start'
+    env_file:
+      - ./.env

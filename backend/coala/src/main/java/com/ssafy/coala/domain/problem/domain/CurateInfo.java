@@ -19,7 +19,6 @@ import java.util.List;
 public class CurateInfo {
     @Id
     String id;//solvedId
-//    List<Integer> recentId;
     List<ProblemDto> curateFromRecent;
     List<ProblemDto> curateFromQuestionCnt;
 }

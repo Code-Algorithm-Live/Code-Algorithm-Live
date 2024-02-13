@@ -114,6 +114,40 @@ public class RedisServiceImpl implements RedisService {
 
     //현재 매칭 대기열에 존재하는지 검사
     @Override
+    public boolean modifying(WaitDto waitDto){
+        if(isExist(waitDto)){
+            List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
+            if (list != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                for (Object obj : list) {
+                    if (obj instanceof LinkedHashMap) {
+                        LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) obj;
+
+                        // 역직렬화하여 WaitDto로 변환
+                        WaitDto dtoInList = objectMapper.convertValue(map, WaitDto.class);
+
+                        if (Objects.equals(dtoInList.getSender(), waitDto.getSender())) {
+                            redisTemplate.opsForList().remove(MATCH_QUEUE_KEY, 1, obj);
+                            redisTemplate.opsForList().remove(Integer.toString(waitDto.getHelpDto().getNum()),1,obj);
+                            //문제번호 상관없는 전체 대기열에 push
+                            redisTemplate.opsForList().rightPush(MATCH_QUEUE_KEY, waitDto);
+                            //문제 별 대기열에 push -> 문제 별 데이터를 얻어올 때 활용하기 쉽게 하기 위해
+                            redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            System.out.println("대기열에서 삭제");
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
     public boolean isExist(WaitDto waitDto){
         List<Object> list = redisTemplate.opsForList().range(MATCH_QUEUE_KEY, 0, -1);
         if (list != null) {
@@ -136,7 +170,6 @@ public class RedisServiceImpl implements RedisService {
 
         return false;
     }
-
 
     //매칭 대기중인 유저들의 전체 리스트
     @Override

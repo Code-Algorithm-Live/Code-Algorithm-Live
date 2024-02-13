@@ -17,12 +17,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -119,6 +124,45 @@ public class MemberController {
     public List<Member> getMemberAllList(){
         System.out.println("getMemberAllList");
         return memberService.getMemberAllList();
+    }
+
+//    @PostMapping("/image/upload/{nickname}")
+    public ResponseEntity<?> uploadImage(@PathVariable String nickname, @RequestParam("file") MultipartFile file){
+        if (file==null || !isImage(file.getContentType())){
+            //remove image
+            return ResponseEntity.internalServerError().body("image upload fail");
+        }
+        if (file.getSize()>Math.pow(2,10)*400){
+            System.out.println(file.getSize());
+            return ResponseEntity.internalServerError().body("image upload fail");
+        }
+
+        try {
+            if (memberService.saveImage(nickname, file))
+                return ResponseEntity.ok("image upload success");
+            else return ResponseEntity.internalServerError().body("image upload fail");
+
+
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("image upload fail");
+        }
+
+    }
+
+    private boolean isImage(String contentType) {
+        return contentType != null && (contentType.startsWith("image/jpeg") || contentType.startsWith("image/png") || contentType.startsWith("image/gif"));
+    }
+
+//    @GetMapping("/image/display/{nickname}")
+    private ResponseEntity<byte[]> displayImage(@PathVariable String nickname){
+        String filepath ="C:/coala/data/images/dtdtdz.png";
+//        System.out.println(filepath);
+        Path path = Paths.get(filepath);
+        try {
+            return ResponseEntity.ok(Files.readAllBytes(path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
