@@ -105,7 +105,7 @@ const CodeEditor = () => {
 
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
-  const [maxHeight, setMaxHeight] = useState('');
+  const [eleOffset, setEleOffset] = useState({ width: '', height: '' });
   const [history, setHistory] = useState<History[]>([]);
 
   useEffect(() => {
@@ -244,13 +244,19 @@ const CodeEditor = () => {
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
   useEffect(() => {
     if (!ref.current) return;
-    setMaxHeight(`${ref.current.offsetHeight - 10}px`);
+    setEleOffset({
+      height: `${ref.current.offsetHeight - 10}px`,
+      width: `${ref.current.offsetWidth}px`,
+    });
   }, []);
+
+  const { width: maxWidth, height: maxHeight } = eleOffset;
 
   return (
     <Container ref={ref}>
       <ReactCodeMirror
         theme={atomone}
+        maxWidth={maxWidth}
         maxHeight={maxHeight}
         extensions={[java(), editorTheme]}
         onChange={handleChange}
