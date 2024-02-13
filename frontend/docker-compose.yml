@@ -9,8 +9,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
 
-  frontend_app_1:
-    container_name: frontend_app_1
+  frontend_app:
+    container_name: frontend_app
     build:
       context: ./
       dockerfile: ./dockerfile
