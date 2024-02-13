@@ -1,13 +1,13 @@
 'use client';
 
-import Input from '@/components/Chat/Chatting/Input';
-import Message from '@/components/Chat/Chatting/Message';
-import MyMessage from '@/components/Chat/Chatting/MyMessage';
-import { generateUUID } from '@/utils/uuid';
 import { Client } from '@stomp/stompjs';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
+import Input from '@/components/Chat/Chatting/Input';
+import Message from '@/components/Chat/Chatting/Message';
+import MyMessage from '@/components/Chat/Chatting/MyMessage';
+import { generateUUID } from '@/utils/uuid';
 
 const Container = styled.div`
   position: relative;
@@ -82,6 +82,7 @@ const Chatting = () => {
 
     scrollToBottom();
   }, [messages]);
+  const storeDestination = `/pub/chat/message`;
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {
@@ -126,6 +127,16 @@ const Chatting = () => {
 
     client.current.publish({
       destination: pubDestination,
+      body: JSON.stringify({
+        type: MessageType.TALK,
+        roomId,
+        sender: userId,
+        message,
+      }),
+    });
+
+    client.current.publish({
+      destination: storeDestination,
       body: JSON.stringify({
         type: MessageType.TALK,
         roomId,
