@@ -16,6 +16,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(columnList = "level")})
 public class Problem {
     @Id
     private Integer id;

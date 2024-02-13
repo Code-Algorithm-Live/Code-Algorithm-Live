@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FriendAlarmRepository extends JpaRepository<FriendAlarm,Integer> {
+public interface FriendAlarmRepository extends JpaRepository<FriendAlarm,Long> {
 
     List<FriendAlarm> findByReceiverNickname(String nickname);
 
