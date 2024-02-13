@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,25 @@ public class ProblemServiceImpl implements ProblemService {
     @Autowired
     CustomCurateInfoRepository customCurateInfoRepository;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void insertProblem(List<Problem> list) {
+        Map<String, ProblemInfo>[] mapArr = (Map<String, ProblemInfo>[])new Map[31];
+        for (int i=1; i<=30; i++){
+            mapArr[i] = (Map) redisTemplate.opsForHash().entries("level:"+i);
+            if (mapArr[i]==null) mapArr[i] = new LinkedHashMap();
+        }
+
+        for (Problem p:list){
+            if (p.getLevel()==0) continue;
+            mapArr[p.getLevel()].put(p.getId().toString(), new ProblemInfo(p));
+        }
+
+        for (int i=1; i<=30; i++){
+            redisTemplate.opsForHash().putAll("level:"+i, mapArr[i]);
+            Map<Object, Object> map = redisTemplate.opsForHash().entries("level:"+i);
+        }
+
         problemRepository.saveAll(list);
     }
 
@@ -51,6 +69,8 @@ public class ProblemServiceImpl implements ProblemService {
         problemRepository.updateProblemDescription(id, description);
     }
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     public List<Integer> getProblem(String solvedId){
         List<Integer> result = new ArrayList<>();
