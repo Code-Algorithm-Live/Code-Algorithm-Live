@@ -31,9 +31,6 @@ public class ProblemServiceImpl implements ProblemService {
     @Autowired
     CustomCurateInfoRepository customCurateInfoRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
-
     @Override
     public void insertProblem(List<Problem> list) {
         problemRepository.saveAll(list);
@@ -106,6 +103,7 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     @Transactional
     public CurateInfo getCurateProblem(String solvedId) {
+        long startTime = System.currentTimeMillis();
         //check updateTime
         CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);
         if (curateInfo != null){
@@ -118,13 +116,14 @@ public class ProblemServiceImpl implements ProblemService {
 
         Member member = Member.builder()
                 .solvedId(solvedId)
-                .id(memberProblemRepository.findUUIDBySolveId(solvedId))
+                .id(memberProblemRepository.findMemberBySolveId(solvedId))
                 .build();
 
         //update MemberProblem data
         if (member.getId()==null) return null;
         updateMemberProblem(problemIds, recentProblemStr, member);
 
+        System.out.println(System.currentTimeMillis()-startTime);
         //curating
         List<Integer> recentId = new ArrayList<>();
         for (int i=0; i<Math.min(5, recentProblemStr.size()); i++){
@@ -146,6 +145,7 @@ public class ProblemServiceImpl implements ProblemService {
 
             }
         }
+        System.out.println(System.currentTimeMillis()-startTime);
 
         List<Problem> rangedProblem = null;
         if (maxLV<4){
@@ -153,7 +153,7 @@ public class ProblemServiceImpl implements ProblemService {
         } else {
             rangedProblem = problemRepository.findProblemsByLevelRange(maxLV-3, maxLV+1);
         }
-
+        System.out.println(System.currentTimeMillis()-startTime);
         rangedProblem = rangedProblem.
                 stream().filter(x->{
                     if (x.isGive_no_rating()) return false;
@@ -167,9 +167,10 @@ public class ProblemServiceImpl implements ProblemService {
 
         //        sort되어있나?
         rangedProblem.sort(Comparator.comparingInt(Problem::getId));
-
+//        System.out.println(rangedProblem.size());
         //이미 푼 문제 제거
         rangedProblem = rangedProblemFiltering(rangedProblem, problemIds);
+//        System.out.println(rangedProblem.size());
 
         List<ProblemSimilarity> listPS = new ArrayList<>();//유사도 리스트
 
@@ -224,8 +225,8 @@ public class ProblemServiceImpl implements ProblemService {
         }
         result.setCurateFromQuestionCnt(curateFromQuestionCnt);
 
-        customCurateInfoRepository.saveWithTTL(result, 5);
-
+        customCurateInfoRepository.saveWithTTL(result, 1);
+        System.out.println(System.currentTimeMillis()-startTime);
         return result;
     }
 
@@ -240,8 +241,8 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public List<MemberProblem> getRecentMemberProblem(int problemId) {
-        return null;
+    public List<String> getRecentMemberByProblem(int problemId) {
+        return memberProblemRepository.findSolveIdByProblemId(problemId);
     }
 
     List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> ids){

@@ -38,8 +38,10 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
     @Query("update MemberProfile m set m.lastRequest = CURRENT_TIMESTAMP where m.nickname = :nickname")
     void updateLastRequestByNickname(@Param("nickname") String nickname);
 
-    @Query(value = "select m.email, m.image_url, m.kakao_name, m.nick_name, m.exp, m.solved_id from member_profile m join member_problem_ mp on m.id = mp.member_id " +
-            "where mp.problem_id = :problemId and m.last_request >= (now() - interval 60 minute) order by m.last_request desc", nativeQuery = true)
+    @Query(value = "select mpf.email, mpf.image_url, mpf.kakao_name, mpf.nick_name, m.member_exp, mpf.solved_id " +
+            "from member_profile mpf join member_problem mp on mpf.id = mp.member_id " +
+            "join member m on m.id = mpf.id " +
+            "where mp.problem_id = :problemId and mpf.last_request >= (now() - interval 60 minute) order by mpf.last_request desc", nativeQuery = true)
     List<Object[]> findAccessMemberByProblemId(@Param("problemId") int problemId);
 
     @Query("select m.imageUrl from MemberProfile m where m.nickname=:nickname")

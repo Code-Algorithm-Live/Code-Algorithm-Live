@@ -1,7 +1,5 @@
 package com.ssafy.coala.domain.problem.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.coala.domain.member.domain.Member;
 import com.ssafy.coala.domain.problem.application.ProblemService;
 import com.ssafy.coala.domain.problem.domain.CurateInfo;
 import com.ssafy.coala.domain.problem.domain.Problem;
@@ -11,19 +9,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.security.SecureRandom;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -42,9 +33,13 @@ public class ProblemController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // DB 요청 실패에 대한 예외 처리
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+//    @GetMapping("")
+//    public
 
     @Operation(summary = "문제 크롤링", description = "해당 문제에 대한 백준 사이트 html을 크롤링한다. !!호출횟수 줄일 것!!")
     @GetMapping("crawl/{problemId}")
@@ -104,4 +99,9 @@ public class ProblemController {
         return ResponseEntity.ok(null);
     }
 
+    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
+    @GetMapping("recent/{problemId}")
+    public ResponseEntity<List<String>> recentMemberByProblem(@PathVariable int problemId){
+        return ResponseEntity.ok(problemService.getRecentMemberByProblem(problemId));
+    }
 }
