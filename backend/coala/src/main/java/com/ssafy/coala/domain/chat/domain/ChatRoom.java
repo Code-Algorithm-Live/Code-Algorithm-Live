@@ -25,6 +25,7 @@ public class ChatRoom {
 
     private boolean isClose;
     private String title;
+    @Column(columnDefinition = "text")
     private String content;
     private int problemId;
 

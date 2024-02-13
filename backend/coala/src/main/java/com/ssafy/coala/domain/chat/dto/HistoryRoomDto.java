@@ -16,9 +16,9 @@ import java.util.UUID;
 public class HistoryRoomDto {
     private UUID roomId;
     private String sender;
-//    private String receiver;//list x
+    private String receiver;
     private String title;
-//    private String content;//list x
+    private String content;
     private int problemId;
     private Timestamp date;
 }
