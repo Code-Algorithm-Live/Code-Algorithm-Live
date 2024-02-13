@@ -75,7 +75,7 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <Select selectedValue={selectedHistory} onChange={changeHistory} />
-      <List historyList={historyList} />
+      <List historyList={historyList} selectedValue={selectedHistory} />
       <Button />
     </SidebarContainer>
   );
