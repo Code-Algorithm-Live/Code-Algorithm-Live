@@ -31,7 +31,8 @@ public class ProblemServiceImpl implements ProblemService {
     MemberProblemRepository memberProblemRepository;
     @Autowired
     CustomCurateInfoRepository customCurateInfoRepository;
-
+    @Autowired
+    MemberRepository memberRepository;
     @SuppressWarnings("unchecked")
     @Override
     public void insertProblem(List<Problem> list) {
@@ -134,10 +135,7 @@ public class ProblemServiceImpl implements ProblemService {
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
 
-        Member member = Member.builder()
-                .solvedId(solvedId)
-                .id(memberProblemRepository.findMemberBySolveId(solvedId))
-                .build();
+        Member member = memberRepository.findBySolvedId(solvedId);
 
         //update MemberProblem data
         if (member.getId()==null) return null;
