@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     Member findBySolvedId(String SolvedId);
 
-    Member findById(UUID uuid);
+//    Member findById(UUID uuid);
 
     boolean existsByNickname(String nickname);
 

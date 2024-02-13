@@ -77,12 +77,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberProfile getMemberProfile(UUID uuid) {
-        return memberProfileRepository.findById(uuid);
+        return memberProfileRepository.findById(uuid).orElse(null);
     }
 
     @Override
     public Member getMember(UUID uuid) {
-        return memberRepository.findById(uuid);
+        return memberRepository.findById(uuid).orElse(null);
     }
 
     @Override

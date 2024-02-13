@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MemberProfileRepository extends JpaRepository<MemberProfile, Integer> {
+public interface MemberProfileRepository extends JpaRepository<MemberProfile, UUID> {
 
 
     Boolean existsByNickname(String nickname);
@@ -29,7 +29,7 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
 
     boolean existsByEmail(String email);
 
-    MemberProfile findById(UUID uuid);
+//    MemberProfile findById(UUID uuid);
 
     MemberProfile findByKakaoname(String username);
 
