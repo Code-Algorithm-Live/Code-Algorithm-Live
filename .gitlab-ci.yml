@@ -10,7 +10,6 @@ variables:
 create-env:
   stage: create-env
   script:
-  - cd frontend
   - echo "NEXT_PUBLIC_KAKAO_CLIENT_ID = ${NEXT_PUBLIC_KAKAO_CLIENT_ID}" >> .env
   - echo "NEXT_PUBLIC_KAKAO_CLIENT_SECRET = ${NEXT_PUBLIC_KAKAO_CLIENT_SECRET}" >> .env
   - echo "NEXT_PUBLIC_BASE_URL = ${NEXT_PUBLIC_BASE_URL}" >> .env
