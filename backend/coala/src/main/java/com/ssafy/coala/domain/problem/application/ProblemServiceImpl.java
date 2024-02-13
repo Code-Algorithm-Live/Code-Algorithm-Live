@@ -145,6 +145,7 @@ public class ProblemServiceImpl implements ProblemService {
 
             }
         }
+        System.out.println(System.currentTimeMillis()-startTime);
 
         List<Problem> rangedProblem = null;
         if (maxLV<4){
@@ -166,10 +167,10 @@ public class ProblemServiceImpl implements ProblemService {
 
         //        sort되어있나?
         rangedProblem.sort(Comparator.comparingInt(Problem::getId));
-        System.out.println(rangedProblem.size());
+//        System.out.println(rangedProblem.size());
         //이미 푼 문제 제거
         rangedProblem = rangedProblemFiltering(rangedProblem, problemIds);
-        System.out.println(rangedProblem.size());
+//        System.out.println(rangedProblem.size());
 
         List<ProblemSimilarity> listPS = new ArrayList<>();//유사도 리스트
 
