@@ -2,11 +2,26 @@ version: '3'
 
 services:
   app:
+    container_name : front
     image: ${DOCKER_HUB_USER}/frontend:frontend-latest
     ports:
-      - '3000:3000'
+      - 3000
     env_file:
       - ./.env
+  
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    volumes:
+      - /etc/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+
+
  
       
 
