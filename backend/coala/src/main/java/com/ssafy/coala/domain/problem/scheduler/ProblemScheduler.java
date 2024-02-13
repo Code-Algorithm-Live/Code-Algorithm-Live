@@ -138,7 +138,7 @@ public class ProblemScheduler {
                     }
                 }
             }
-            input = problemService.insertProblem(input);
+            problemService.insertProblem(input);
             System.out.println("Problem saved. " + curId + ":" + maxId);
 
         } catch (Exception e) {

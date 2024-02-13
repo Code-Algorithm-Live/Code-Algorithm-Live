@@ -1,5 +1,8 @@
 'use client';
 
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import styled from 'styled-components';
 import { fetchPostCompiler } from '@/api/chat';
 import Chatting from '@/components/Chat/Chatting';
 import CodeEditor from '@/components/Chat/CodeEditor';
@@ -9,9 +12,6 @@ import QuestionModal from '@/components/Chat/QuestionModal';
 import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
@@ -172,6 +172,7 @@ const RightContainer = styled.div`
 
   .chattingContainer {
     flex: 1;
+    height: calc(100% - 112px); // 도움 요청 폼 더보기 높이값 뺀 만큼 조정
   }
 `;
 

@@ -4,7 +4,7 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import IconNotice from '@assets/svgs/notice.svg';
 import IconHistory from '@assets/svgs/history.svg';
@@ -140,6 +140,7 @@ export default function Nav() {
       alert('로그아웃 실패');
     }
   };
+
   return (
     <NavContainer>
       <Coala>
