@@ -35,8 +35,8 @@ public class ProblemServiceImpl implements ProblemService {
     MemberRepository memberRepository;
 
     @Override
-    public List<Problem> insertProblem(List<Problem> list) {
-        return problemRepository.saveAll(list);
+    public void insertProblem(List<Problem> list) {
+        problemRepository.saveAll(list);
     }
 
     @Override
@@ -54,30 +54,6 @@ public class ProblemServiceImpl implements ProblemService {
         problemRepository.updateProblemDescription(id, description);
     }
 
-//    @PostConstruct
-    public void problemCaching(){
-        List<Problem> problems = problemRepository.findAll();
-        Map<Integer, LevelProblem> levelProblemMap = new LinkedHashMap<>();
-
-        for (Problem p:problems){
-            if (p.getLevel()==0) continue;
-            if (!levelProblemMap.containsKey(p.getLevel())){
-                LevelProblem levelProblem = new LevelProblem(p.getLevel(),new HashMap<>());
-                levelProblem.putProblem(p);
-                levelProblemMap.put(p.getLevel(),levelProblem);
-            } else {
-                LevelProblem levelProblem = levelProblemMap.get(p.getLevel());
-                levelProblem.putProblem(p);
-            }
-        }
-
-        for (int i=1; i<30; i++){
-            if (levelProblemMap.containsKey(i)){
-                //save
-            }
-        }
-
-    }
 
     public List<Integer> getProblem(String solvedId){
         List<Integer> result = new ArrayList<>();

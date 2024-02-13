@@ -21,7 +21,7 @@ public class Member implements Serializable {
 
     // member_profile 만들어질 때 생성된 id 받아옴
     @Id
-    @Column(name = "id", columnDefinition = "BINARY(16)")
+    @Column(name = "id")
     private UUID id;
 
     //생성 시간
