@@ -19,7 +19,7 @@ create-env:
   - echo "NEXT_PUBLIC_YORKIE_BASE_URL = ${NEXT_PUBLIC_YORKIE_BASE_URL}" >> .env
   - echo "NEXT_PUBLIC_YORKIE_API_KEY = ${NEXT_PUBLIC_YORKIE_API_KEY}" >> .env
   - echo "NEXTAUTH_SECRET = ${NEXTAUTH_SECRET}" >> .env
-  - cat frontend/.env
+  - cat .env
   artifacts:
     paths:
       - frontend/.env
