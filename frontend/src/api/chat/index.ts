@@ -30,7 +30,7 @@ const fetchCreateCodeHistory = async ({
   roomUuid,
   ...data
 }: FetchCreateCodeHistory) => {
-  const res = await instance.post(`/history/${roomUuid}`, data);
+  const res = await instance.post(`/chat/history/${roomUuid}`, data.list);
   return res;
 };
 
