@@ -13,7 +13,12 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
+import yorkie, {
+  DocEventType,
+  EditOpInfo,
+  OperationInfo,
+  Text,
+} from 'yorkie-js-sdk';
 
 import { fetchCreateCodeHistory } from '@/api/chat';
 import { History, YorkieDoc } from '@/components/Chat/CodeEditor/type';
@@ -40,22 +45,28 @@ const editorTheme = EditorView.theme({
   },
 });
 
+const DEFAULT_CODE = `
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}`;
 const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
-const DOC_NAME = `hamster-${new Date()
-  .toISOString()
-  .substring(0, 10)
-  .replace(/-/g, '')}`;
 const MAX_HISTORY = 10;
 
 const CodeEditor = () => {
+  const { roomId } = useParams<{ roomId: string }>();
+  const DOC_NAME = `${roomId}-${new Date()
+    .toISOString()
+    .substring(0, 10)
+    .replace(/-/g, '')}`;
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
   const [eleOffset, setEleOffset] = useState({ width: '', height: '' });
   const [history, setHistory] = useState<History[]>([]);
-  const { roomId } = useParams<{ roomId: string }>();
   const createHistoryMutation = useMutation({
     mutationFn: fetchCreateCodeHistory,
   });
@@ -176,7 +187,8 @@ const CodeEditor = () => {
       doc.update(root => {
         if (!root.content) {
           // eslint-disable-next-line no-param-reassign
-          root.content = new yorkie.Text();
+          root.content = new Text();
+          root.content.edit(0, 0, DEFAULT_CODE);
         }
       }, 'create content if not exists');
 
