@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { styled } from 'styled-components';
 import { Client } from '@stomp/stompjs';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { styled } from 'styled-components';
+import Input from '@/components/Chat/Chatting/Input';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-import Input from '@/components/Chat/Chatting/Input';
 import { generateUUID } from '@/utils/uuid';
 
 const Container = styled.div`
@@ -21,6 +21,7 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
+  height: calc(100% - 80px); // 채팅 입력창 만큼 높이를 조정
   padding: 7px;
   overflow-y: scroll;
 
@@ -67,13 +68,26 @@ const Chatting = () => {
   const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
   const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
   const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+  const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /**
+     * 채팅방 스크롤바를 항상 하단으로 고정
+     */
+    const scrollToBottom = () => {
+      if (!messageContainerRef.current) return;
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    };
+
+    scrollToBottom();
+  }, [messages]);
   const storeDestination = `/pub/chat/message`;
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {
     const msgTime = getHourMinutes(new Date());
     const chatId = generateUUID();
-
     setMessages(prev => [
       ...prev,
       {
@@ -158,7 +172,7 @@ const Chatting = () => {
 
   return (
     <Container>
-      <MessageContainer>
+      <MessageContainer ref={messageContainerRef}>
         {messages.map(({ chatId, type, sender, date, message }, idx) => {
           if (type !== MessageType.TALK) return <></>;
 
