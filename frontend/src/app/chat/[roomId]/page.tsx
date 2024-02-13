@@ -177,7 +177,7 @@ const RightContainer = styled.div`
 `;
 
 export default function Chat() {
-  const [code] = useState('');
+  const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const compileMutation = useMutation({
     mutationFn: fetchPostCompiler,
@@ -186,7 +186,10 @@ export default function Chat() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { helpForm } = useHelpFromStore();
 
+  const handleCodeEditorChange = (value: string) => setCode(value);
+
   const handleRun = (input: string) => {
+    console.log(input);
     if (!code) return;
     if (compileMutation.isPending) return;
 
@@ -231,7 +234,7 @@ export default function Chat() {
               </div>
             </LeftContainer>
             <CodeEditorContainer>
-              <CodeEditor />
+              <CodeEditor onChange={handleCodeEditorChange} />
               <InputOutput
                 isRunning={compileMutation.isPending}
                 onRun={input => handleRun(input)}
@@ -245,12 +248,22 @@ export default function Chat() {
           <QuestionBannerContainer>
             <div className="questionBanner">
               <div className="titleContainer">
-                <p className="title">{helpForm?.helpDto.title}</p>
+                <p
+                  className="title"
+                  dangerouslySetInnerHTML={{
+                    __html: helpForm?.helpDto.title as TrustedHTML,
+                  }}
+                />
                 <button className="show" onClick={handleClickShowMore}>
                   더보기
                 </button>
               </div>
-              <p className="content">{helpForm?.helpDto.content}</p>
+              <p
+                className="content"
+                dangerouslySetInnerHTML={{
+                  __html: helpForm?.helpDto.content as TrustedHTML,
+                }}
+              />
             </div>
           </QuestionBannerContainer>
           <div className="chattingContainer">
