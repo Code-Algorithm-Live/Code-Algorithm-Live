@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { instance } from '@/api/instance';
-import NoticeList from '@/components/Notice/NoticeList';
 import { NoticeForm } from '@/types/NoticeForm';
+import NoticeList from '@/components/Notice/NoticeList';
 
 const Container = styled.div`
   display: flex;
