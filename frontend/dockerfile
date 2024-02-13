@@ -1,5 +1,5 @@
 # 기반 이미지
-FROM node:18-alpine
+FROM node:18-alpine as build-stage
 
 # 작업 디렉토리 설정
 WORKDIR /usr/src/app
@@ -16,8 +16,19 @@ RUN addgroup --system --gid 1001 nodejs \
 # 애플리케이션 실행을 위한 사용자 권한 설정
 USER nextjs
 
+# production-stage
+FROM nginx:stable-alpine as production-stage
+# stable-alpine 버전의 nginx 기본 베이스로 설정
+
+COPY ./default.conf /etc/nginx/nginx.conf
+# 로컬에서 만든 default.conf(nginx 설정)을 nginx의 서버에 복사
+
+COPY --from=build-stage /usr/src/app /usr/share/nginx/html
+# nginx가 동작하기위해 필요한 파일들을 시스템으로 복사한다
+# --from=builder-stage 태그를 이용하여 위의 빌드 단계의 이미지의 작업 디렉토리(/app/build)에서 nginx의 디렉토리로 파일을 복사한다.
+
 # 애플리케이션에 할당할 포트
-EXPOSE 3000
+EXPOSE 80
 
 # 한국 시간으로 설정
 ENV TZ Asia/Seoul
