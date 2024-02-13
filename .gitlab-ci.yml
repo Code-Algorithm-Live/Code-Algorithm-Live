@@ -19,7 +19,6 @@ create-env:
   - echo "NEXT_PUBLIC_YORKIE_BASE_URL = ${NEXT_PUBLIC_YORKIE_BASE_URL}" >> .env
   - echo "NEXT_PUBLIC_YORKIE_API_KEY = ${NEXT_PUBLIC_YORKIE_API_KEY}" >> .env
   - echo "NEXTAUTH_SECRET = ${NEXTAUTH_SECRET}" >> .env
-  - echo "NEXTAUTH_URL = ${NEXTAUTH_URL}" >> .env
   - cat .env
   artifacts:
     paths:
@@ -55,11 +54,8 @@ docker-build:
     - docker rmi ${DOCKER_HUB_USER}/frontend:frontend-latest || true
     - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PW}
     - cd frontend
-    - docker images
-    - docker ps -q --filter "name=${DOCKER_HUB_USER}/frontend" | grep -q . && docker stop ${DOCKER_HUB_USER}/frontend && docker rm ${DOCKER_HUB_USER}/frontend | true
-    - docker run -d -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt/ -v /home/ubuntu/certbot/www:/var/www/certbot --name ${DOCKER_HUB_USER}/frontend
-    - docker rmi -f $(docker images -f "dangling=true" -q) || true
-    
+    - docker build -t ${DOCKER_HUB_USER}/frontend:frontend-latest -f Dockerfile .
+    - docker push ${DOCKER_HUB_USER}/frontend:frontend-latest
   only:
     - develop # master 브랜치에 push될 때만 배포
     - front-develop
