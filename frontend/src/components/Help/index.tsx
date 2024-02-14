@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import TextInput from '@/components/Common/TextInput';
@@ -12,13 +11,15 @@ import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import { generateUUID } from '@/utils/uuid';
 
 function Form() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
-  const debouncedNumber = useDebounce(middleNumber, 5000);
-  const { data: session } = useSession();
-  const [problemNum, setProblemNum] = useState(''); // FIXME: 입력한 문제 번호가 0으로 넘어가는 이슈 해결 위한 임시 값입니다. 이슈 해결 후 삭제 해주세요.
+  const debouncedNumber = useDebounce(middleNumber, 2000);
+  const [problemNum, setProblemNum] = useState('');
+  const [loading, setLoading] = useState(false);
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -39,6 +40,9 @@ function Form() {
   const handleChangeNumber = (num: string) => {
     setMiddleNumber(num);
     setProblemNum(num);
+    if (parseInt(num, 10) >= 1000 && parseInt(num, 10) <= 31401) {
+      setLoading(true);
+    }
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
@@ -53,6 +57,11 @@ function Form() {
     title: formTitle,
     content: formContent,
   };
+
+  const isSubmitDisabled =
+    !(parseInt(problemNum, 10) >= 1000 && parseInt(problemNum, 10) <= 31401) ||
+    formTitle.trim() === '' ||
+    formContent.trim() === '';
 
   const handleSubmit = () => {
     const data = {
@@ -73,10 +82,13 @@ function Form() {
     localStorage.setItem('problemNumber', problemNumber);
     localStorage.setItem('startTime', nowTime);
     localStorage.setItem('helpRequestTime', '0');
+
+    router.push('/help/wait');
   };
 
   useEffect(() => {
     setProblemNumber(debouncedNumber);
+    setLoading(false);
   }, [debouncedNumber]);
 
   return (
@@ -91,21 +103,25 @@ function Form() {
             제목*
           </TextInput>
           <QuillEditor onChange={handleChangeContent} />
-          <div className={styles.buttonCon}>
-            <Link href={`/help/wait`}>
-              <button
-                className={styles.helpSubmitButton}
-                type="submit"
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onClick={handleSubmit}
-              >
-                제출
-              </button>
-            </Link>
-          </div>
         </div>
-        <div className={styles.linkForm}>
-          <LinkPreview problemNumber={Number(problemNumber)} />
+        <div>
+          <div className={styles.linkForm}>
+            <LinkPreview
+              problemNumber={Number(problemNumber)}
+              loading={loading}
+            />
+          </div>
+          <div className={styles.buttonCon}>
+            <button
+              className={styles.helpSubmitButton}
+              type="submit"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={handleSubmit}
+              disabled={isSubmitDisabled}
+            >
+              제출
+            </button>
+          </div>
         </div>
       </div>
     </>
