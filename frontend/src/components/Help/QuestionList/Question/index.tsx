@@ -19,10 +19,64 @@ type IHistoryHelp = {
 
 const initHistory: HistoryDto[] = [
   {
-    idx: 0,
-    pre: '',
+    idx: 111,
+    pre: '      qeqrewtert\n        xcvb\n        fsd\n        h\n        ',
     next: '',
-    time: '2024-02-12T03:18:22.7195703',
+    time: '2024-02-14T07:42:07.368Z',
+  },
+  {
+    idx: 111,
+    pre: '\n',
+    next: '',
+    time: '2024-02-14T07:42:07.619Z',
+  },
+  {
+    idx: 115,
+    pre: '',
+    next: '  \n    ',
+    time: '2024-02-14T07:42:07.654Z',
+  },
+  {
+    idx: 115,
+    pre: '  ',
+    next: 'dqwdwqdasdasdsadasd',
+    time: '2024-02-14T07:42:09.073Z',
+  },
+  {
+    idx: 113,
+    pre: '  ',
+    next: 'sasaddasads',
+    time: '2024-02-14T07:42:09.423Z',
+  },
+  {
+    idx: 111,
+    pre: '  ',
+    next: '',
+    time: '2024-02-14T07:42:09.704Z',
+  },
+  {
+    idx: 111,
+    pre: '\n',
+    next: '',
+    time: '2024-02-14T07:42:09.974Z',
+  },
+  {
+    idx: 117,
+    pre: '',
+    next: '  \n',
+    time: '2024-02-14T07:43:59.036Z',
+  },
+  {
+    idx: 119,
+    pre: '',
+    next: 'w',
+    time: '2024-02-14T07:43:59.665Z',
+  },
+  {
+    idx: 120,
+    pre: '',
+    next: 'e',
+    time: '2024-02-14T07:43:59.810Z',
   },
 ];
 const initMessage: MessageDto[] = [
