@@ -3,22 +3,25 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import style from '@/components/Help/Wait/StopWatch.module.scss';
 import { clearInterval } from 'stompjs';
+import style from '@/components/Help/Wait/StopWatch.module.scss';
 import { convertMillisecondsToTime, timerFormatter } from '@/utils/timer';
 import { instance } from '@/api/instance';
 import { HelpDto, Sender } from '@/types/Help';
-
-const getStartTime = () => {
-  if (typeof window === 'undefined') return '';
-  return localStorage.getItem('startTime');
-};
+import useProblemInfoStore from '@/store/problemInfo';
+import useProblemNumberStore from '@/store/problemNumber';
+import useHelpRequestStore from '@/store/helpRequest';
+import useStopwatchStore from '@/store/stopWatch';
 
 const StopWatch = () => {
-  const [timeLap, setTimeLap] = useState(0);
+  const { removeHelpRequestTime } = useHelpRequestStore();
+  const { zustandStartTime, removeStartTime } = useStopwatchStore();
   const { data: session } = useSession();
-
-  const startTime = Number(getStartTime());
+  const startTime = zustandStartTime;
+  const [timeLap, setTimeLap] = useState(Date.now() - startTime);
+  const { zustandContent, zustandTitle, removeTitle, removeContent } =
+    useProblemInfoStore();
+  const { zustandProblemNumber, removeNumber } = useProblemNumberStore();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,10 +37,11 @@ const StopWatch = () => {
   const time = timerFormatter({ hours, minutes, seconds });
 
   const handleClickCancel = () => {
-    if (typeof window === 'undefined') return;
-
-    localStorage.removeItem('startTime');
-    localStorage.removeItem('helpRequestTime');
+    removeContent();
+    removeTitle();
+    removeNumber();
+    removeStartTime();
+    removeHelpRequestTime();
 
     const defaultNumber: number = 0;
 
@@ -51,27 +55,30 @@ const StopWatch = () => {
     };
 
     const helpDto: HelpDto = {
-      title: localStorage.getItem('title') ?? 'null',
-      num: Number(localStorage.getItem('problemNumber')),
-      content: localStorage.getItem('content') ?? 'null',
+      title: zustandTitle ?? 'null',
+      num: Number(zustandProblemNumber),
+      content: zustandContent ?? 'null',
     };
 
     const data = {
       sender,
       helpDto,
     };
+    // TODO: 연결한 서버 체크 못함(등록 500 에러로)
     instance
       .delete<Sender>('/help/waitqueue', { data })
       // eslint-disable-next-line no-console
-      .catch(Err => console.error(Err));
+      .catch(Error => console.error(Error));
   };
   return (
     <div className={style.StopWatch}>
       <p className={style.state}>기다리는 중</p>
-      <div className={style.time}>
-        <span>경과시간 </span>
-        <span className="time">{time}</span>
-      </div>
+      {startTime !== 0 && (
+        <div className={style.time}>
+          <span>경과시간 </span>
+          <span className="time">{time}</span>
+        </div>
+      )}
       <div className={style.buttons}>
         <button className={style.button}>
           <Link href={'/help/edit'}>수정하기</Link>

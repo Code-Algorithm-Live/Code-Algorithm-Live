@@ -11,7 +11,6 @@ interface ListItem {
 
 interface ListProps {
   historyList: ListItem[];
-  selectedValue: string;
 }
 
 const Container = styled.div`
@@ -62,14 +61,11 @@ const SubText = styled.p`
   text-overflow: ellipsis;
 `;
 
-const List: React.FC<ListProps> = ({ historyList, selectedValue }) => {
+const List: React.FC<ListProps> = ({ historyList }) => {
   return (
     <Container>
       {historyList.map((history, index) => (
-        <Link
-          key={index}
-          href={`/history/${selectedValue}/${history.problemId}`}
-        >
+        <Link key={index} href={`/history/${history.roomId}`}>
           <SidebarLink>
             <MainText>{history.title}</MainText>
             <SubText>{history.problemId}번 문제</SubText>

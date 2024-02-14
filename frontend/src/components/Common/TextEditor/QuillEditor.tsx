@@ -20,13 +20,6 @@ const QuillEditor = ({ onChange }: TInputEditor) => {
         container: [
           ['code-block', 'blockquote', 'bold', 'italic', 'underline', 'strike'],
           [{ size: ['small', false, 'large', 'huge'] }, { color: [] }],
-          // [
-          //   { list: 'ordered' },
-          //   { list: 'bullet' },
-          //   { indent: '-1' },
-          //   { indent: '+1' },
-          // ],
-          ['link'],
         ],
       },
     }),

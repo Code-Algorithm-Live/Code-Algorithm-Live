@@ -13,7 +13,7 @@ const SidebarContainer = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 1290px;
 `;
 
 const Home = () => {

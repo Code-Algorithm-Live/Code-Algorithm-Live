@@ -79,6 +79,20 @@ const DeleteButton = styled.button`
   transition: background-color 0.3s ease;
 `;
 
+const SelectAllButton = styled.button`
+  position: absolute;
+  bottom: 5px;
+  right: 70px;
+  width: 80px;
+  height: 30px;
+  color: var(--white-color);
+  background-color: var(--main-color);
+  &:hover {
+    background-color: var(--main-hover-color);
+  }
+  transition: background-color 0.3s ease;
+`;
+
 const Notice = () => {
   const { data: session } = useSession();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -91,6 +105,14 @@ const Notice = () => {
       }
       return [...prevSelectedIds, id];
     });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.length === noticeListData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(noticeListData.map(notice => notice.id));
+    }
   };
 
   useEffect(() => {
@@ -109,10 +131,13 @@ const Notice = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchData();
-  }, []);
+  }, [session]);
 
   const deleteNotice = async () => {
     try {
+      if (!selectedIds) {
+        return;
+      }
       const deletePromises = selectedIds.map(async id => {
         await instance.delete(
           `${process.env.NEXT_PUBLIC_BASE_URL}/alarm/help/${id}`,
@@ -143,6 +168,7 @@ const Notice = () => {
       <TabContainer>
         <TabButton>전체 알림</TabButton>
         <TabLine />
+        <SelectAllButton onClick={handleSelectAll}>전체 선택</SelectAllButton>
         <DeleteButton onClick={deleteNotice}>삭제</DeleteButton>
       </TabContainer>
       {noticeListData && (
