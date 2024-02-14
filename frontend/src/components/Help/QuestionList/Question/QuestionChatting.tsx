@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-// import MyBubble from '@/components/Chat/Chatting/MyMessage';
 
 const Container = styled.div`
   position: relative;

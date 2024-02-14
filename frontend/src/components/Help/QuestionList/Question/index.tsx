@@ -9,7 +9,8 @@ import MoveButton from '@/components/Help/QuestionList/Question/MoveButton';
 import SlideBar from '@/components/Help/QuestionList/Question/SlideBar';
 import { HistoryDto, MessageDto, ChatRoomInfo } from '@/types/HelpHistory';
 import styles from '@/components/Help/QuestionList/Question/index.module.scss';
-import useProblemNumberStore from '@/store/problemNumber';
+// import useProblemNumberStore from '@/store/problemNumber';
+import NavBar from '@/components/Help/NavBar';
 
 type IHistoryHelp = {
   historyDto: HistoryDto[];
@@ -33,9 +34,12 @@ const initMessage: MessageDto[] = [
     date: '2024-02-12T03:18:20.7195703',
   },
 ];
+/**
+ * 문제 번호, 질문 번호, 제목, 내용, 질문자 닉네임은 히스토리 들어오려고 클릭하면 hitstoryProblem.ts(스토어)에 들어가도록 해놓음. 필요 시 사용
+ */
 
 function Form() {
-  const { zustandProblemNumber } = useProblemNumberStore();
+  // const { zustandProblemNumber } = useProblemNumberStore();
   const params = useSearchParams();
   const roomId = params.get('roomId');
   const [messageHistory, setMessageHistory] =
@@ -162,7 +166,8 @@ function Form() {
 
   return (
     <div>
-      <div className={styles.title}>{zustandProblemNumber} 히스토리</div>
+      <NavBar sort="질문히스토리 보기"></NavBar>
+      <div className={styles.questionContainer}></div>
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
           <div className={styles.codeEditor}>
