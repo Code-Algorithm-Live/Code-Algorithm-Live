@@ -84,6 +84,9 @@ const ContentText = styled.span`
   font-size: 16px;
   font-weight: 400;
   padding-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const BoldEffect = styled.span`
@@ -208,8 +211,7 @@ const StompProvider = ({ children }: { children: React.ReactNode }) => {
               </TitleText>
             </TitleContainer>
             <ContentText>
-              <BoldEffect>{helpForm?.helpDto.num}번</BoldEffect> 문제의 도움
-              요청이 도착했습니다.
+              <BoldEffect>{helpForm?.helpDto.num}번</BoldEffect> 문제
             </ContentText>
             <ContentText>{helpForm?.helpDto.title}</ContentText>
           </TextContainer>

@@ -3,7 +3,7 @@ interface HistoryList {
   sender: string;
   title: string;
   problemId: number;
-  LocalDateTiem: string;
+  date: string;
 }
 
 export type { HistoryList };
