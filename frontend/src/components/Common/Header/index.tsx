@@ -9,6 +9,7 @@ import { signOut, useSession } from 'next-auth/react';
 import IconNotice from '@assets/svgs/notice.svg';
 import IconHistory from '@assets/svgs/history.svg';
 import IconLogout from '@assets/svgs/logout.svg';
+import useHistorybarStore from '@/store/historyBar';
 import { instance } from '@/api/instance';
 import { NoticeForm } from '@/types/NoticeForm';
 
@@ -98,6 +99,11 @@ const NoticeCount = styled.span`
 export default function Nav() {
   const { data: session, status } = useSession();
   const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
+  const toggleHistoryBar = () => {
+    useHistorybarStore.setState(state => ({
+      HistoryBar: !state.HistoryBar,
+    }));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,10 +163,8 @@ export default function Nav() {
             </NoticeContainer>
           </Link>
         </Item>
-        <Item>
-          <Link href="/history">
-            <IconHistory />
-          </Link>
+        <Item onClick={toggleHistoryBar}>
+          <IconHistory style={{ cursor: 'pointer' }} />
         </Item>
         <Item onClick={RealSignOut}>
           <IconLogout
