@@ -30,7 +30,7 @@ public class RedisServiceImpl implements RedisService {
 
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ProblemRepository problemRepository;
+    private final ProblemService problemService;
 //    public RedisServiceImpl(RedisRepository redisRepository, RedisTemplate<String, Member> redisTemplate){
 //
 //        this.redisRepository = redisRepository;
@@ -111,7 +111,7 @@ public class RedisServiceImpl implements RedisService {
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
         redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
 
-        problemRepository.questionCntIncrease(waitDto.getHelpDto().getNum());
+        problemService.questionCntIncrease(waitDto.getHelpDto().getNum());
     }
 
     //현재 매칭 대기열에 존재하는지 검사

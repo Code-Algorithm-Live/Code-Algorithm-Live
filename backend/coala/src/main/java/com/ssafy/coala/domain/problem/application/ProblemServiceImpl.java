@@ -37,10 +37,22 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional
     public void insertProblem(List<Problem> list) {
         list.sort(Comparator.comparingInt(Problem::getId));
+
+
         Map<String, ProblemInfo>[] mapArr = (Map<String, ProblemInfo>[])new Map[31];
         for (int i=1; i<=30; i++){
             mapArr[i] = (Map) redisTemplate.opsForHash().entries("level:"+i);
             if (mapArr[i]==null) mapArr[i] = new LinkedHashMap();
+        }
+
+        List<Integer> ids = new ArrayList<>();
+        for (Problem p : list){
+            ids.add(p.getId());
+        }
+        //난이도 없는 문제 풀면?
+        List<Integer> question_cnt = problemRepository.findAllQuestionCntById(ids);
+        for (int i =0; i<list.size(); i++){
+            if (question_cnt.get(i)!=null) list.get(i).setQuestion_cnt(question_cnt.get(i));
         }
 
         for (Problem p:list){
@@ -69,6 +81,16 @@ public class ProblemServiceImpl implements ProblemService {
         return (id==null)?999:id;
     }
 
+    @Override
+    public void questionCntIncrease(int id){
+        Problem p = getProblem(id);
+        if (p==null) return;
+        p.setQuestion_cnt(p.getQuestion_cnt()+1);
+        redisTemplate.opsForHash().put("level:"+p.getLevel(), p.getId().toString(),
+                new ProblemInfo(p));
+        problemRepository.questionCntIncrease(p.getId());
+
+    }
     @Override
     public Problem getProblem(int id) {
         return problemRepository.findById(id).orElse(null);
@@ -187,8 +209,6 @@ public class ProblemServiceImpl implements ProblemService {
                 int key = Integer.parseInt((String)entry.getKey());
                 if (problemIds.contains(key)) continue;
                 rangedProblemArr[i].put(key,(ProblemInfo) entry.getValue());
-
-
             }
         }
 
@@ -236,18 +256,23 @@ public class ProblemServiceImpl implements ProblemService {
                 if (rangedProblemArr[i].remove(ids)!=null) break;;
             }
         }
-        List<Integer[]> quesionCntList = new ArrayList<>();
+        List<Integer[]> questionCntList = new ArrayList<>();
         for (int i=low; i<=high; i++){
             for (Map.Entry<Integer, ProblemInfo> entry:rangedProblemArr[i].entrySet()){
                 if (entry.getValue().getQuestionCnt()>0){
-                    quesionCntList.add(new Integer[]{entry.getKey(), entry.getValue().getQuestionCnt()});
+                    questionCntList.add(new Integer[]{entry.getKey(), entry.getValue().getQuestionCnt()});
                 }
             }
         }
-        quesionCntList.sort(Comparator.comparingInt(x->-x[1]));
+
+        questionCntList.sort(Comparator.comparingInt(x->-x[1]));
         List<Integer> questionCntListIds = new ArrayList<>();
+        for (Integer[] arr:questionCntList){
+            questionCntListIds.add(arr[0]);
+        }
 
         List<Problem> curateFromQuestionCnt = problemRepository.findAllById(questionCntListIds);
+
         List<ProblemDto> curateFromQuestionCntDto = new ArrayList<>();
         for (Problem p: curateFromQuestionCnt){
             curateFromQuestionCntDto.add(new ProblemDto(p));
