@@ -4,10 +4,18 @@
   justify-content: space-around;
   align-items: center;
 }
+
 .watch {
   margin-top: 18px;
 }
+
 .moveButton {
+  margin-top: 18px;
   display: flex;
-  gap: 7px;
+  gap: 20px;
+}
+
+.text {
+  font-family: Pretendard;
+  font-size: 18px;
 }
