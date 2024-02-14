@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,11 +19,11 @@ public interface MemberProblemRepository extends JpaRepository<MemberProblem, Me
     @Query(value = "select problem_id from member_problem mp join member m on m.id = mp.member_id where solved_id = :solvedId", nativeQuery = true)
     List<Integer> findProblemIdBySolvedId(@Param("solvedId") String solvedId);
 
-    @Query(value = "select solved_id from member m join member_problem mp on mp.member_id = m.id where problem_id = :problemId", nativeQuery = true)
-    List<String> findSolveIdByProblemId(@Param("problemId") int problemId);
+//    @Query(value = "select m.solved_id from member m join member_problem mp on mp.member_id = m.id where mp.problem_id = :problemId", nativeQuery = true)
+//    List<String> findSolveIdByProblemId(@Param("problemId") int problemId);
 
-    @Query(value = "select solved_id form member m join member_problem mp on mp.member_id = m.id where problem_id = :problemId ordered by solved_time", nativeQuery = true)
-    List<String> findRecentSolvedIdByProblemId(@Param("problemId")int problemId);
+//    @Query(value = "select m.nick_name from member m join member_problem mp on mp.member_id = m.id where mp.problem_id = :problemId order by mp.last_solved", nativeQuery = true)
+//    List<String> findRecentNickNameByProblemId(@Param("problemId")int problemId);
 
 //    List<Integer> findProlbm
 
