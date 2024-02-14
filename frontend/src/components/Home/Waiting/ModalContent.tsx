@@ -37,6 +37,8 @@ const TitleContainer = styled.div`
   margin-bottom: 30px;
   height: 40px;
   width: 350px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const ContentsContainer = styled.div`
