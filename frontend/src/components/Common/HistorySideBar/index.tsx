@@ -1,16 +1,26 @@
 'use client';
 
 import styled from 'styled-components';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { instance } from '@/api/instance';
 import List from '@/components/Common/HistorySideBar/List';
 import Button from '@/components/Common/HistorySideBar/Button';
 import Select from '@/components/Common/HistorySideBar/Select';
+
+interface HistoryData {
+  roomId: string;
+  sender: null;
+  title: string;
+  problemId: number;
+  date: string;
+}
 
 const SidebarContainer = styled.div`
   padding: 20px 20px 20px 10px;
   display: flex;
   flex-direction: column;
-  width: 244px;
+  min-width: 244px;
   height: calc(100vh - 48px);
   border-right: 2px solid var(--main-color);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
@@ -19,33 +29,53 @@ const SidebarContainer = styled.div`
 `;
 
 const Sidebar = () => {
+  const { data: session } = useSession();
   const [selectedHistory, setSelectedHistory] = useState<string>('question');
+  const [qHistory, setQHistory] = useState<HistoryData[]>([]);
+  const [aHistory, setAHistory] = useState<HistoryData[]>([]);
+
   const changeHistory = (event: {
     target: { value: SetStateAction<string> };
   }) => {
     setSelectedHistory(event.target.value);
   };
 
-  // 임시 히스토리 데이터
-  const QHistory = Array.from({ length: 10 }, (_, index) => ({
-    main: `내가 질문한 히스토리들!!!!! ${index + 1}`,
-    sub: '문제 번호, 문제 이름',
-    href: '/',
-  }));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let endpoint;
+        let setHistory;
 
-  const AHistory = Array.from({ length: 10 }, (_, index) => ({
-    main: `내가 답변한 히스토리들!!!!! ${index + 1}`,
-    sub: '문제 번호, 문제 이름',
-    href: '/',
-  }));
+        if (selectedHistory === 'question') {
+          endpoint = `/chat/history/sender/${session?.user.email}`;
+          setHistory = setQHistory;
+        } else {
+          endpoint = `/chat/history/receiver/${session?.user.email}`;
+          setHistory = setAHistory;
+        }
+
+        const response = await instance.get<HistoryData[]>(
+          `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,
+        );
+        if (response.data) {
+          setHistory(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchData();
+  }, [selectedHistory]);
 
   // 노출시킬 데이터 판별
-  const historyList = selectedHistory === 'question' ? QHistory : AHistory;
+  const historyList = selectedHistory === 'question' ? qHistory : aHistory;
 
   return (
     <SidebarContainer>
       <Select selectedValue={selectedHistory} onChange={changeHistory} />
-      <List historyList={historyList} />
+      <List historyList={historyList} selectedValue={selectedHistory} />
       <Button />
     </SidebarContainer>
   );
