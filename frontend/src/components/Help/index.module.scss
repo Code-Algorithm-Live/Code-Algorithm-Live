@@ -3,7 +3,10 @@
 }
 
 .all {
-  margin-top: 67px;
+  font-family: Pretendard;
+  margin: 60px 0px 0px 0px;
+  justify-content: center;
+  gap: 200px;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -19,28 +22,35 @@
   margin-bottom: 24px;
 }
 .linkForm {
-  margin-top: 77px;
+  margin-top: 50px;
 }
 .buttonCon {
   display: flex;
   float: right;
-  margin-top: 40px;
+  margin-top: 320px;
 }
 .helpSubmitButton {
   border-radius: 10px;
-  margin-top: 12px;
-  width: 167px;
-  height: 54px;
-  color: var(--white-color);
-  font-size: 16px;
+  width: 150px;
+  height: 50px;
   background-color: var(--sub-color);
-}
-.disabledSubmitButton {
-  border-radius: 10px;
-  margin-top: 12px;
-  width: 167px;
-  height: 54px;
-  color: var(--white-color);
+  font-family: Pretendard;
   font-size: 16px;
-  background-color: var(--sub-disabled-color);
+  font-weight: 400;
+  color: var(--white-color);
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
+
+  opacity: 0.5;
+  pointer-events: none;
+
+  &:hover {
+    background-color: var(--sub-hover-color);
+  }
+}
+
+.helpSubmitButton:enabled {
+  opacity: 1;
+  pointer-events: auto;
 }

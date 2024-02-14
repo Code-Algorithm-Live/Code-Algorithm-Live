@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import TextInput from '@/components/Common/TextInput';
@@ -17,16 +16,20 @@ import useStopwatchStore from '@/store/stopWatch';
 import useHelpRequestStore from '@/store/helpRequest';
 
 function Form() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
-  const debouncedNumber = useDebounce(middleNumber, 5000);
   const { data: session } = useSession();
   const { setZustandProblemNumber } = useProblemNumberStore();
   const { setZustandTitle, setZustandContent } = useProblemInfoStore();
   const { setZustandStartTime } = useStopwatchStore();
   const { removeHelpRequestTime } = useHelpRequestStore();
+  const debouncedNumber = useDebounce(middleNumber, 2000);
+  const [problemNum, setProblemNum] = useState('');
+  const [loading, setLoading] = useState(false);
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -47,6 +50,10 @@ function Form() {
 
   const handleChangeNumber = (num: string) => {
     setMiddleNumber(num);
+    setProblemNum(num);
+    if (parseInt(num, 10) >= 1000 && parseInt(num, 10) <= 31401) {
+      setLoading(true);
+    }
   };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
@@ -61,6 +68,11 @@ function Form() {
     title: formTitle,
     content: formContent,
   };
+
+  const isSubmitDisabled =
+    !(parseInt(problemNum, 10) >= 1000 && parseInt(problemNum, 10) <= 31401) ||
+    formTitle.trim() === '' ||
+    formContent.trim() === '';
 
   const handleSubmit = () => {
     const nowTime: number = Date.now();
@@ -85,6 +97,7 @@ function Form() {
 
   useEffect(() => {
     setProblemNumber(debouncedNumber);
+    setLoading(false);
   }, [debouncedNumber]);
 
   return (

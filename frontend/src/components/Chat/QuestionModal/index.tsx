@@ -11,8 +11,6 @@ const QuestionModal = ({
   isOpen: boolean;
   onClose: () => void;
 } & QuestionContentProps) => {
-  console.log('isOpen', isOpen);
-  console.log('modalData', modalData);
   return (
     <BasicModal open={isOpen} onClose={onClose}>
       <>
