@@ -25,7 +25,7 @@ public class CustomCurateInfoRepository {
         String key = generateKey(id);
         Map<?, ?> map = (Map<?,?>) redisTemplate.opsForValue().get(key);
         if (map==null) return null;
-        System.out.println(map);
+//        System.out.println(map);
         return new CurateInfo(id,(List<ProblemDto>) map.get("curateFromRecent"),(List<ProblemDto>) map.get("curateFromQuestionCnt"));
 
     }
