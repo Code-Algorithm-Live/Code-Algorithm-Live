@@ -41,7 +41,7 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
     @Query(value = "select mpf.email, mpf.image_url, mpf.kakao_name, mpf.nick_name, m.member_exp, mpf.solved_id " +
             "from member_profile mpf join member_problem mp on mpf.id = mp.member_id " +
             "join member m on m.id = mpf.id " +
-            "where mp.problem_id = :problemId and mpf.last_request >= (now() - interval 60 minute) order by mpf.last_request desc", nativeQuery = true)
+            "where mp.problem_id = :problemId and mpf.last_request >= (now() - interval 60 minute) order by mp.last_solved desc", nativeQuery = true)
     List<Object[]> findAccessMemberByProblemId(@Param("problemId") int problemId);
 
     @Query("select m.imageUrl from MemberProfile m where m.nickname=:nickname")
