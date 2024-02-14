@@ -48,6 +48,6 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, In
     String findImageUrlByNickname(@Param("nickname") String nickname);
 
     @Modifying
-    @Query ("update MemberProfile m set m.imageUrl=:imageUrl where nickname=:nickname")
+    @Query ("update MemberProfile m set m.imageUrl=:imageUrl where m.nickname=:nickname")
     void updateImageUrlByNickname(@Param("imageUrl") String imageUrl, @Param("nickname") String nickname);
 }

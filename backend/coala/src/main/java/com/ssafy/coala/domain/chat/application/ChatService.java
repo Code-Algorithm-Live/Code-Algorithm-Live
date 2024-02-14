@@ -154,7 +154,7 @@ public class ChatService {
     }
 
     public List<HistoryRoomDto> findHistoryByReceiver(String receiver){
-        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(receiver);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomByReceiver(receiver);
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList) {
             result.add(new HistoryRoomDto(chatRoom.getRoomId(), chatRoom.getSender(),
@@ -167,6 +167,10 @@ public class ChatService {
         result.add((new HistoryRoomDto(UUID.randomUUID(),"sender1","receiver1",
                 "상어초등학교 도와주셈","어려웡",21608, Timestamp.valueOf(LocalDateTime.now()))));
         return result;
+    }
+
+    public void closeRoom(UUID roomId){
+
     }
 
 }
