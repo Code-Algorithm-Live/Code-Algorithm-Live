@@ -144,11 +144,9 @@ public class ProblemServiceImpl implements ProblemService {
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
         Member member = memberRepository.findBySolvedId(solvedId);
-        long start = System.currentTimeMillis();
         //update MemberProblem data
         if (member.getId()==null) return null;
         updateMemberProblem(problemIds, recentProblemStr, member);
-        System.out.println(System.currentTimeMillis()-start);
 
         //curating
         List<Integer> recentId = new ArrayList<>();
@@ -157,7 +155,7 @@ public class ProblemServiceImpl implements ProblemService {
         }
 
         List<Problem> recentProblem = problemRepository.findAllById(recentId);
-        System.out.println("size:"+recentProblem.size());
+
         int maxLV = 0;
 
         Map<String, Integer> recentTag = new HashMap<>();
@@ -219,12 +217,11 @@ public class ProblemServiceImpl implements ProblemService {
         for (int i=0; i<Math.min(20, listPS.size()); i++){
             curateFromRecentIds.add(listPS.get(i).id);
         }
-        System.out.println(System.currentTimeMillis()-start);
+
         List<Problem> curateFromRecent = problemRepository.findAllById(curateFromRecentIds);
         for (Problem p:curateFromRecent){
             curateFromRecentDto.add(new ProblemDto(p));
         }
-        System.out.println(System.currentTimeMillis()-start);
         CurateInfo result = new CurateInfo();
         result.setId(solvedId);
         result.setCurateFromRecent(curateFromRecentDto);
@@ -276,38 +273,16 @@ public class ProblemServiceImpl implements ProblemService {
         return memberProblemRepository.findSolveIdByProblemId(problemId);
     }
 
-    List<Problem> rangedProblemFiltering(List<Problem> rangedProblem, List<Integer> ids){
-        List<Problem> result = new ArrayList<>();
-
-        int i=0;
-        int j=0;
-        while (i<ids.size() && j<rangedProblem.size()){
-            if (ids.get(i)>rangedProblem.get(j).getId()){
-                result.add(rangedProblem.get(j++));
-            } else if (ids.get(i)<rangedProblem.get(j).getId()) {
-                i++;
-            } else {
-                i++;
-                j++;
-            }
-        }
-
-        while (j<rangedProblem.size()){
-            result.add(rangedProblem.get(j++));
-        }
-
-        return result;
-    }
-
     public void updateMemberProblem(List<Integer> problems, List<String[]> recentProblemStr, Member member){
+        long start = System.currentTimeMillis();
         //recentProblem에 있다면 save
         //problem에 있지만 preProblem에 없다면 save
-        List<MemberProblem> preProblem = memberProblemRepository.findByMemberId(member.getId());
+        List<Integer> preProblem = memberProblemRepository.findProblemIdBySolvedId(member.getSolvedId());
         List<MemberProblem> saveProblem = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        DB는 sort되어있나?
-        preProblem.sort(Comparator.comparingInt(x -> x.getProblem().getId()));
-
+        preProblem.sort(Comparator.comparingInt(x -> x));
+        System.out.println(System.currentTimeMillis()-start);
         //문제 데이터 갱신하기
         if (preProblem.isEmpty()){ //계정에 문제 데이터 없다면...
             for (Integer id : problems) {
@@ -333,7 +308,7 @@ public class ProblemServiceImpl implements ProblemService {
             }
         } else {
             for (int i=0, j=0; i<problems.size(); i++){
-                if (j<preProblem.size() && problems.get(i).equals(preProblem.get(j).getProblem().getId())){
+                if (j<preProblem.size() && problems.get(i).equals(preProblem.get(j))){
                     j++;
                 } else {
                     Problem newP = new Problem();
@@ -358,8 +333,12 @@ public class ProblemServiceImpl implements ProblemService {
                 }
             }
         }
-        memberProblemRepository.save(saveProblem.get(0));
+        System.out.println(System.currentTimeMillis()-start);
+
+        System.out.println(System.currentTimeMillis()-start);
+
         memberProblemRepository.saveAll(saveProblem);
+        System.out.println(System.currentTimeMillis()-start);
     }
 
     public static double calculateCosineSimilarity(Map<String, Integer> vectorA, Map<String, Integer> vectorB) {
