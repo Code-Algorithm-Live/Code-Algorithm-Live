@@ -23,4 +23,9 @@ public interface ProblemRepository extends JpaRepository<Problem, Integer> {
             "JOIN p.languages l " +
             "WHERE p.level BETWEEN :low AND :high AND l.language = 'ko' AND p.give_no_rating = false")
     List<Problem> findProblemsByLevelRange(@Param("low") int low, @Param("high") int high);
+
+    @Modifying
+    @Transactional
+    @Query("update Problem p set p.question_cnt=p.question_cnt+1 where p.id = :problemId")
+    void questionCntIncrease(@Param("problemId") int problemId);
 }

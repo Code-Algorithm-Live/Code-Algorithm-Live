@@ -31,6 +31,7 @@ public class ProblemServiceImpl implements ProblemService {
     CustomCurateInfoRepository customCurateInfoRepository;
     @Autowired
     MemberRepository memberRepository;
+
     @SuppressWarnings("unchecked")
     @Override
     @Transactional
@@ -45,8 +46,11 @@ public class ProblemServiceImpl implements ProblemService {
         for (Problem p:list){
             if (p.getLevel()==0) continue;
             for (ProblemLanguage pl:p.getLanguages()){
-                if (pl.getLanguage().equals("ko"))
+                if (pl.getLanguage().equals("ko")) {
+//                    System.out.println(pl.getLanguage()+":"+p.getLanguages().size());
                     mapArr[p.getLevel()].put(p.getId().toString(), new ProblemInfo(p));
+                    break;
+                }
             }
         }
 
