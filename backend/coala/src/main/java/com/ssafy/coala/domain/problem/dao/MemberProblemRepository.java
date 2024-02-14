@@ -26,6 +26,8 @@ public interface MemberProblemRepository extends JpaRepository<MemberProblem, Me
     @Query(value = "select solved_id form member m join member_problem mp on mp.member_id = m.id where problem_id = :problemId ordered by solved_time", nativeQuery = true)
     List<String> findRecentSolvedIdByProblemId(@Param("problemId")int problemId);
 
+//    List<Integer> findProlbm
+
 //    default UUID findUUIDBySolveId(String solvedId) {
 //        byte[] result = findMemberBySolveId(solvedId);
 //        ByteBuffer byteBuffer = ByteBuffer.wrap(result);
