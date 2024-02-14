@@ -24,5 +24,13 @@ module.exports = {
   //   ];
   // },
   reactStrictMode: false,
-  output:'standalone'
+  output: 'standalone',
+  async rewrites() {
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: 'https://i10a709.p.ssafy.io/api/v1/:path*',
+      },
+    ];
+  },
 };
