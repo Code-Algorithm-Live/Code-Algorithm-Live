@@ -2,8 +2,29 @@ version: '3'
 
 services:
   app:
+    container_name: front
     image: ${DOCKER_HUB_USER}/frontend:frontend-latest
     ports:
-      - '3000:3000'
+      - 3000:3000
     env_file:
       - ./.env
+    networks:
+      - corp
+
+  nginx_proxy:
+    image: nginx:1.21.5-alpine
+    container_name: nginx_proxy    
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - corp
+    depends_on:
+      - app
+    links:
+      - app:app
+
+networks:
+  corp:
+    driver: bridge
