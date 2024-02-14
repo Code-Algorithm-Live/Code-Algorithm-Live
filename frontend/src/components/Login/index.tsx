@@ -34,6 +34,7 @@ const Mark = styled.div`
 
   font-size: 100px;
   font-weight: 200;
+  text-shadow: 0px 0px 5px var(--white-color);
 `;
 
 export default function Login() {

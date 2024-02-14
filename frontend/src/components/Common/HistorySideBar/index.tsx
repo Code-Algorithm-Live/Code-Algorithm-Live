@@ -1,9 +1,10 @@
 'use client';
 
 import styled from 'styled-components';
-import { SetStateAction, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { instance } from '@/api/instance';
+import useSidebarStore from '@/store/historySelect';
 import List from '@/components/Common/HistorySideBar/List';
 import Button from '@/components/Common/HistorySideBar/Button';
 import Select from '@/components/Common/HistorySideBar/Select';
@@ -32,35 +33,34 @@ const SidebarContainer = styled.div`
 
 const Sidebar = () => {
   const { data: session, status } = useSession();
-  const [selectedHistory, setSelectedHistory] = useState<string>('question');
+  const selectedHistory = useSidebarStore(state => state.selectedHistory);
+  const setHistory = useSidebarStore(state => state.setHistory);
   const [qHistory, setQHistory] = useState<HistoryData[]>([]);
   const [aHistory, setAHistory] = useState<HistoryData[]>([]);
 
-  const changeHistory = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setSelectedHistory(event.target.value);
+  const changeHistory = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setHistory(event.target.value);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         let endpoint;
-        let setHistory;
+        let setHistoryChange;
 
         if (selectedHistory === 'question') {
           endpoint = `/chat/history/sender/${session?.user.email}`;
-          setHistory = setQHistory;
+          setHistoryChange = setQHistory;
         } else {
           endpoint = `/chat/history/receiver/${session?.user.email}`;
-          setHistory = setAHistory;
+          setHistoryChange = setAHistory;
         }
 
         const response = await instance.get<HistoryData[]>(
           `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,
         );
         if (response.data) {
-          setHistory(response.data);
+          setHistoryChange(response.data);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -69,7 +69,7 @@ const Sidebar = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchData();
-  }, [selectedHistory]);
+  }, [selectedHistory, session?.user.email]);
 
   // 노출시킬 데이터 판별
   const historyList = selectedHistory === 'question' ? qHistory : aHistory;
@@ -78,7 +78,7 @@ const Sidebar = () => {
     <SidebarContainer>
       <Select selectedValue={selectedHistory} onChange={changeHistory} />
       {status === 'authenticated' ? (
-        <List historyList={historyList} selectedValue={selectedHistory} />
+        <List historyList={historyList} />
       ) : (
         <Loader />
       )}
