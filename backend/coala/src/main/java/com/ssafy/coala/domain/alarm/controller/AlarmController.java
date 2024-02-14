@@ -73,16 +73,16 @@ public class AlarmController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
-    @DeleteMapping("/friend/{id}")
+//    @DeleteMapping("/friend/{id}")
     public ResponseEntity<?> deletefriendlist(@Parameter(description = "친구 요청 알람 ID", required = true, example = "1") @PathVariable long id) {
         alarmService.deleteFriendAlram(id);
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping("/api/v1/test")
-    public String test(){
-        System.out.println("test success");
-        return "test success";
-    }
+//    @PostMapping("/api/v1/test")
+//    public String test(){
+//        System.out.println("test success");
+//        return "test success";
+//    }
 
 }

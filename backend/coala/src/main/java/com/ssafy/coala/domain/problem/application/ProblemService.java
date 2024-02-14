@@ -12,6 +12,6 @@ public interface ProblemService {
     public  void updateDescriptionById(int id, String description);
     public CurateInfo getCurateProblem(String solvedId);
     public List<Integer> getProblemByMember(String solvedId);
-    public List<String> getSolvedIdByProblem(int problemId);
-    public List<String> getRecentMemberByProblem(int problemId);
+//    public List<String> getSolvedIdByProblem(int problemId);
+//    public List<String> getRecentMemberByProblem(int problemId);
 }
