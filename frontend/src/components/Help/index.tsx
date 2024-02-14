@@ -9,6 +9,11 @@ import styles from '@/components/Help/index.module.scss';
 import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
 import { generateUUID } from '@/utils/uuid';
+import HistorySideBar from '@/components/Common/HistorySideBar';
+import useProblemNumberStore from '@/store/problemNumber';
+import useProblemInfoStore from '@/store/problemInfo';
+import useStopwatchStore from '@/store/stopWatch';
+import useHelpRequestStore from '@/store/helpRequest';
 
 function Form() {
   const { data: session } = useSession();
@@ -17,6 +22,11 @@ function Form() {
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
+  const { data: session } = useSession();
+  const { setZustandProblemNumber } = useProblemNumberStore();
+  const { setZustandTitle, setZustandContent } = useProblemInfoStore();
+  const { setZustandStartTime } = useStopwatchStore();
+  const { removeHelpRequestTime } = useHelpRequestStore();
   const debouncedNumber = useDebounce(middleNumber, 2000);
   const [problemNum, setProblemNum] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,6 +43,7 @@ function Form() {
     kakaoname: session?.user?.kakaoName,
     solvedId: session?.user?.SolvedId,
     nickname: session?.user?.name,
+    exp: session?.user?.userExp,
   };
 
   const roomUuid = generateUUID();
@@ -53,7 +64,7 @@ function Form() {
   };
 
   const helpDto = {
-    num: Number(problemNum),
+    num: Number(problemNumber),
     title: formTitle,
     content: formContent,
   };
@@ -64,26 +75,24 @@ function Form() {
     formContent.trim() === '';
 
   const handleSubmit = () => {
+    const nowTime: number = Date.now();
+    setZustandTitle(formTitle);
+    setZustandContent(formContent);
+    setZustandProblemNumber(problemNumber);
+    setZustandStartTime(nowTime);
+    removeHelpRequestTime();
+
     const data = {
       sender,
       helpDto,
       roomUuid,
     };
 
+    // FIXME: 500에러
     instance
       .post<FetchRegistHelpRequest>('/help/waitqueue', data)
       // eslint-disable-next-line no-console
       .catch(Err => console.error(Err));
-
-    /** 로컬 스토리지에 저장 */
-    const nowTime: string = Date.now().toString();
-    localStorage.setItem('title', formTitle);
-    localStorage.setItem('content', formContent);
-    localStorage.setItem('problemNumber', problemNumber);
-    localStorage.setItem('startTime', nowTime);
-    localStorage.setItem('helpRequestTime', '0');
-
-    router.push('/help/wait');
   };
 
   useEffect(() => {
@@ -93,34 +102,49 @@ function Form() {
 
   return (
     <>
-      <div className={styles.all}>
-        <div className={styles.form}>
-          <p className={styles.title}>도움 요청하기</p>
-          <TextInput inputSort="number" onChange={handleChangeNumber}>
-            문제번호*
-          </TextInput>
-          <TextInput inputSort="title" onChange={handleChangeTitle}>
-            제목*
-          </TextInput>
-          <QuillEditor onChange={handleChangeContent} />
+      <div className={styles.allContainer}>
+        <div className={styles.sideBar}>
+          <HistorySideBar></HistorySideBar>
         </div>
-        <div>
-          <div className={styles.linkForm}>
-            <LinkPreview
-              problemNumber={Number(problemNumber)}
-              loading={loading}
-            />
+        <div className={styles.all}>
+          <div className={styles.form}>
+            <p className={styles.title}>도움 요청하기</p>
+            <TextInput inputSort="number" onChange={handleChangeNumber}>
+              문제번호*
+            </TextInput>
+            <TextInput inputSort="title" onChange={handleChangeTitle}>
+              제목*
+            </TextInput>
+            <QuillEditor onChange={handleChangeContent} />
+            <div className={styles.buttonCon}>
+              {problemNumber !== '' &&
+              formContent !== '' &&
+              formTitle !== '' ? (
+                <Link href={`/help/wait`}>
+                  <button
+                    className={styles.helpSubmitButton}
+                    type="submit"
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={handleSubmit}
+                  >
+                    제출
+                  </button>
+                </Link>
+              ) : (
+                <button
+                  className={styles.disabledSubmitButton}
+                  type="submit"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={handleSubmit}
+                  disabled
+                >
+                  제출
+                </button>
+              )}
+            </div>
           </div>
-          <div className={styles.buttonCon}>
-            <button
-              className={styles.helpSubmitButton}
-              type="submit"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={handleSubmit}
-              disabled={isSubmitDisabled}
-            >
-              제출
-            </button>
+          <div className={styles.linkForm}>
+            <LinkPreview problemNumber={Number(problemNumber)} />
           </div>
         </div>
       </div>

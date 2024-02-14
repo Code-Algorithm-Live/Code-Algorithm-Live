@@ -4,10 +4,10 @@ import style from '@/components/Help/Wait/MoveHelp.module.scss';
 
 type MoveProps = {
   text: string;
+  problemNumber: string;
 };
-const MoveHelp = ({ text }: MoveProps) => {
+const MoveHelp = ({ text, problemNumber }: MoveProps) => {
   // 문제 번호 받기
-  const problemNumber: number = 1533;
   let move: string;
   if (text === '도움 요청하기') {
     move = 'user-list';

@@ -9,7 +9,7 @@ function NavBar({ sort }: INavBarProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/');
+    router.push('/help/wait');
   };
   return (
     <div className={style.bar}>
