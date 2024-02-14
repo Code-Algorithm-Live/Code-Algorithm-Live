@@ -96,7 +96,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
             />
           </ContentsContainer>
         </FormContainer>
-        <LinkPreview problemNumber={modalData.helpDto.num} />
+        <LinkPreview problemNumber={modalData.helpDto.num} loading={false} />
       </MiddleContainer>
     </Container>
   );
