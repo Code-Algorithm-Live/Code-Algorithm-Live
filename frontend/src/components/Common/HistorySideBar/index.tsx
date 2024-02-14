@@ -7,6 +7,7 @@ import { instance } from '@/api/instance';
 import List from '@/components/Common/HistorySideBar/List';
 import Button from '@/components/Common/HistorySideBar/Button';
 import Select from '@/components/Common/HistorySideBar/Select';
+import Loader from '@/components/Common/Loader';
 
 interface HistoryData {
   roomId: string;
@@ -17,6 +18,7 @@ interface HistoryData {
 }
 
 const SidebarContainer = styled.div`
+  position: relative;
   padding: 20px 20px 20px 10px;
   display: flex;
   flex-direction: column;
@@ -29,7 +31,7 @@ const SidebarContainer = styled.div`
 `;
 
 const Sidebar = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [selectedHistory, setSelectedHistory] = useState<string>('question');
   const [qHistory, setQHistory] = useState<HistoryData[]>([]);
   const [aHistory, setAHistory] = useState<HistoryData[]>([]);
@@ -75,7 +77,11 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <Select selectedValue={selectedHistory} onChange={changeHistory} />
-      <List historyList={historyList} selectedValue={selectedHistory} />
+      {status === 'authenticated' ? (
+        <List historyList={historyList} selectedValue={selectedHistory} />
+      ) : (
+        <Loader />
+      )}
       <Button />
     </SidebarContainer>
   );

@@ -66,6 +66,7 @@ const Question = () => {
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
+
   return (
     <Container>
       <Header>도움 요청 대기열</Header>
