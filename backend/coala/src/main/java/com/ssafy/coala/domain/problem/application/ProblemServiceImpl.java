@@ -279,7 +279,7 @@ public class ProblemServiceImpl implements ProblemService {
         }
 
         result.setCurateFromQuestionCnt(curateFromQuestionCntDto);
-        customCurateInfoRepository.saveWithTTL(result, 1);
+        customCurateInfoRepository.saveWithTTL(result, 5);
 
         return result;
     }
