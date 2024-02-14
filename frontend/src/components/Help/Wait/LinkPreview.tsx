@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { IData, IFetchData } from '@/types/Problem';
 import { instance } from '@/api/instance';
-import styles from './LinkPreview.module.scss';
 import Loader from '@/components/Common/Loader';
+import styles from './LinkPreview.module.scss';
 
 function LinkPreview({
   problemNumber,
