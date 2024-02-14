@@ -34,39 +34,50 @@ const MessageContainer = styled.div`
 interface IMessageProps {
   messageProps: string[][];
   messageSender: string;
+  messageSelect : (index:number) => void;
 }
 
-const QuestionChatting = ({ messageProps, messageSender }: IMessageProps) => {
+const QuestionChatting = ({ messageProps, messageSender, messageSelect }: IMessageProps) => {
   const sender = messageSender;
+  const handleMessageSelect = (index:number) =>{
+    messageSelect(index);
+  }
+
   return (
     <div>
       <Container>
         <MessageContainer>
-          {messageProps.map((message, index) => {
+          {
+          messageProps.map((message, index) => {
             let isFirst = false;
+            //에러남 고쳤겠지..?
             if (
               index === 0 ||
-              messageProps[index - 1][0] !== message[index][0]
+              messageProps[index - 1][0] !== message[0]
             ) {
               isFirst = true;
             }
             if (sender === message[0]) {
               return (
-                <MyMessage
+                <div onClick={() => handleMessageSelect(index)}>
+                  <MyMessage
+                    key={index}
+                    first={isFirst}
+                    message={message[1]}
+                    date=""
+                  />
+                </div>
+              );
+            }
+            return (
+              <div onClick={() => handleMessageSelect(index)}>
+                <Message
                   key={index}
                   first={isFirst}
                   message={message[1]}
                   date=""
                 />
-              );
-            }
-            return (
-              <Message
-                key={index}
-                first={isFirst}
-                message={message[1]}
-                date=""
-              />
+              </div>
             );
           })}
         </MessageContainer>
