@@ -41,7 +41,7 @@ public class ProblemScheduler {
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * *")
     public void setMaxId() throws IOException{
-        String URL = "https://www.acmicpc.net/problem/added";
+        String URL = "https://www.acmicpc.net/problemset?sort=no_desc";
         Document doc = Jsoup.connect(URL).get();
 //        System.out.println(doc);
 //        Element element = doc.select(".list_problem_id").get(0);
