@@ -8,6 +8,7 @@ import Waiting from '@/components/Home/Waiting';
 
 const SidebarContainer = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 const Container = styled.div`

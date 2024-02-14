@@ -1,25 +1,69 @@
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { useEffect, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+
+interface CoalaImageProps extends ImageProps {
+  $imgNumber: number;
+}
+
+const slideIn = keyframes`
+  from {
+    transform: translateX(-400%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(400%);
+  }
+`;
+
+const CoalaContainer = styled.div`
+  width: 80%;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+`;
+
+const CoalaImage = styled(Image)<CoalaImageProps>`
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  left: calc(50% - 100px);
+  animation: ${({ $imgNumber }) => ($imgNumber % 2 === 1 ? slideIn : slideOut)}
+    2.1s ease-in-out;
+`;
 
 const Coala = () => {
   const [imgNumber, setImgNumber] = useState<number>(1);
+
   useEffect(() => {
+    let currentNumber = 1;
     const interval = setInterval(() => {
-      const changeNumber = Math.round(Math.random() * 4) + 1;
-      setImgNumber(changeNumber);
-    }, 5000);
+      setImgNumber(currentNumber);
+      currentNumber = (currentNumber % 4) + 1;
+    }, 2000);
+
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div style={{ height: '360px' }}>
-      <Image
+    <CoalaContainer>
+      <CoalaImage
         src={`/images/wait/${imgNumber}.png`}
         alt="imgNumber"
-        width={230}
-        height={343}
-      ></Image>
-    </div>
+        width={200}
+        height={300}
+        $imgNumber={imgNumber}
+      />
+    </CoalaContainer>
   );
 };
+
 export default Coala;
