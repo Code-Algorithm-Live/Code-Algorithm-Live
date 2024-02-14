@@ -37,7 +37,6 @@ public class ProblemScheduler {
     int maxId = 0;
     //다음 저장할 문제 idx
     int curId = 0;
-    boolean isSaved = false;
 
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * *")
@@ -51,23 +50,24 @@ public class ProblemScheduler {
     }
 
     //solved.ac api의 호출제한->15분당 256번
-    //15분당225번 문제데이터를 solved.ac api에서 가져온다.
-    //분당 1500개, 15분동안 22500개의 문제를 얻는다.
-    @Scheduled(fixedRate = 60000)
+    //15분당150번 문제데이터를 solved.ac api에서 가져온다.
+    //5분마다6000개의 문제를 가져오고, 15분동안 18000개의 문제를 얻는다. 30분동안 모든문제데이터를 입력한다.
+    //2분정도 걸린다...
+    @Scheduled(fixedRate = 300000)
     public void saveProblem() {
+        long start = System.currentTimeMillis();
+        System.out.println("save start...");
         try {
             // API 호출 주소
             if (curId == 0){ //초깃값이면 db에서 가져온다.
-                curId = problemService.maxId();
+                curId = problemService.curId();
             }
             if (curId>=maxId) {
-                isSaved = true;
                 curId = 999;
-                System.out.println("save end!");
             }
 
 
-            int curIter = Math.min((isSaved)?5:15,(maxId-curId)/100+1);
+            int curIter = Math.min(60,(maxId-curId)/100+1);
 
             List<Problem> input = new ArrayList<>();
 
@@ -139,7 +139,7 @@ public class ProblemScheduler {
                 }
             }
             problemService.insertProblem(input);
-            System.out.println("Problem saved. " + curId + ":" + maxId);
+            System.out.println("Problem saved. " + curId + ":" + maxId+", time: "+(System.currentTimeMillis()-start));
 
         } catch (Exception e) {
             e.printStackTrace();
