@@ -94,18 +94,24 @@ function Form() {
           </div>
 
           <div className={styles.linkForm}>
-            <LinkPreview problemNumber={Number(problemNumber)} />
+            <LinkPreview
+              problemNumber={Number(problemNumber)}
+              loading={false}
+            />
+            <div className={styles.buttonCon}>
+              <Link href={`/help/wait`}>
+                <button className={styles.editPageButton}>뒤로가기</button>
+              </Link>
+              <Link href={`/help/wait`}>
+                <button
+                  className={styles.editPageButton}
+                  onClick={handleUpdate}
+                >
+                  확인
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className={styles.buttonCon}>
-          <Link href={`/help/wait`}>
-            <button className={styles.editPageButton}>뒤로가기</button>
-          </Link>
-          <Link href={`/help/wait`}>
-            <button className={styles.editPageButton} onClick={handleUpdate}>
-              확인
-            </button>
-          </Link>
         </div>
       </div>
     </div>
