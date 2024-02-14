@@ -1,10 +1,7 @@
 server:
   port: 8080
-#  ssl:
-#    enabled: true
-#    key-store: src/main/resources/cert_key.p12
-#    key-store-password: a709
-
+  servlet:
+    context-path: /api/v1
 
 spring:
   redis:
