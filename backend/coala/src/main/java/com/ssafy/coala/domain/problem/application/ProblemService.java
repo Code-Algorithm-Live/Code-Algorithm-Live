@@ -14,4 +14,5 @@ public interface ProblemService {
     public List<Integer> getProblemByMember(String solvedId);
 //    public List<String> getSolvedIdByProblem(int problemId);
 //    public List<String> getRecentMemberByProblem(int problemId);
+    public void questionCntIncrease(int id);
 }

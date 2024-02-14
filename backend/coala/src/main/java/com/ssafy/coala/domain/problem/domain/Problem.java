@@ -28,6 +28,8 @@ public class Problem {
     private boolean give_no_rating;
     private float average_tries;
     private String description;
+
+    @Column(updatable = false, columnDefinition = "int default 0" )
     private int question_cnt;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
