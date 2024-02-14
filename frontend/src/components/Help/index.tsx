@@ -1,10 +1,11 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import TextInput from '@/components/Common/TextInput';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
+// import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from '@/components/Help/index.module.scss';
 import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
@@ -17,12 +18,10 @@ import useHelpRequestStore from '@/store/helpRequest';
 
 function Form() {
   const { data: session } = useSession();
-  const router = useRouter();
   const [problemNumber, setProblemNumber] = useState<string>('');
   const [formTitle, setFormTitle] = useState<string>('');
   const [formContent, setFormContent] = useState<string>('');
   const [middleNumber, setMiddleNumber] = useState<string>('');
-  const { data: session } = useSession();
   const { setZustandProblemNumber } = useProblemNumberStore();
   const { setZustandTitle, setZustandContent } = useProblemInfoStore();
   const { setZustandStartTime } = useStopwatchStore();
@@ -30,6 +29,7 @@ function Form() {
   const debouncedNumber = useDebounce(middleNumber, 2000);
   const [problemNum, setProblemNum] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   type FetchRegistHelpRequest = {
     sender: Sender;
@@ -93,6 +93,9 @@ function Form() {
       .post<FetchRegistHelpRequest>('/help/waitqueue', data)
       // eslint-disable-next-line no-console
       .catch(Err => console.error(Err));
+
+    // TODO: 페이지 이동
+    router.push('/help/wait');
   };
 
   useEffect(() => {
@@ -116,35 +119,25 @@ function Form() {
               제목*
             </TextInput>
             <QuillEditor onChange={handleChangeContent} />
-            <div className={styles.buttonCon}>
-              {problemNumber !== '' &&
-              formContent !== '' &&
-              formTitle !== '' ? (
-                <Link href={`/help/wait`}>
-                  <button
-                    className={styles.helpSubmitButton}
-                    type="submit"
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    onClick={handleSubmit}
-                  >
-                    제출
-                  </button>
-                </Link>
-              ) : (
-                <button
-                  className={styles.disabledSubmitButton}
-                  type="submit"
-                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                  onClick={handleSubmit}
-                  disabled
-                >
-                  제출
-                </button>
-              )}
-            </div>
           </div>
-          <div className={styles.linkForm}>
-            <LinkPreview problemNumber={Number(problemNumber)} />
+          <div>
+            <div className={styles.linkForm}>
+              <LinkPreview
+                problemNumber={Number(problemNumber)}
+                loading={loading}
+              />
+            </div>
+            <div className={styles.buttonCon}>
+              <button
+                className={styles.helpSubmitButton}
+                type="submit"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={handleSubmit}
+                disabled={isSubmitDisabled}
+              >
+                제출
+              </button>
+            </div>
           </div>
         </div>
       </div>

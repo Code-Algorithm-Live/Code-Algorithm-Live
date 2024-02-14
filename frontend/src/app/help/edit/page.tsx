@@ -1,3 +1,5 @@
+import Form from '@/components/Help/Edit/index';
+
 export default function Edit() {
-  return <h1>Edit</h1>;
+  return <Form />;
 }
