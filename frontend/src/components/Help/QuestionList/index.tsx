@@ -8,43 +8,40 @@ import Pagination from '@/components/Help/QuestionList/Pagination';
 import QuestionBoard from '@/components/Help/QuestionList/QuestionBoard';
 import styles from '@/components/Help/QuestionList/index.module.scss';
 import { HistoryList } from '@/types/Chat';
+import useProblemNumberStore from '@/store/problemNumber';
 
-const getProblemNumber = () => {
-  if (typeof window === 'undefined') return '0';
-  return localStorage.getItem('problemNumber');
-};
+// const getProblemNumber = () => {
+//   if (typeof window === 'undefined') return '0';
+//   return localStorage.getItem('problemNumber');
+// };
 
 function Form() {
-  const [problemHistoryList, setProblemHistoryList] =
-    useState<HistoryListData>();
+  const [problemHistoryList, setProblemHistoryList] = useState<HistoryList[]>();
   const [currentPage, setCurrentPage] = useState(1);
-  const problemNumber = getProblemNumber() as string;
-  const problemId = Number(problemNumber);
-  interface HistoryListData {
-    data: HistoryList[];
-  }
+  const { zustandProblemNumber } = useProblemNumberStore();
+  const problemNumber = zustandProblemNumber;
   useEffect(() => {
     instance
-      .get<HistoryListData>(`/chat/history/list/${problemId}`)
-      .then(({ data }: { data: HistoryListData }) =>
-        setProblemHistoryList(data),
-      )
+      .get<HistoryList[]>(`/chat/history/list/${Number(problemNumber)}`)
+      .then(({ data }: { data: HistoryList[] }) => setProblemHistoryList(data))
       // eslint-disable-next-line no-console
       .catch(Error => console.log(Error));
-  }, [problemId]);
+  }, [problemNumber]);
 
   let currentPageData: HistoryList[] = [];
   let totalPage = 0;
 
-  if (!problemHistoryList || !problemHistoryList.data) {
+  const numberProps: string = `${problemNumber}번 문제`;
+
+  if (!problemHistoryList) {
     return (
       <div>
         <strong>
-          <NavBar sort={problemNumber} />
+          <NavBar sort={numberProps} />
         </strong>
         <div className={styles.container}>
           <div className={styles.sort}>질문 히스토리 보기</div>
-          <div>질문 히스토리가 없습니다.</div>
+          <div className={styles.description}>질문 히스토리가 없습니다.</div>
         </div>
       </div>
     );
@@ -60,16 +57,16 @@ function Form() {
   // 현재 페이지 데이터 계산
   const startIndex: number = (currentPage - 1) * limit;
   let endIndex: number = startIndex + limit;
-  if (endIndex > problemHistoryList.data.length) {
-    endIndex = problemHistoryList.data.length;
+  if (endIndex > problemHistoryList.length) {
+    endIndex = problemHistoryList.length;
   }
-  currentPageData = problemHistoryList.data.slice(startIndex, endIndex);
-  totalPage = Math.ceil(problemHistoryList.data.length / limit);
+  currentPageData = problemHistoryList.slice(startIndex, endIndex);
+  totalPage = Math.ceil(problemHistoryList.length / limit);
 
   return (
     <div>
       <strong>
-        <NavBar sort={problemNumber} />
+        <NavBar sort={numberProps} />
       </strong>
       <div className={styles.container}>
         <div className={styles.sort}>질문 히스토리 보기</div>
