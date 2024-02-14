@@ -116,14 +116,9 @@ public class ChatRoomController {
         }
     }
 
-//
-//    @Operation(summary = "채팅방 id로 방정보 받기", description = "채팅방 id로 끝난 채팅방정보 호출")
-//    @GetMapping("history/room/{roomUuid}")
-//    public ResponseEntity<HistoryRoomDto> findHistoryByRoomId(@PathVariable UUID roomUuid){
-//        try {
-//            return null;
-//        } catch (Exception e){
-//            return ResponseEntity.internalServerError().body(null);
-//        }
-//    }
+    public ResponseEntity<String> activeCloseRoom(){
+
+        return ResponseEntity.ok("close");
+    }
+
 }
