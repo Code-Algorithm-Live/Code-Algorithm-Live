@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import { instance } from '@/api/instance';
 import NicknameInput from './NicknameInput';
 
 interface UserNameProps {
@@ -24,15 +25,14 @@ const Nickname: React.FC<UserNameProps> = ({
         return;
       }
       // 중복 확인 요청 api
-      const response = await fetch(
-        `http://localhost:8080/member/dupcheck/${text}`,
+      const response = await instance.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/member/dupcheck/${text}`,
       );
-
-      if (response.ok) {
-        const data = (await response.json()) as boolean;
-
-        setfetchResult(data);
-        onSuceessFetchData(data);
+      if (response) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setfetchResult(response.data);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        onSuceessFetchData(response.data);
       }
     } catch (error) {
       setfetchResult(true);

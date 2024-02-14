@@ -179,6 +179,8 @@ const SignUp = () => {
           nicknameRef.current.value,
           solvedIdRef.current.value,
         );
+      } else {
+        alert('상태 메시지와 문자열이 일치하지 않습니다.');
       }
     }
   };

@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const StyledSelectContainer = styled.select`
@@ -27,7 +27,7 @@ const StyledOption = styled.option`
 
 interface SelectProps {
   selectedValue: string;
-  onChange: (event: { target: { value: SetStateAction<string> } }) => void;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const Select: React.FC<SelectProps> = ({ selectedValue, onChange }) => {
