@@ -7,7 +7,6 @@ import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import com.ssafy.coala.domain.problem.dao.ProblemRepository;
 import com.ssafy.coala.domain.problem.domain.*;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -263,15 +261,15 @@ public class ProblemServiceImpl implements ProblemService {
         return memberProblemRepository.findProblemIdBySolvedId(solvedId);
     }
 
-    @Override
-    public List<String> getSolvedIdByProblem(int problemId) {
-        return memberProblemRepository.findSolveIdByProblemId(problemId);
-    }
+//    @Override
+//    public List<String> getSolvedIdByProblem(int problemId) {
+//        return memberProblemRepository.findSolveIdByProblemId(problemId);
+//    }
 
-    @Override
-    public List<String> getRecentMemberByProblem(int problemId) {
-        return memberProblemRepository.findSolveIdByProblemId(problemId);
-    }
+//    @Override
+//    public List<String> getRecentMemberByProblem(int problemId) {
+//        return memberProblemRepository.findRecentNickNameByProblemId(problemId);
+//    }
 
     public void updateMemberProblem(List<Integer> problems, List<String[]> recentProblemStr, Member member){
         long start = System.currentTimeMillis();

@@ -1,13 +1,18 @@
 server:
   port: 8080
+#  ssl:
+#    enabled: true
+#    key-store: src/main/resources/cert_key.p12
+#    key-store-password: a709
+
 
 spring:
   redis:
-#     host: 127.0.0.1
+    #  host: 127.0.0.1
      host: i10a709.p.ssafy.io
      port: 6379
   datasource:
-#     url: jdbc:mariadb://localhost:3306/security
+    #  url: jdbc:mariadb://localhost:3306/security
      url: jdbc:mariadb://i10a709.p.ssafy.io:3306/security
      username: root
      password: root
@@ -21,7 +26,7 @@ spring:
 #    show-sql: true
     hibernate:
         ddl-auto: update
-
+      
 
 
   mvc:
@@ -39,3 +44,5 @@ spring:
 file:
   upload:
     directory: C:/coala/data/
+    
+
