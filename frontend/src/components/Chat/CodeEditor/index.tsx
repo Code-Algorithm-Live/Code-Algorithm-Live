@@ -13,7 +13,12 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import yorkie, { DocEventType, EditOpInfo, OperationInfo } from 'yorkie-js-sdk';
+import yorkie, {
+  DocEventType,
+  EditOpInfo,
+  OperationInfo,
+  Text,
+} from 'yorkie-js-sdk';
 
 import { fetchCreateCodeHistory } from '@/api/chat';
 import { History, YorkieDoc } from '@/components/Chat/CodeEditor/type';
@@ -40,22 +45,28 @@ const editorTheme = EditorView.theme({
   },
 });
 
+const DEFAULT_CODE = `
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}`;
 const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
-const DOC_NAME = `hamster-${new Date()
-  .toISOString()
-  .substring(0, 10)
-  .replace(/-/g, '')}`;
 const MAX_HISTORY = 10;
 
-const CodeEditor = () => {
+const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
+  const { roomId } = useParams<{ roomId: string }>();
+  const DOC_NAME = `${roomId}-${new Date()
+    .toISOString()
+    .substring(0, 10)
+    .replace(/-/g, '')}`;
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
   const [eleOffset, setEleOffset] = useState({ width: '', height: '' });
   const [history, setHistory] = useState<History[]>([]);
-  const { roomId } = useParams<{ roomId: string }>();
   const createHistoryMutation = useMutation({
     mutationFn: fetchCreateCodeHistory,
   });
@@ -168,7 +179,19 @@ const CodeEditor = () => {
       });
     };
 
-    const attachDoc = async () => {
+    const attachDoc = async ({
+      onRemoteChange,
+      onDocChange,
+    }: {
+      onRemoteChange: ({
+        preStr,
+        nextStr,
+      }: {
+        preStr: string;
+        nextStr: string;
+      }) => void;
+      onDocChange: (content: string) => void;
+    }) => {
       await client.activate();
 
       await client.attach(doc);
@@ -176,7 +199,8 @@ const CodeEditor = () => {
       doc.update(root => {
         if (!root.content) {
           // eslint-disable-next-line no-param-reassign
-          root.content = new yorkie.Text();
+          root.content = new Text();
+          root.content.edit(0, 0, DEFAULT_CODE);
         }
       }, 'create content if not exists');
 
@@ -184,23 +208,40 @@ const CodeEditor = () => {
         if (event.type === DocEventType.Snapshot) syncText();
       });
 
-      // remote change 이벤트 발생
       doc.subscribe('$.content', event => {
+        if (event.type === DocEventType.LocalChange) {
+          onDocChange(doc.getRoot().content.toString());
+        }
+
+        // remote change 이벤트 발생
         if (event.type === DocEventType.RemoteChange) {
           const { operations } = event.value;
           handleOperations(operations);
-          // FIXME: remote change발생시 history 추가
           const nextStr = doc.getRoot().content.toString();
-          handleAddHistory({ preStr: preContent.current, nextStr });
+          onRemoteChange({ preStr: preContent.current, nextStr });
+          onDocChange(doc.getRoot().content.toString());
         }
       });
 
       await client.sync();
       syncText();
+
+      onDocChange(doc.getRoot().content.toString());
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    attachDoc();
+    attachDoc({
+      onRemoteChange: ({
+        preStr,
+        nextStr,
+      }: {
+        preStr: string;
+        nextStr: string;
+      }) => handleAddHistory({ preStr, nextStr }),
+      onDocChange: (content: string) => {
+        onChange(content);
+      },
+    });
   }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
