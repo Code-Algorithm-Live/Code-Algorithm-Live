@@ -35,7 +35,9 @@ public class ProblemServiceImpl implements ProblemService {
     MemberRepository memberRepository;
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public void insertProblem(List<Problem> list) {
+        list.sort(Comparator.comparingInt(Problem::getId));
         Map<String, ProblemInfo>[] mapArr = (Map<String, ProblemInfo>[])new Map[31];
         for (int i=1; i<=30; i++){
             mapArr[i] = (Map) redisTemplate.opsForHash().entries("level:"+i);
@@ -44,20 +46,25 @@ public class ProblemServiceImpl implements ProblemService {
 
         for (Problem p:list){
             if (p.getLevel()==0) continue;
-            mapArr[p.getLevel()].put(p.getId().toString(), new ProblemInfo(p));
+            for (ProblemLanguage pl:p.getLanguages()){
+                if (pl.getLanguage().equals("ko"))
+                    mapArr[p.getLevel()].put(p.getId().toString(), new ProblemInfo(p));
+            }
         }
 
         for (int i=1; i<=30; i++){
             redisTemplate.opsForHash().putAll("level:"+i, mapArr[i]);
             Map<Object, Object> map = redisTemplate.opsForHash().entries("level:"+i);
         }
+        redisTemplate.opsForValue().set("curId:" ,list.get(list.size()-1).getId());
 
         problemRepository.saveAll(list);
     }
 
     @Override
-    public Integer maxId() {
-        return problemRepository.findMaxId();
+    public Integer curId() {
+        Integer id = (Integer) redisTemplate.opsForValue().get("curId:");
+        return (id==null)?999:id;
     }
 
     @Override
@@ -121,10 +128,12 @@ public class ProblemServiceImpl implements ProblemService {
         }
         return result;
     }
+
+    @SuppressWarnings("unchecked")
     @Override
     @Transactional
     public CurateInfo getCurateProblem(String solvedId) {
-        long startTime = System.currentTimeMillis();
+
         //check updateTime
         CurateInfo curateInfo = customCurateInfoRepository.findById(solvedId);
         if (curateInfo != null){
@@ -134,23 +143,21 @@ public class ProblemServiceImpl implements ProblemService {
 
         List<String[]> recentProblemStr = getRecentProblem(solvedId);
         List<Integer> problemIds = getProblem(solvedId);
-
         Member member = memberRepository.findBySolvedId(solvedId);
-
+        long start = System.currentTimeMillis();
         //update MemberProblem data
         if (member.getId()==null) return null;
         updateMemberProblem(problemIds, recentProblemStr, member);
+        System.out.println(System.currentTimeMillis()-start);
 
-        System.out.println(System.currentTimeMillis()-startTime);
         //curating
         List<Integer> recentId = new ArrayList<>();
         for (int i=0; i<Math.min(5, recentProblemStr.size()); i++){
             recentId.add(Integer.parseInt(recentProblemStr.get(i)[0]));
         }
 
-
         List<Problem> recentProblem = problemRepository.findAllById(recentId);
-
+        System.out.println("size:"+recentProblem.size());
         int maxLV = 0;
 
         Map<String, Integer> recentTag = new HashMap<>();
@@ -160,45 +167,43 @@ public class ProblemServiceImpl implements ProblemService {
                 if (recentTag.containsKey(t.getName())) {
                     recentTag.put(t.getName(), recentTag.get(t.getName())+1);
                 } else recentTag.put(t.getName(), 1);
+            }
+        }
+
+        Map<Integer, ProblemInfo>[] rangedProblemArr = new Map[31];
+        int low = 1;
+        int high = 5;
+        if (maxLV>4){
+            low = maxLV-3;
+            high = Math.min(maxLV+1, 30);
+        }
+
+        for (int i=low; i<=high; i++){
+            rangedProblemArr[i] = new LinkedHashMap<>();
+
+            Map<Object, Object> map = redisTemplate.opsForHash().entries("level:"+i);
+
+            for (Map.Entry<Object, Object> entry:map.entrySet()){
+                int key = Integer.parseInt((String)entry.getKey());
+                if (problemIds.contains(key)) continue;
+                rangedProblemArr[i].put(key,(ProblemInfo) entry.getValue());
+
 
             }
         }
-        System.out.println(System.currentTimeMillis()-startTime);
 
-        List<Problem> rangedProblem = null;
-        if (maxLV<4){
-            rangedProblem = problemRepository.findProblemsByLevelRange(1, 5);
-        } else {
-            rangedProblem = problemRepository.findProblemsByLevelRange(maxLV-3, maxLV+1);
-        }
-        System.out.println(System.currentTimeMillis()-startTime);
-        rangedProblem = rangedProblem.
-                stream().filter(x->{
-                    if (x.isGive_no_rating()) return false;
-
-                    for (ProblemLanguage language:x.getLanguages()){
-                        if (language.getLanguage().equals("ko")) return true;
-                    }
-                    return false;
-                }).
-                collect(Collectors.toList());
-
-        //        sort되어있나?
-        rangedProblem.sort(Comparator.comparingInt(Problem::getId));
-//        System.out.println(rangedProblem.size());
-        //이미 푼 문제 제거
-        rangedProblem = rangedProblemFiltering(rangedProblem, problemIds);
-//        System.out.println(rangedProblem.size());
-
+        //유사도 추천
         List<ProblemSimilarity> listPS = new ArrayList<>();//유사도 리스트
 
-        for (Problem p: rangedProblem){
-            Map<String, Integer> tag = new HashMap<>();
-            for (Tag t: p.getTags()){
-                tag.put(t.getName(), 1);
+        for (int i=low; i<=high; i++){
+            for (Map.Entry<Integer, ProblemInfo> entry:rangedProblemArr[i].entrySet()){
+                Map<String, Integer> tag = new HashMap<>();
+                for (String tagName: entry.getValue().getTags()){
+                    tag.put(tagName, 1);
+                }
+                double similarity = calculateCosineSimilarity(tag, recentTag);
+                if (similarity>0) listPS.add(new ProblemSimilarity(entry.getKey(), similarity));
             }
-            double similarity = calculateCosineSimilarity(tag, recentTag);
-            if (similarity>0) listPS.add(new ProblemSimilarity(p.getId(), similarity));
 
         }
 
@@ -207,46 +212,54 @@ public class ProblemServiceImpl implements ProblemService {
         //정해진 구간에서 랜덤하게
         listPS.sort(Comparator.comparingDouble(x -> x.value));
 
-        //filtering
-        listPS = listPS.stream().
-                filter(x -> x.value>0).
-                collect(Collectors.toList());
-
-        List<ProblemDto> curateFromRecent = new ArrayList<>();
+        List<ProblemDto> curateFromRecentDto = new ArrayList<>();
         List<Integer> curateFromRecentIds = new ArrayList<>();
 
+        //
         for (int i=0; i<Math.min(20, listPS.size()); i++){
-            int idx = binarySearchProblem(rangedProblem, listPS.get(i).id);
-            curateFromRecentIds.add(idx);
-            curateFromRecent.add(new ProblemDto(rangedProblem.get(idx)));
+            curateFromRecentIds.add(listPS.get(i).id);
         }
-
+        System.out.println(System.currentTimeMillis()-start);
+        List<Problem> curateFromRecent = problemRepository.findAllById(curateFromRecentIds);
+        for (Problem p:curateFromRecent){
+            curateFromRecentDto.add(new ProblemDto(p));
+        }
+        System.out.println(System.currentTimeMillis()-start);
         CurateInfo result = new CurateInfo();
         result.setId(solvedId);
-        result.setCurateFromRecent(curateFromRecent);
-
-        curateFromRecentIds.sort(Comparator.naturalOrder());
+        result.setCurateFromRecent(curateFromRecentDto);
 
         //친구가 푼 문제 확인 -> 차후 구현
         //join 많이 필요.. 버리자!
-
         //filtering 후 counting data 주기
-        rangedProblem = rangedProblemFiltering(rangedProblem, curateFromRecentIds);
-        rangedProblem = rangedProblem.
-                stream().filter(x -> x.getQuestion_cnt()>0).
-                collect(Collectors.toList());
-        rangedProblem.sort(Comparator.comparingInt(Problem::getQuestion_cnt));
-
-        List<ProblemDto> curateFromQuestionCnt = new ArrayList<>();
-        for (int i=0; i<Math.min(20, rangedProblem.size()); i++){
-            curateFromQuestionCnt.add(new ProblemDto(rangedProblem.get(i)));
+        for (int ids: curateFromRecentIds){
+            for (int i=low; i<=high; i++){
+                if (rangedProblemArr[i].remove(ids)!=null) break;;
+            }
         }
-        result.setCurateFromQuestionCnt(curateFromQuestionCnt);
+        List<Integer[]> quesionCntList = new ArrayList<>();
+        for (int i=low; i<=high; i++){
+            for (Map.Entry<Integer, ProblemInfo> entry:rangedProblemArr[i].entrySet()){
+                if (entry.getValue().getQuestionCnt()>0){
+                    quesionCntList.add(new Integer[]{entry.getKey(), entry.getValue().getQuestionCnt()});
+                }
+            }
+        }
+        quesionCntList.sort(Comparator.comparingInt(x->-x[1]));
+        List<Integer> questionCntListIds = new ArrayList<>();
 
+        List<Problem> curateFromQuestionCnt = problemRepository.findAllById(questionCntListIds);
+        List<ProblemDto> curateFromQuestionCntDto = new ArrayList<>();
+        for (Problem p: curateFromQuestionCnt){
+            curateFromQuestionCntDto.add(new ProblemDto(p));
+        }
+
+        result.setCurateFromQuestionCnt(curateFromQuestionCntDto);
         customCurateInfoRepository.saveWithTTL(result, 1);
-        System.out.println(System.currentTimeMillis()-startTime);
+
         return result;
     }
+
 
     @Override
     public List<Integer> getProblemByMember(String solvedId) {
@@ -289,8 +302,6 @@ public class ProblemServiceImpl implements ProblemService {
     public void updateMemberProblem(List<Integer> problems, List<String[]> recentProblemStr, Member member){
         //recentProblem에 있다면 save
         //problem에 있지만 preProblem에 없다면 save
-
-
         List<MemberProblem> preProblem = memberProblemRepository.findByMemberId(member.getId());
         List<MemberProblem> saveProblem = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

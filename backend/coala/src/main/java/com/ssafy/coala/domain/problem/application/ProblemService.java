@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProblemService {
     public void insertProblem(List<Problem> list);
-    public Integer maxId();
+    public Integer curId();
     public Problem getProblem(int id);
     public  void updateDescriptionById(int id, String description);
     public CurateInfo getCurateProblem(String solvedId);

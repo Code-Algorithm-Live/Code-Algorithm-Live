@@ -13,7 +13,7 @@ import lombok.*;
         @Index(columnList = "problem_id")})
 public class Tag {
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
