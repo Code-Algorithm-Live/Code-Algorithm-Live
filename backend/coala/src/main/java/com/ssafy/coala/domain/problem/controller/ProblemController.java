@@ -80,6 +80,7 @@ public class ProblemController {
     public ResponseEntity<ProblemDto> getProblem(@Parameter(description = "problemId", required = true, example = "1000")
                                                   @PathVariable int problemId){
         Problem problem = problemService.getProblem(problemId);
+//        problemService.questionCntIncrease(problemId);
         if (problem!=null){
             if (problem.getDescription()==null){
                 try {
