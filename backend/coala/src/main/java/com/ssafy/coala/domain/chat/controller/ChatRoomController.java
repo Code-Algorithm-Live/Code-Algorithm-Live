@@ -116,9 +116,9 @@ public class ChatRoomController {
         }
     }
 
-    public ResponseEntity<String> activeCloseRoom(){
 
-        return ResponseEntity.ok("close");
-    }
+//    public ResponseEntity<String> activeCloseRoom(){
+//        return ResponseEntity.ok("close");
+//    }
 
 }

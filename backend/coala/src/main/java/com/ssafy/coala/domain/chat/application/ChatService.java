@@ -170,7 +170,16 @@ public class ChatService {
     }
 
     public void closeRoom(UUID roomId){
-
+        chatRoomRepository.updateIsCloseByRoomId(roomId);
     }
+
+    public void closeRooms(List<UUID> roomIds){
+        chatRoomRepository.updateIsCloseByRoomIds(roomIds);
+    }
+    public List<UUID> closableRoomIds(){
+        return chatRoomRepository.findCloseRoomID();
+    }
+
+
 
 }

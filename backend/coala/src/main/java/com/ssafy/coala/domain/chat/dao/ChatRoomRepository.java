@@ -27,4 +27,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID> {
     @Modifying
     @Query("update chatRoom set isClose = true where roomId = :roomId")
     void updateIsCloseByRoomId(@Param("roomId") UUID roomId);
+
+    @Transactional
+    @Modifying
+    @Query("update chatRoom set isClose = true where roomId in :roomIds")
+    void updateIsCloseByRoomIds(@Param("roomIds")List <UUID> roomIds);
+
+    @Query("select c.roomId from chatRoom c where c.isClose = false")
+    List<UUID> findCloseRoomID();
 }
