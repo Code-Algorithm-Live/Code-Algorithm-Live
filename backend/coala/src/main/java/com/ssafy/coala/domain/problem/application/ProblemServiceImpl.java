@@ -7,7 +7,6 @@ import com.ssafy.coala.domain.problem.dao.MemberProblemRepository;
 import com.ssafy.coala.domain.problem.dao.ProblemRepository;
 import com.ssafy.coala.domain.problem.domain.*;
 import com.ssafy.coala.domain.problem.dto.ProblemDto;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -263,15 +261,15 @@ public class ProblemServiceImpl implements ProblemService {
         return memberProblemRepository.findProblemIdBySolvedId(solvedId);
     }
 
-    @Override
-    public List<String> getSolvedIdByProblem(int problemId) {
-        return memberProblemRepository.findSolveIdByProblemId(problemId);
-    }
+//    @Override
+//    public List<String> getSolvedIdByProblem(int problemId) {
+//        return memberProblemRepository.findSolveIdByProblemId(problemId);
+//    }
 
-    @Override
-    public List<String> getRecentMemberByProblem(int problemId) {
-        return memberProblemRepository.findSolveIdByProblemId(problemId);
-    }
+//    @Override
+//    public List<String> getRecentMemberByProblem(int problemId) {
+//        return memberProblemRepository.findRecentNickNameByProblemId(problemId);
+//    }
 
     public void updateMemberProblem(List<Integer> problems, List<String[]> recentProblemStr, Member member){
         long start = System.currentTimeMillis();
@@ -282,7 +280,8 @@ public class ProblemServiceImpl implements ProblemService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        DB는 sort되어있나?
         preProblem.sort(Comparator.comparingInt(x -> x));
-        System.out.println(System.currentTimeMillis()-start);
+
+//        System.out.println(System.currentTimeMillis()-start);
         //문제 데이터 갱신하기
         if (preProblem.isEmpty()){ //계정에 문제 데이터 없다면...
             for (Integer id : problems) {
@@ -333,12 +332,13 @@ public class ProblemServiceImpl implements ProblemService {
                 }
             }
         }
-        System.out.println(System.currentTimeMillis()-start);
+//        System.out.println(System.currentTimeMillis()-start);
 
-        System.out.println(System.currentTimeMillis()-start);
-
+        //1초 걸림
         memberProblemRepository.saveAll(saveProblem);
-        System.out.println(System.currentTimeMillis()-start);
+//        System.out.println(System.currentTimeMillis()-start);
+        //save시 최악의 경우 맞은문제 10문제당 1초정도 걸리는것 같다...
+        //문제수가 많을경우 100문제당 4초정도로 나아지나?
     }
 
     public static double calculateCosineSimilarity(Map<String, Integer> vectorA, Map<String, Integer> vectorB) {
@@ -367,26 +367,6 @@ public class ProblemServiceImpl implements ProblemService {
         } else {
             return dotProduct / (Math.sqrt(magnitudeA) * Math.sqrt(magnitudeB));
         }
-    }
-
-    public static int binarySearchProblem(List<Problem> problems, int targetId) {
-        int low = 0;
-        int high = problems.size() - 1;
-
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            int midId = problems.get(mid).getId();
-
-            if (midId < targetId) {
-                low = mid + 1;
-            } else if (midId > targetId) {
-                high = mid - 1;
-            } else {
-                return mid; // ID found at index mid
-            }
-        }
-
-        return -1; // ID not found
     }
 
     public static int binarySearch(List<MemberProblem> list, int key) {

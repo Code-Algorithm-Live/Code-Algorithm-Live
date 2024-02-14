@@ -56,7 +56,7 @@ public class ProblemController {
         return ResponseEntity.ok(doc.toString());
     }
 
-    @Operation(summary = "푼 문제 리스트", description = "해당 유저가 푼 전체 문제번호리스트를 가져온다.")
+    @Operation(summary = "푼 문제 리스트", description = "해당 유저가 푼 전체 문제번호리스트를 가져온다.(느림!)")
     @GetMapping("problem/{solvedId}")
     public ResponseEntity<List<Integer>> getProblemByMember(@Parameter(description = "solvedId", required = true, example = "col016")
                                                             @PathVariable String solvedId){
@@ -99,9 +99,9 @@ public class ProblemController {
         return ResponseEntity.ok(null);
     }
 
-    @Operation(summary = "문제정보조회", description = "해당 문제 하나에 대한 정보만 조회한다.")
-    @GetMapping("recent/{problemId}")
-    public ResponseEntity<List<String>> recentMemberByProblem(@PathVariable int problemId){
-        return ResponseEntity.ok(problemService.getRecentMemberByProblem(problemId));
-    }
+//    @Operation(summary = "문제 푼사람 조회", description = "해당 문제를 최근 푼 사람의 닉네임을 조회한다.")
+//    @GetMapping("recent/{problemId}")
+//    public ResponseEntity<List<String>> recentMemberByProblem(@PathVariable int problemId){
+//        return ResponseEntity.ok(problemService.getRecentMemberByProblem(problemId));
+//    }
 }
