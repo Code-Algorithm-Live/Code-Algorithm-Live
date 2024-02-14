@@ -6,8 +6,12 @@ import { useRouter } from 'next/navigation';
 const StyledButton = styled.button`
   border-radius: 10px;
   height: 45px;
+  width: 200px;
   margin-bottom: 0px;
   background-color: var(--sub-color);
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
 
   font-family: Pretendard;
   font-size: 18px;

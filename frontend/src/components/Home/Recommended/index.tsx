@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import ProblemList from '@/components/Home/Recommended/ProblemList';
+import Loader from '@/components/Common/Loader';
 
 type ApiResponse = {
   curateFromQuestionCnt: {
@@ -17,6 +18,7 @@ type ApiResponse = {
 };
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 30px 50px 50px 50px;
@@ -32,6 +34,7 @@ const Header = styled.span`
 
 const Recommended = () => {
   const { data: session, status } = useSession();
+
   const [problems, setProblems] = useState<
     Array<{
       summary: string;
@@ -99,11 +102,13 @@ const Recommended = () => {
 
   return (
     <Container>
-      {status === 'authenticated' && (
+      {status === 'authenticated' ? (
         <>
           <Header>{session?.user?.name}님을 위한 문제 추천</Header>
           <ProblemList problems={problems} />
         </>
+      ) : (
+        <Loader />
       )}
     </Container>
   );
