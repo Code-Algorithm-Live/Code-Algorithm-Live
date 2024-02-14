@@ -4,14 +4,25 @@ import { useState, useEffect } from 'react';
 import { IData, IFetchData } from '@/types/Problem';
 import { instance } from '@/api/instance';
 import styles from './LinkPreview.module.scss';
+import Loader from '@/components/Common/Loader';
 
-function LinkPreview({ problemNumber }: { problemNumber: number }) {
+function LinkPreview({
+  problemNumber,
+  loading,
+}: {
+  problemNumber: number;
+  loading: boolean;
+}) {
   const [sorts, setSorts] = useState('???,???,???');
   const [link, setLink] = useState('relative-0');
   const [problem, setProblem] = useState<IData | null>(null);
 
   useEffect(() => {
-    if (problemNumber !== 0 && problemNumber !== problem?.id) {
+    if (
+      problemNumber >= 1000 &&
+      problemNumber <= 31401 &&
+      problemNumber !== problem?.id
+    ) {
       instance
         .get<IFetchData>(`/problem/${problemNumber}`)
         .then(({ data }: { data: IFetchData }) => {
@@ -29,6 +40,13 @@ function LinkPreview({ problemNumber }: { problemNumber: number }) {
     }
   }, [problemNumber, problem?.id]);
 
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        <Loader />
+      </div>
+    );
+  }
   if (problem !== null) {
     const imgurl = `/images/problemLevel/${link}.svg`;
     const handleClickLevel = () => {
@@ -102,7 +120,8 @@ function LinkPreview({ problemNumber }: { problemNumber: number }) {
   }
   return (
     <div className={styles.unknown}>
-      <div>문제 번호를 입력하세요</div>
+      <span>문제 번호를 입력하세요</span>
+      <span>1000번 ~ 31401번</span>
     </div>
   );
 }
