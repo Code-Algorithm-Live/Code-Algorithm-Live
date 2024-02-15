@@ -81,10 +81,10 @@ const Sidebar = () => {
         let setHistoryChange;
 
         if (selectedHistory === 'question') {
-          endpoint = `/chat/history/sender/${session?.user.email}`;
+          endpoint = `/chat/history/sender/${session?.user.name}`;
           setHistoryChange = setQHistory;
         } else {
-          endpoint = `/chat/history/receiver/${session?.user.email}`;
+          endpoint = `/chat/history/receiver/${session?.user.name}`;
           setHistoryChange = setAHistory;
         }
 
