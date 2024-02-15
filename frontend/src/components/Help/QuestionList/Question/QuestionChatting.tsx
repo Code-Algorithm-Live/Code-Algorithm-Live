@@ -1,14 +1,16 @@
 import { styled } from 'styled-components';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-// import MyBubble from '@/components/Chat/Chatting/MyMessage';
+import QuestionBanner from '@/components/Help/QuestionList/Question/QuestionChatting/QuestionBanner';
 
 const Container = styled.div`
   position: relative;
-  height: 600px;
+  height: 550px;
   width: 30%;
   min-width: 327px;
   background: var(--editorBlack, #282a36);
+
+  overflow: hidden;
 `;
 
 const MessageContainer = styled.div`
@@ -17,6 +19,7 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
+  height: 488px;
   padding: 7px;
   overflow-y: scroll;
 
@@ -35,18 +38,14 @@ const MessageContainer = styled.div`
 interface IMessageProps {
   messageProps: string[][];
   messageSender: string;
-  messageSelect : (index:number) => void;
 }
 
-const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMessageProps) => {
+const QuestionChatting = ({ messageProps, messageSender }: IMessageProps) => {
   const sender = messageSender;
-  const handleMessageSelect = (index:number) =>{
-    messageSelect(index);
-  }
-
   return (
     <div>
       <Container>
+        <QuestionBanner />
         <MessageContainer>
           {messageProps.map((message, index) => {
             let isFirst = false;
@@ -58,25 +57,21 @@ const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMess
             }
             if (sender === message[0]) {
               return (
-                <div onClick={() => handleMessageSelect(index)}>
                 <MyMessage
                   key={index}
                   first={isFirst}
                   message={message[1]}
                   date=""
                 />
-                </div>
               );
             }
             return (
-              <div onClick={() => handleMessageSelect(index)}>
               <Message
                 key={index}
                 first={isFirst}
                 message={message[1]}
                 date=""
               />
-              </div>
             );
           })}
         </MessageContainer>
@@ -86,5 +81,3 @@ const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMess
 };
 
 export default QuestionChatting;
-
-
