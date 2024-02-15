@@ -58,6 +58,8 @@ const SidebarContainer = styled.div<SidebarContainerProps>`
     0.5s ease-in-out;
 `;
 
+const AUTHENTICATED = 'authenticated';
+
 const Sidebar = () => {
   const { data: session, status } = useSession();
   const historyBarControl = useHistorybarStore(state => state.HistoryBar);
@@ -71,6 +73,8 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
+    if (status !== AUTHENTICATED) return;
+
     const fetchData = async () => {
       try {
         let endpoint;
@@ -97,7 +101,7 @@ const Sidebar = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchData();
-  }, [selectedHistory, session?.user.email]);
+  }, [selectedHistory, status]);
 
   // 노출시킬 데이터 판별
   const historyList = selectedHistory === 'question' ? qHistory : aHistory;
