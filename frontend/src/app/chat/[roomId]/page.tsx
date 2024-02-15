@@ -9,7 +9,7 @@ import Chatting from '@/components/Chat/Chatting';
 import CodeEditor from '@/components/Chat/CodeEditor';
 import InputOutput from '@/components/Chat/InputOutput';
 import ProblemView from '@/components/Chat/ProblemView';
-import QuestionModal from '@/components/Chat/QuestionModal';
+import QuestionModal from '@/components/Chat/QuestionBanner/QuestionModal';
 import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
