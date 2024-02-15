@@ -51,7 +51,7 @@ const QuestionChatting = ({ messageProps, messageSender }: IMessageProps) => {
             let isFirst = false;
             if (
               index === 0 ||
-              messageProps[index - 1][0] !== message[index][0]
+              messageProps[index - 1][0] !== message[0]
             ) {
               isFirst = true;
             }
