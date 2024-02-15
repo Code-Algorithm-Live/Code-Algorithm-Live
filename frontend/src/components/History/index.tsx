@@ -125,6 +125,17 @@ const HistoryPage = () => {
             historyDto,
             messageDto,
           }: { historyDto: HistoryDto[]; messageDto: MessageDto[] } = data;
+          let date = new Date();
+          if (historyDto.length > 0) {
+            date = new Date(historyDto[0].time);
+            date.setSeconds(date.getSeconds() - 1);
+          }
+          historyDto.unshift({
+            idx: 120,
+            pre: '',
+            next: 'public class Main { public static void main(String[] args) { System.out.println("Hello, world!"); } } ',
+            time: date.toISOString(),
+          });
           setMessageHistory(messageDto);
           setHistoryHistory(historyDto);
         })
@@ -142,9 +153,12 @@ const HistoryPage = () => {
   };
   const handleMessageSelect = (index: number) => {
     // console.log(index, messageHistory[index].date);
-    const tarDate = messageHistory[index].date;
+    const tarDate = new Date(messageHistory[index].date);
     let i = 1;
-    while (i < historyHistory.length && historyHistory[i].time < tarDate) {
+    while (
+      i < historyHistory.length &&
+      new Date(historyHistory[i].time) < tarDate
+    ) {
       i += 1;
     }
 
