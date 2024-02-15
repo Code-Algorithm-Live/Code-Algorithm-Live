@@ -8,8 +8,11 @@ import Chatting from '@/components/Chat/Chatting';
 import CodeEditor from '@/components/Chat/CodeEditor';
 import InputOutput from '@/components/Chat/InputOutput';
 import ProblemView from '@/components/Chat/ProblemView';
+import QuestionModal from '@/components/Chat/QuestionModal';
+import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
-import QuestionBanner from '@/components/Chat/QuestionBanner';
+import { HelpForm } from '@/types/Help';
+import { useRouter } from 'next/navigation';
 
 const Container = styled.div`
   display: flex;
@@ -112,6 +115,58 @@ const CodeEditorContainer = styled.div`
   width: 100%;
 `;
 
+const QuestionBannerContainer = styled.div`
+  padding: 12px 4px;
+  background: var(--editorBlack, #282a36);
+
+  .questionBanner {
+    padding: 15px 14px;
+    min-width: 310px;
+    width: 310px;
+    min-height: 88px;
+    height: 88px;
+
+    border-radius: 4px;
+    background: var(--editorSub, #343746);
+
+    color: var(--editorTypo, #e2e1e1);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.21px;
+
+    .titleContainer {
+      margin-bottom: 8px;
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      .show {
+        border: none;
+
+        background: transparent;
+
+        color: var(--link-font-color, #0395ff);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.21px;
+      }
+    }
+    .content {
+      display: -webkit-box;
+      overflow: hidden;
+
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+    }
+  }
+`;
+
 const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -129,7 +184,9 @@ export default function Chat() {
     mutationFn: fetchPostCompiler,
     onSuccess: ({ data }) => setOutput(data),
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { helpForm } = useHelpFromStore();
+  const router = useRouter();
 
   const handleCodeEditorChange = (value: string) => setCode(value);
 
@@ -140,6 +197,19 @@ export default function Chat() {
 
     compileMutation.mutate({ code, input });
   };
+
+  const handleClickShowMore = () => {
+    setIsModalOpen(true);
+  };
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCloseRoom = () => {
+    router.push('/');
+  };
+
+  const modalData = helpForm as HelpForm;
 
   return (
     <>
@@ -152,10 +222,12 @@ export default function Chat() {
             </p>
 
             <div className="menu">
-              {/* <Timer /> */}
+              <Timer />
+
               <div className="lang">
                 <select name="" id="">
                   <option value="">java</option>
+                  <option value="">python</option>
                 </select>
               </div>
             </div>
@@ -164,11 +236,14 @@ export default function Chat() {
             <LeftContainer>
               <ProblemView />
               <div className="bottomMenuContainer">
-                <button>나가기</button>
+                <button onClick={handleCloseRoom}>나가기</button>
               </div>
             </LeftContainer>
             <CodeEditorContainer>
-              <CodeEditor onChange={handleCodeEditorChange} />
+              <CodeEditor
+                onChange={handleCodeEditorChange}
+                onCloseRoom={handleCloseRoom}
+              />
               <InputOutput
                 isRunning={compileMutation.isPending}
                 onRun={input => handleRun(input)}
@@ -179,12 +254,38 @@ export default function Chat() {
         </PairProgrammingContainer>
 
         <RightContainer>
-          <QuestionBanner helpForm={helpForm} />
+          <QuestionBannerContainer>
+            <div className="questionBanner">
+              <div className="titleContainer">
+                <p
+                  className="title"
+                  dangerouslySetInnerHTML={{
+                    __html: helpForm?.helpDto.title as TrustedHTML,
+                  }}
+                />
+                <button className="show" onClick={handleClickShowMore}>
+                  더보기
+                </button>
+              </div>
+              <p
+                className="content"
+                dangerouslySetInnerHTML={{
+                  __html: helpForm?.helpDto.content as TrustedHTML,
+                }}
+              />
+            </div>
+          </QuestionBannerContainer>
           <div className="chattingContainer">
             <Chatting />
           </div>
         </RightContainer>
       </Container>
+
+      <QuestionModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        modalData={modalData}
+      />
     </>
   );
 }
