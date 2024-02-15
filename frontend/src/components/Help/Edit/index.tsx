@@ -17,14 +17,13 @@ import useProblemNumberStore from '@/store/problemNumber';
 import useProblemInfoStore from '@/store/problemInfo';
 
 function Form() {
-  const [formTitle, setFormTitle] = useState<string>('');
-  const [formContent, setFormContent] = useState<string>('');
+  const router = useRouter();
   const { data: session } = useSession();
   const { zustandProblemNumber } = useProblemNumberStore();
-  const { setZustandTitle, setZustandContent } = useProblemInfoStore();
-
-  const router = useRouter();
-
+  const { setZustandTitle, zustandTitle, setZustandContent, zustandContent } =
+    useProblemInfoStore();
+  const [formTitle, setFormTitle] = useState<string>(zustandTitle);
+  const [formContent, setFormContent] = useState<string>(zustandContent);
   const problemNumber = zustandProblemNumber;
 
   type FetchRegistHelpRequest = {
@@ -57,16 +56,16 @@ function Form() {
     }
   }, [problemNumber, router]);
 
+  const handleChangeContent = (content: string) => {
+    setFormContent(content);
+  };
   const handleChangeTitle = (title: string) => {
     setFormTitle(title);
   };
 
-  const handleChangeContent = (content: string) => {
-    setFormContent(content);
-  };
   const handleUpdate = () => {
-    setZustandTitle(formTitle);
     setZustandContent(formContent);
+    setZustandTitle(formTitle);
 
     const data = {
       sender,
@@ -82,7 +81,7 @@ function Form() {
   return (
     <div className={styles.allContainer}>
       <div className={styles.sideBar}>
-        <HistorySideBar></HistorySideBar>
+        <HistorySideBar />
       </div>
       <div className={styles.buttonPlace}>
         <div className={styles.all}>

@@ -2,7 +2,13 @@
 
 import { Client } from '@stomp/stompjs';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { styled } from 'styled-components';
 import Input from '@/components/Chat/Chatting/Input';
 import Message from '@/components/Chat/Chatting/Message';
@@ -60,13 +66,17 @@ const getHourMinutes = (timeStamp: Date) => {
   return `${timeStamp.getHours()}:${timeStamp.getMinutes()}`;
 };
 
-const Chatting = () => {
+// eslint-disable-next-line react/display-name
+const Chatting = forwardRef((_, ref) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<IMessage[]>([]);
   const { roomId } = useParams<{ roomId: string }>();
+
   const enterDestination = `/pub/chat/${roomId}`; // 채팅방 참가
   const subDestination = `/sub/channel/${roomId}`; // 채팅방 구독
   const pubDestination = `/sub/channel/${roomId}`; // 채팅방 메세지 전송
+  const storeDestination = `/pub/chat/message`;
+  const exitDestination = `/pub/chat/exit`;
   const messageContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,7 +91,6 @@ const Chatting = () => {
 
     scrollToBottom();
   }, [messages]);
-  const storeDestination = `/pub/chat/message`;
 
   /** 메세지를 수신했을 때 호출 */
   const onMessageReceived = ({ message, type, sender }: IMessage) => {
@@ -120,6 +129,19 @@ const Chatting = () => {
       },
     }),
   );
+
+  const exitRoom = () => {
+    client.current.publish({
+      destination: exitDestination,
+      body: JSON.stringify({
+        roomId,
+        sender: userId,
+      }),
+    });
+  };
+  useImperativeHandle(ref, () => ({
+    closeChat: exitRoom,
+  }));
 
   const sendMessage = (message: string) => {
     if (!message) return;
@@ -194,6 +216,6 @@ const Chatting = () => {
       <Input value={input} onChange={handleChange} onSubmit={handleSubmit} />
     </Container>
   );
-};
+});
 
 export default Chatting;
