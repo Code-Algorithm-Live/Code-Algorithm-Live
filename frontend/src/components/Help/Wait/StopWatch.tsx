@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { clearInterval } from 'stompjs';
 import style from '@/components/Help/Wait/StopWatch.module.scss';
 import { convertMillisecondsToTime, timerFormatter } from '@/utils/timer';
@@ -15,6 +15,7 @@ import useStopwatchStore from '@/store/stopWatch';
 
 const StopWatch = () => {
   const { removeHelpRequestTime } = useHelpRequestStore();
+  const router = useRouter();
   const { zustandStartTime, removeStartTime } = useStopwatchStore();
   const { data: session } = useSession();
   const startTime = zustandStartTime;
@@ -69,6 +70,8 @@ const StopWatch = () => {
       .delete<Sender>('/help/waitqueue', { data })
       // eslint-disable-next-line no-console
       .catch(Error => console.error(Error));
+
+    router.push('/');
   };
   return (
     <div className={style.StopWatch}>
@@ -80,11 +83,16 @@ const StopWatch = () => {
         </div>
       )}
       <div className={style.buttons}>
-        <button className={style.button}>
-          <Link href={'/help/edit'}>수정하기</Link>
+        <button
+          className={style.button}
+          onClick={() => {
+            router.push('/help/edit');
+          }}
+        >
+          수정하기
         </button>
         <button className={style.button} onClick={handleClickCancel}>
-          <Link href={'/'}>취소하기</Link>
+          취소하기
         </button>
       </div>
     </div>
