@@ -179,6 +179,9 @@ const CodeEditor = ({
     if (isSender) flushHistory();
     onCloseRoom();
   };
+  useImperativeHandle(ref, () => ({
+    closeCoding: handleClose,
+  }));
 
   // create a document then attach it into the client.
   useEffect(() => {
