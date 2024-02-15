@@ -50,8 +50,7 @@ interface IMessage {
   date: string;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_SOCKET_BASE_URL;
-const brokerURL = `${BASE_URL}/ws/chat`;
+const brokerURL = process.env.NEXT_PUBLIC_BROKER_URL;
 const userId = Math.random().toString();
 
 /**
