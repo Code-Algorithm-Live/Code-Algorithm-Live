@@ -9,7 +9,11 @@ function NavBar({ sort }: INavBarProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/help/wait');
+    if (sort === '질문히스토리 보기') {
+      router.push('/help/question-list');
+    } else {
+      router.push('/help/wait');
+    }
   };
   return (
     <div className={style.bar}>

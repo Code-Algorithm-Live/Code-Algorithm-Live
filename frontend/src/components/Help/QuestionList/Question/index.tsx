@@ -80,7 +80,7 @@ function Form() {
   const [currentPage, setCurrentPage] = useState(1);
   const historyPage = historyHistory.length;
   const messagePage = messageHistory.length;
-  const totalPage = historyPage + messagePage;
+  const totalPage = historyPage + messagePage + 1;
   // const totalPage = 5;
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -156,14 +156,18 @@ function Form() {
   }
 
   // props로 보내줄 Message 배열 복사
-  const n: number = currentPage - 1;
-  const messageProps: string[][] = Message.slice(0, n);
+  const n: number = order[currentPage - 1][1];
+  let messageProps: string[][];
+  if (n === -1) {
+    messageProps = Message.slice(0, 0);
+  } else {
+    messageProps = Message.slice(0, n);
+  }
   // currentPage = 순서 배열의 인덱스(채팅배열, 코드배열 인덱스 가지고 있음)-2차원 배열
   // 그에 맞게 출력
 
   // 현재페이지에 맞는 데이터값 파악(ex- 메세지 몇 번째, 히스토리 몇 번째)
   //    양 데이터 초기값 시간 비교
-
   return (
     <div>
       <NavBar sort="질문히스토리 보기"></NavBar>
@@ -183,15 +187,14 @@ function Form() {
           </div>
         </div>
         <div className={styles.pageContainer}>
-          <MoveButton
+          <SlideBar
             totalPage={totalPage}
-            limit={1}
             page={currentPage}
             setPage={handlePageChange}
           />
-
-          <SlideBar
+          <MoveButton
             totalPage={totalPage}
+            limit={1}
             page={currentPage}
             setPage={handlePageChange}
           />

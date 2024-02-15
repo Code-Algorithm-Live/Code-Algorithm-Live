@@ -16,6 +16,16 @@ const PaginationWrapper = styled.div`
   height: 60px;
 `;
 
+const ButtonContainer = styled.div`
+  mafint-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-family: Pretendard;
+  width: 80%;
+  align-items: center;
+`;
+
 interface IPagination {
   totalPage: number;
   limit: number;
@@ -35,28 +45,32 @@ const MoveButton = ({ totalPage, page, setPage }: IPagination) => {
   };
 
   return (
-    <PaginationWrapper>
-      <Icon
-        icon={CgChevronDoubleLeftR}
-        onClick={() => handlePageChange(1)}
-        disabled={page === 1}
-      />
-      <Icon
-        icon={CgChevronLeftR}
-        onClick={() => handlePageChange(page - 1)}
-        disabled={page === 1}
-      />
-      <Icon
-        icon={CgChevronRightR}
-        onClick={() => handlePageChange(page + 1)}
-        disabled={page === totalPage}
-      />
-      <Icon
-        icon={CgChevronDoubleRightR}
-        onClick={() => handlePageChange(totalPage)}
-        disabled={page === totalPage}
-      />
-    </PaginationWrapper>
+    <ButtonContainer>
+      <div>start</div>
+      <PaginationWrapper>
+        <Icon
+          icon={CgChevronDoubleLeftR}
+          onClick={() => handlePageChange(1)}
+          disabled={page === 1}
+        />
+        <Icon
+          icon={CgChevronLeftR}
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        />
+        <Icon
+          icon={CgChevronRightR}
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === totalPage}
+        />
+        <Icon
+          icon={CgChevronDoubleRightR}
+          onClick={() => handlePageChange(totalPage)}
+          disabled={page === totalPage}
+        />
+      </PaginationWrapper>
+      <div>end</div>
+    </ButtonContainer>
   );
 };
 
