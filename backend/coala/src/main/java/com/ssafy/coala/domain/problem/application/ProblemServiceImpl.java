@@ -50,10 +50,10 @@ public class ProblemServiceImpl implements ProblemService {
             ids.add(p.getId());
         }
         //난이도 없는 문제 풀면?
-        List<Integer> question_cnt = problemRepository.findAllQuestionCntById(ids);
-        for (int i =0; i<list.size(); i++){
-            if (question_cnt.get(i)!=null) list.get(i).setQuestion_cnt(question_cnt.get(i));
-        }
+//        List<Integer> question_cnt = problemRepository.findAllQuestionCntById(ids);
+//        for (int i =0; i<list.size(); i++){
+//            if (question_cnt.get(i)!=null) list.get(i).setQuestion_cnt(question_cnt.get(i));
+//        }
 
         for (Problem p:list){
             if (p.getLevel()==0) continue;
