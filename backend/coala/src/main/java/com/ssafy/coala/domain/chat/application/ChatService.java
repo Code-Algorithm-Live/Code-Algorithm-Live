@@ -50,6 +50,9 @@ public class ChatService {
                 .roomId(makeRoomDto.getRoomUuid())
                 .sender(makeRoomDto.getSender())
                 .receiver(makeRoomDto.getReceiver())
+                .isClose(false)
+                .content(makeRoomDto.getContent())
+                .title(makeRoomDto.getTitle())
                 .build();
         chatRoomRepository.save(chatRoom);
         System.out.println("application: " + chatRoom.getSender());
@@ -170,7 +173,16 @@ public class ChatService {
     }
 
     public void closeRoom(UUID roomId){
-
+        chatRoomRepository.updateIsCloseByRoomId(roomId);
     }
+
+    public void closeRooms(List<UUID> roomIds){
+        chatRoomRepository.updateIsCloseByRoomIds(roomIds);
+    }
+    public List<UUID> closableRoomIds(){
+        return chatRoomRepository.findCloseRoomId();
+    }
+
+
 
 }
