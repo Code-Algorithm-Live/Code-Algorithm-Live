@@ -35,6 +35,7 @@ const slideDown = keyframes`
 `;
 
 const NotificationContainer = styled.div`
+  cursor: pointer;
   width: 300px;
   height: 135px;
   position: fixed;

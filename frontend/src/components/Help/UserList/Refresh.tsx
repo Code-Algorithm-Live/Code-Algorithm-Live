@@ -16,8 +16,10 @@ const Refresh = ({ totalPage, page, setPage }: IRefresh) => {
   const [remainTime, setRemainTime] = useState(600000);
   const {
     zustandHelpRequestTime,
+    setZustandHelpRequestTime,
     zustandRefreshStart,
     setZustandRefreshStart,
+    setRequestList,
   } = useHelpRequestStore();
   const refreshStart = zustandRefreshStart;
 
@@ -38,6 +40,8 @@ const Refresh = ({ totalPage, page, setPage }: IRefresh) => {
 
   const presentHelpRequest = zustandHelpRequestTime;
   const handleClick = () => {
+    setRequestList();
+    setZustandHelpRequestTime(0);
     if (page + 1 > totalPage) {
       setPage(0);
     } else {
@@ -49,8 +53,8 @@ const Refresh = ({ totalPage, page, setPage }: IRefresh) => {
 
   return (
     <div className={styles.container}>
-      <p>요청횟수: {presentHelpRequest}/5</p>
-      {presentHelpRequest >= 5 || (remainTime > 0 && remainTime < 600000) ? (
+      <p className={styles.text}>요청횟수: {presentHelpRequest}/5</p>
+      {remainTime > 0 && remainTime < 600000 ? (
         <button className={styles.timer} disabled>
           {timer}
           <Image

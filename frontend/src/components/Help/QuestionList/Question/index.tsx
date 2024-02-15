@@ -9,7 +9,8 @@ import MoveButton from '@/components/Help/QuestionList/Question/MoveButton';
 import SlideBar from '@/components/Help/QuestionList/Question/SlideBar';
 import { HistoryDto, MessageDto, ChatRoomInfo } from '@/types/HelpHistory';
 import styles from '@/components/Help/QuestionList/Question/index.module.scss';
-import useProblemNumberStore from '@/store/problemNumber';
+// import useProblemNumberStore from '@/store/problemNumber';
+import NavBar from '@/components/Help/NavBar';
 
 type IHistoryHelp = {
   historyDto: HistoryDto[];
@@ -18,10 +19,64 @@ type IHistoryHelp = {
 
 const initHistory: HistoryDto[] = [
   {
-    idx: 0,
-    pre: '',
+    idx: 111,
+    pre: '      qeqrewtert\n        xcvb\n        fsd\n        h\n        ',
     next: '',
-    time: '2024-02-12T03:18:22.7195703',
+    time: '2024-02-14T07:42:07.368Z',
+  },
+  {
+    idx: 111,
+    pre: '\n',
+    next: '',
+    time: '2024-02-14T07:42:07.619Z',
+  },
+  {
+    idx: 115,
+    pre: '',
+    next: '  \n    ',
+    time: '2024-02-14T07:42:07.654Z',
+  },
+  {
+    idx: 115,
+    pre: '  ',
+    next: 'dqwdwqdasdasdsadasd',
+    time: '2024-02-14T07:42:09.073Z',
+  },
+  {
+    idx: 113,
+    pre: '  ',
+    next: 'sasaddasads',
+    time: '2024-02-14T07:42:09.423Z',
+  },
+  {
+    idx: 111,
+    pre: '  ',
+    next: '',
+    time: '2024-02-14T07:42:09.704Z',
+  },
+  {
+    idx: 111,
+    pre: '\n',
+    next: '',
+    time: '2024-02-14T07:42:09.974Z',
+  },
+  {
+    idx: 117,
+    pre: '',
+    next: '  \n',
+    time: '2024-02-14T07:43:59.036Z',
+  },
+  {
+    idx: 119,
+    pre: '',
+    next: 'w',
+    time: '2024-02-14T07:43:59.665Z',
+  },
+  {
+    idx: 120,
+    pre: '',
+    next: 'e',
+    time: '2024-02-14T07:43:59.810Z',
   },
 ];
 const initMessage: MessageDto[] = [
@@ -33,9 +88,12 @@ const initMessage: MessageDto[] = [
     date: '2024-02-12T03:18:20.7195703',
   },
 ];
+/**
+ * 문제 번호, 질문 번호, 제목, 내용, 질문자 닉네임은 히스토리 들어오려고 클릭하면 hitstoryProblem.ts(스토어)에 들어가도록 해놓음. 필요 시 사용
+ */
 
 function Form() {
-  const { zustandProblemNumber } = useProblemNumberStore();
+  // const { zustandProblemNumber } = useProblemNumberStore();
   const params = useSearchParams();
   const roomId = params.get('roomId');
   const [messageHistory, setMessageHistory] =
@@ -162,7 +220,8 @@ function Form() {
 
   return (
     <div>
-      <div className={styles.title}>{zustandProblemNumber} 히스토리</div>
+      <NavBar sort="질문히스토리 보기"></NavBar>
+      <div className={styles.questionContainer}></div>
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
           <div className={styles.codeEditor}>

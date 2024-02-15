@@ -1,12 +1,13 @@
 .allContainer {
   display: flex;
+  min-width: 1000px;
 }
 .all {
   font-family: Pretendard;
   margin: 60px 0px 0px 0px;
   justify-content: center;
   width: 100%;
-  justify-content: space-around;
+  gap: 100px;
   display: flex;
   .form {
     width: fit-content;
@@ -24,7 +25,7 @@
 .buttonCon {
   display: flex;
   float: right;
-  margin-top: 320px;
+  margin-top: 290px;
 }
 .helpSubmitButton {
   border-radius: 10px;
