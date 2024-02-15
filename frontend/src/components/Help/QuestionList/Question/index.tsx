@@ -196,7 +196,7 @@ function Form() {
           historyDto.unshift({
             idx: 120,
             pre: '',
-            next: 'public class Main { public static void main(String[] args) { System.out.println("Hello, world!"); } } ',
+            next: 'public class Main\n{ public static void main(String[] args) {\nSystem.out.println("Hello, world!");\n}\n} ',
             time: date.toISOString(),
           });
           setMessageHistory(messageDto);
