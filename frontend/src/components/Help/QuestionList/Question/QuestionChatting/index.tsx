@@ -5,10 +5,23 @@ import MyMessage from '@/components/Chat/Chatting/MyMessage';
 
 const Container = styled.div`
   position: relative;
-  height: 600px;
+  height: 550px;
   width: 30%;
   min-width: 327px;
   background: var(--editorBlack, #282a36);
+  overflow: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--editorTypo-color);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+  }
 `;
 
 const MessageContainer = styled.div`
