@@ -4,12 +4,17 @@ import style from '@/components/Help/NavBar.module.scss';
 
 interface INavBarProps {
   sort: string;
+  pushPage: string;
 }
-function NavBar({ sort }: INavBarProps) {
+function NavBar({ sort, pushPage }: INavBarProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/help/wait');
+    if (pushPage === 'wait') {
+      router.push('/help/wait');
+    } else {
+      router.push('/help/question-list');
+    }
   };
   return (
     <div className={style.bar}>

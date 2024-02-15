@@ -220,7 +220,7 @@ function Form() {
 
   return (
     <div>
-      <NavBar sort="질문히스토리 보기"></NavBar>
+      <NavBar sort="질문히스토리 보기" pushPage="question-list" />
       <div className={styles.questionContainer}></div>
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
