@@ -1,5 +1,6 @@
 package com.ssafy.coala.domain.chat.dto;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,8 @@ public class MakeRoomDto {
     private UUID roomUuid;
     private String sender;
     private String receiver;
+    private String title;
+    private String content;
+    private int problemId;
 
-    //isclose, title, content, problemId
 }

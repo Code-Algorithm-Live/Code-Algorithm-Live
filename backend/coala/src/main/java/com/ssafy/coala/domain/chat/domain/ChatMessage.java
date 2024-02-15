@@ -21,7 +21,7 @@ public class ChatMessage {
     @GeneratedValue
     private Long id;
     public enum MessageType {
-        ENTER, TALK
+        ENTER, TALK, EXIT
     }
 
     private MessageType type;

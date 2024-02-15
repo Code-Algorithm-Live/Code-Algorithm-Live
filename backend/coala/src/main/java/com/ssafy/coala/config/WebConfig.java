@@ -30,7 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://coala-delta.vercel.app")
                 .allowedOrigins("http://i10a709.p.ssafy.io:8081")
                 .allowedOrigins("http://i10a709.p.ssafy.io:3000")
-                .allowedOrigins("http://i10a709.p.ssafy.io");
+                .allowedOrigins("http://i10a709.p.ssafy.io")
+                .allowedOrigins("https://i10a709.p.ssafy.io");
     }
 
 }

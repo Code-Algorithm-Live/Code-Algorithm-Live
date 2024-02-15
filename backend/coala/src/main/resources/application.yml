@@ -1,13 +1,15 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api/v1
 
 spring:
   redis:
-#     host: 127.0.0.1
+    #  host: 127.0.0.1
      host: i10a709.p.ssafy.io
      port: 6379
   datasource:
-#     url: jdbc:mariadb://localhost:3306/security
+    #  url: jdbc:mariadb://localhost:3306/security
      url: jdbc:mariadb://i10a709.p.ssafy.io:3306/security
      username: root
      password: root
@@ -38,6 +40,6 @@ spring:
 
 file:
   upload:
-    directory: C:/coala/data/
+    directory: /tmp/coala/data/
     
 

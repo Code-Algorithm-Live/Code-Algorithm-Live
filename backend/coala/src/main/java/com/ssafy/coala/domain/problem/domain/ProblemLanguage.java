@@ -17,7 +17,7 @@ import lombok.Setter;
 public class ProblemLanguage {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     Problem problem;
     @Id
     String language;

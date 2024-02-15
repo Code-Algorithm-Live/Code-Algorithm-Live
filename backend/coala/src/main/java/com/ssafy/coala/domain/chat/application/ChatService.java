@@ -44,14 +44,22 @@ public class ChatService {
     }
 
     //채팅방 생성
+    @Transactional
     public ChatRoom createRoom(MakeRoomDto makeRoomDto) {
         System.out.println("매칭 수락시 방생성");
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(makeRoomDto.getRoomUuid())
                 .sender(makeRoomDto.getSender())
                 .receiver(makeRoomDto.getReceiver())
+                .isClose(false)
+                .content(makeRoomDto.getContent())
+                .title(makeRoomDto.getTitle())
+                .problemId(makeRoomDto.getProblemId())
                 .build();
         chatRoomRepository.save(chatRoom);
+        killZombieRooms(makeRoomDto.getSender());
+        killZombieRooms(makeRoomDto.getReceiver());
+
         System.out.println("application: " + chatRoom.getSender());
         return chatRoom;
     }
@@ -107,11 +115,6 @@ public class ChatService {
         for (CodeHistory codeHistory : codeHistoryList){
             codeHistoryDtoList.add(new CodeHistoryDto(codeHistory));
         }
-        //더미
-        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender1", "1", Timestamp.valueOf(LocalDateTime.now())));
-        messageDtoList.add(new MessageDto(ChatMessage.MessageType.TALK, roomUuid, "sender2", "2", Timestamp.valueOf(LocalDateTime.now())));
-        codeHistoryDtoList.add(new CodeHistoryDto(0, "","1",Timestamp.valueOf(LocalDateTime.now())));
-        codeHistoryDtoList.add(new CodeHistoryDto(0, "1","",Timestamp.valueOf(LocalDateTime.now())));
 
         chatHistoryDto.setMessageDto(messageDtoList);
         chatHistoryDto.setHistoryDto(codeHistoryDtoList);
@@ -128,45 +131,53 @@ public class ChatService {
                     chatRoom.getContent(),chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
 
-        //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
-                "1000번 도움!","어려웡",1000,Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender2","receiver2",
-                "20000번 너무어렵다..","어려웡",20000, Timestamp.valueOf(LocalDateTime.now()))));
 
         return result;
     }
 
     public List<HistoryRoomDto> findHistoryBySender(String sender){
         List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(sender);
+
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),chatRoom.getSender(),
                     chatRoom.getReceiver(), chatRoom.getTitle(), chatRoom.getContent(),
                     chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
-        //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
-                "1000번 도움!","어려웡",1000,Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
-                "1001번도 도움!","어려웡",1001, Timestamp.valueOf(LocalDateTime.now()))));
+
         return result;
     }
 
     public List<HistoryRoomDto> findHistoryByReceiver(String receiver){
-        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(receiver);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findRoomByReceiver(receiver);
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList) {
             result.add(new HistoryRoomDto(chatRoom.getRoomId(), chatRoom.getSender(),
                     chatRoom.getReceiver(), chatRoom.getTitle(), chatRoom.getContent(),
                     chatRoom.getProblemId(), Timestamp.valueOf(chatRoom.getDate())));
         }
-        //더미
-        result.add((new HistoryRoomDto(UUID.randomUUID(), "sender1","receiver1",
-                "20000번 너무어렵다..","어려웡",20000, Timestamp.valueOf(LocalDateTime.now()))));
-        result.add((new HistoryRoomDto(UUID.randomUUID(),"sender1","receiver1",
-                "상어초등학교 도와주셈","어려웡",21608, Timestamp.valueOf(LocalDateTime.now()))));
+
         return result;
     }
+
+    public void killZombieRooms(String name){
+        chatRoomRepository.updateZombieRoomByMemberId(name);
+    }
+    public void closeRoom(UUID roomId){
+        chatRoomRepository.updateIsCloseByRoomId(roomId);
+    }
+
+//    public List<ChatRoom> getZombieRoomIds(String name){
+//        return chatRoomRepository.findZombieRoomIds(name);
+//    }
+
+//    public void closeRooms(List<UUID> roomIds){
+//        chatRoomRepository.updateIsCloseByRoomIds(roomIds);
+//    }
+//    public List<UUID> closableRoomIds(){
+//        return chatRoomRepository.findCloseRoomId();
+//    }
+
+
 
 }
