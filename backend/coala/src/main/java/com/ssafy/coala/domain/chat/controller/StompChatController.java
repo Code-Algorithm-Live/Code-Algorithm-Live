@@ -39,6 +39,9 @@ public class StompChatController {
             log.info("roomID = {}", message.getRoomId());
             System.out.println(message.getMessage());
             chatService.saveMessage(message.getRoomId(), message);
+        } else if (ChatMessage.MessageType.EXIT.equals(message.getType())){
+            log.info("roomID = {}", message.getRoomId());
+            System.out.println(message.getMessage()+"채팅방 종료");
         }
         System.out.println("메세지타입: " + message.getType());
         template.convertAndSend("/sub/channel/" + message.getRoomId(), message);
@@ -59,6 +62,7 @@ public class StompChatController {
     @MessageMapping("/chat/exit")
     public void ExitChat(MessageDto message){
         message.setMessage("퇴장하셨습니다.");
+        message.setType(ChatMessage.MessageType.EXIT);
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
 //        System.out.println("퇴장");
         chatService.closeRoom(message.getRoomId());
