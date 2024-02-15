@@ -60,7 +60,7 @@ function Form() {
     }
     return (
       <div className={styles.containerBase}>
-        <NavBar sort="도움 요청하기" />
+        <NavBar sort="도움 요청하기" pushPage="wait" />
         <div className={styles.sort}>
           <span className={styles.people}>최근에 이 문제를 푼 사람</span>
           <Refresh
@@ -80,7 +80,7 @@ function Form() {
   }
   return (
     <div className={styles.containerBase}>
-      <NavBar sort="도움 요청하기" />
+      <NavBar sort="도움 요청하기" pushPage="wait" />
       <div className={styles.sort}>
         <span className={styles.people}>최근에 이 문제를 푼 사람</span>
       </div>
