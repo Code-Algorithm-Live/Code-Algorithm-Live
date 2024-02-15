@@ -29,18 +29,18 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID> {
     void updateIsCloseByRoomId(@Param("roomId") UUID roomId);
 
 
-    @Query("select c from chatRoom c where c.sender =:memberName or c.receiver =:memberName")
-    List<ChatRoom> findZombieRoomIds(@Param("memberName") String memberName);
-
-//    @Transactional
-//    @Modifying
-//    @Query("update chatRoom set isClose = true where sender =:memberName and receiver =:memberName")
-//    void updateZombieRoomByMemberId(@Param("memberName") String memberName);
+//    @Query("select c from chatRoom c where c.sender =:memberName or c.receiver =:memberName")
+//    List<ChatRoom> findZombieRoomIds(@Param("memberName") String memberName);
 
     @Transactional
     @Modifying
-    @Query("update chatRoom set isClose = true where roomId in :roomIds")
-    void updateIsCloseByRoomIds(@Param("roomIds")List <UUID> roomIds);
+    @Query("update chatRoom set isClose = true where sender =:memberName and receiver =:memberName")
+    void updateZombieRoomByMemberId(@Param("memberName") String memberName);
+
+//    @Transactional
+//    @Modifying
+//    @Query("update chatRoom set isClose = true where roomId in :roomIds")
+//    void updateIsCloseByRoomIds(@Param("roomIds")List <UUID> roomIds);
 
 //    @Query(value = "SELECT c.room_id " +
 //            "FROM chat_room c " +
