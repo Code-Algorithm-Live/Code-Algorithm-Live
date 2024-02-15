@@ -285,6 +285,7 @@ function Form() {
             <QuestionChatting
               messageProps={messageProps}
               messageSender={messageSender}
+              messageSelect={handleMessageSelect}
             />
           </div>
         </div>
