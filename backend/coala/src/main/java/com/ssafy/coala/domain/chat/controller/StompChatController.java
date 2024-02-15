@@ -12,10 +12,13 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @Slf4j
@@ -57,7 +60,18 @@ public class StompChatController {
     public void ExitChat(MessageDto message){
         message.setMessage("퇴장하셨습니다.");
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
+        chatService.closeRoom(message.getRoomId());
     }
 
+    @Scheduled(fixedRate = 60000)
+    public void scheduledCloseRoom(){
+        List<UUID> ids = chatService.closableRoomIds();
+        for (UUID id: ids){
+            MessageDto message = new MessageDto();
+            message.setMessage("퇴장하셨습니다.");
+            template.convertAndSend("/sub/channel"+id, message);
+        }
+        chatService.closeRooms(ids);
+    }
 
 }
