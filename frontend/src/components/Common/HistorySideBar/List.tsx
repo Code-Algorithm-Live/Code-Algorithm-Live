@@ -31,7 +31,7 @@ const Container = styled.div`
 const SidebarLink = styled.div`
   padding: 10px;
   transition: background-color 0.3s;
-
+  width: 210px;
   &:hover {
     background-color: var(--editorTypo-color);
   }

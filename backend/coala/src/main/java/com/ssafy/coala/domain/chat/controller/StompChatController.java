@@ -64,7 +64,7 @@ public class StompChatController {
         message.setMessage("퇴장하셨습니다.");
         message.setType(ChatMessage.MessageType.EXIT);
         template.convertAndSend("/sub/channel" + message.getRoomId(), message);
-//        System.out.println("퇴장");
+        System.out.println("퇴장");
         chatService.closeRoom(message.getRoomId());
     }
 

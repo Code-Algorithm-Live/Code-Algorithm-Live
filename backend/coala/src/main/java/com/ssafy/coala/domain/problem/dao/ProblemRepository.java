@@ -25,8 +25,8 @@ public interface ProblemRepository extends JpaRepository<Problem, Integer> {
             "WHERE p.level BETWEEN :low AND :high AND l.language = 'ko' AND p.give_no_rating = false")
     List<Problem> findProblemsByLevelRange(@Param("low") int low, @Param("high") int high);
 
-    @Query("Select p.question_cnt from Problem p where p.id In:ids order by p.id")
-    List<Integer> findAllQuestionCntById(List<Integer> ids);
+    @Query("Select p from Problem p where p.id In:ids order by p.id")
+    List<Problem> findAllQuestionCntById(List<Integer> ids);
     @Modifying
     @Transactional
     @Query(value = "UPDATE problem SET question_cnt = question_cnt + 1 WHERE id = :problemId", nativeQuery = true)

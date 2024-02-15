@@ -65,6 +65,9 @@ const TitleText = styled.span`
   font-family: Pretendard;
   font-size: 18px;
   font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--main-font-color);
 `;
 

@@ -21,7 +21,9 @@ public class CodeHistory {
     private UUID roomId;
 
     private int idx;
+    @Column(columnDefinition = "text")
     private String pre;
+    @Column(columnDefinition = "text")
     private String next;
     private LocalDateTime time;
 
