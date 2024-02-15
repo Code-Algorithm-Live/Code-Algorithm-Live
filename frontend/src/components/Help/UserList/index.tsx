@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
 import { instance } from '@/api/instance';
 import NavBar from '@/components/Help/NavBar';
 import Refresh from '@/components/Help/UserList/Refresh';
@@ -19,7 +18,6 @@ function Form() {
   const { zustandProblemNumber } = useProblemNumberStore();
   const [userList, setUserList] = useState<HPReceiver[]>();
   const [currentPage, setCurrentPage] = useState(0);
-  const mainLanguage = 'java';
   // const problemNumber: number = Number(getProblemNumber());
   const problemNumber: number = Number(zustandProblemNumber);
 
@@ -35,7 +33,7 @@ function Form() {
   if (userList) {
     const dataLength = userList.length;
     // //한 번에 보여줄 요청가능한 사람 수
-    const limit = 6;
+    const limit = 5;
     let totalPage = 0;
     if (dataLength) {
       totalPage = Math.ceil(dataLength / limit) - 1;
@@ -74,11 +72,7 @@ function Form() {
         <div>
           {userList &&
             currentPageData.map((user, index) => (
-              <UserHelp
-                key={index}
-                userData={user}
-                mainLanguage={mainLanguage}
-              />
+              <UserHelp key={index} userData={user} />
             ))}
         </div>
       </div>
