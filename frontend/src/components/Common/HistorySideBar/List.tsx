@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import { Sender, HelpDto, RoomUuid } from '@/types/Help';
 
 interface ListItem {
-  roomId: string;
-  sender: null;
-  title: string;
-  problemId: number;
-  date: string;
+  id: number;
+  sender: Sender;
+  receiver: string;
+  helpDto: HelpDto;
+  sendDate: string;
+  roomUuid: RoomUuid;
 }
 
 interface ListProps {
@@ -65,10 +67,10 @@ const List: React.FC<ListProps> = ({ historyList }) => {
   return (
     <Container>
       {historyList.map((history, index) => (
-        <Link key={index} href={`/history/${history.roomId}`}>
+        <Link key={index} href={`/history/${history.roomUuid}`}>
           <SidebarLink>
-            <MainText>{history.title}</MainText>
-            <SubText>{history.problemId}번 문제</SubText>
+            <MainText>{history.helpDto.title}</MainText>
+            <SubText>{history.helpDto.num}번 문제</SubText>
           </SidebarLink>
         </Link>
       ))}
