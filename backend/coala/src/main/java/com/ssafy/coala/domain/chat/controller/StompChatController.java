@@ -63,15 +63,15 @@ public class StompChatController {
         chatService.closeRoom(message.getRoomId());
     }
 
-    @Scheduled(fixedRate = 60000)
-    public void scheduledCloseRoom(){
-        List<UUID> ids = chatService.closableRoomIds();
-        for (UUID id: ids){
-            MessageDto message = new MessageDto();
-            message.setMessage("퇴장하셨습니다.");
-            template.convertAndSend("/sub/channel"+id, message);
-        }
-        chatService.closeRooms(ids);
-    }
+//    @Scheduled(fixedRate = 60000)
+//    public void scheduledCloseRoom(){
+//        List<UUID> ids = chatService.closableRoomIds();
+//        for (UUID id: ids){
+//            MessageDto message = new MessageDto();
+//            message.setMessage("퇴장하셨습니다.");
+//            template.convertAndSend("/sub/channel"+id, message);
+//        }
+//        chatService.closeRooms(ids);
+//    }
 
 }
