@@ -5,7 +5,7 @@ import QuestionBanner from './QuestionBanner';
 
 const Container = styled.div`
   position: relative;
-  height: 600px;
+  height: 550px;
   width: 30%;
   min-width: 327px;
   background: var(--editorBlack, #282a36);
