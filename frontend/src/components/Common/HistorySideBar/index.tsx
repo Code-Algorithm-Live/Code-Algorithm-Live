@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { instance } from '@/api/instance';
 import useSidebarStore from '@/store/historySelect';
 import useHistorybarStore from '@/store/historyBar';
+import { Sender, HelpDto, RoomUuid } from '@/types/Help';
 import List from '@/components/Common/HistorySideBar/List';
 import Button from '@/components/Common/HistorySideBar/Button';
 import Select from '@/components/Common/HistorySideBar/Select';
@@ -16,11 +17,12 @@ interface SidebarContainerProps {
 }
 
 interface HistoryData {
-  roomId: string;
-  sender: null;
-  title: string;
-  problemId: number;
-  date: string;
+  id: number;
+  sender: Sender;
+  receiver: string;
+  helpDto: HelpDto;
+  sendDate: string;
+  roomUuid: RoomUuid;
 }
 
 const slideIn = keyframes`
