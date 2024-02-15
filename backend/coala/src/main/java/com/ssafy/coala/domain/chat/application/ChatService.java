@@ -142,6 +142,7 @@ public class ChatService {
 
     public List<HistoryRoomDto> findHistoryBySender(String sender){
         List<ChatRoom> chatRoomList = chatRoomRepository.findRoomBySender(sender);
+
         List<HistoryRoomDto> result = new ArrayList<>();
         for (ChatRoom chatRoom:chatRoomList){
             result.add(new HistoryRoomDto(chatRoom.getRoomId(),chatRoom.getSender(),
@@ -176,12 +177,16 @@ public class ChatService {
         chatRoomRepository.updateIsCloseByRoomId(roomId);
     }
 
+    public List<ChatRoom> getZombieRoomIds(String name){
+        return chatRoomRepository.findZombieRoomIds(name);
+    }
+
     public void closeRooms(List<UUID> roomIds){
         chatRoomRepository.updateIsCloseByRoomIds(roomIds);
     }
-    public List<UUID> closableRoomIds(){
-        return chatRoomRepository.findCloseRoomId();
-    }
+//    public List<UUID> closableRoomIds(){
+//        return chatRoomRepository.findCloseRoomId();
+//    }
 
 
 

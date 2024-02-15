@@ -116,8 +116,9 @@ public class ChatRoomController {
         }
     }
 
-    public ResponseEntity<String> activeCloseRoom(){
-
+    @GetMapping("close/{roomUuId}")
+    public ResponseEntity<String> activeCloseRoom(@PathVariable UUID roomUuId){
+        chatService.closeRoom(roomUuId);
         return ResponseEntity.ok("close");
     }
 
