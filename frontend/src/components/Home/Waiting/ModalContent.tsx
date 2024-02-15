@@ -37,8 +37,6 @@ const TitleContainer = styled.div`
   margin-bottom: 30px;
   height: 40px;
   width: 350px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;
 
 const ContentsContainer = styled.div`
@@ -60,6 +58,18 @@ const TitleDiv = styled.div`
   border-radius: 4px;
   padding: 12px;
   height: 100%;
+  overflow: auto;
+  word-wrap: break-word;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--editorTypo-color);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+  }
 `;
 
 const ModalContent: React.FC<ModalContentProps> = ({ modalData }) => {
