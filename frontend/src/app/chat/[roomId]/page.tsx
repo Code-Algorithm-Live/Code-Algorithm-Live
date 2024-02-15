@@ -153,8 +153,7 @@ export default function Chat() {
             </p>
 
             <div className="menu">
-              <Timer />
-
+              {/* <Timer /> */}
               <div className="lang">
                 <select name="" id="">
                   <option value="">java</option>
