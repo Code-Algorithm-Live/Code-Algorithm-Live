@@ -49,12 +49,18 @@ public class ProblemServiceImpl implements ProblemService {
         for (Problem p : list){
             ids.add(p.getId());
         }
-        problemRepository.saveAll(list);
+
         //난이도 없는 문제 풀면?
-        List<Integer> question_cnt = problemRepository.findAllQuestionCntById(ids);
-        for (int i =0; i<list.size(); i++){
-            if (question_cnt.get(i)!=null) list.get(i).setQuestion_cnt(question_cnt.get(i));
+        List<Problem> question_cnt = problemRepository.findAllQuestionCntById(ids);
+
+        for (int i=0; i<question_cnt.size(); i++){
+            if (question_cnt.get(i).getQuestion_cnt()>0)
+                list.get(i).setQuestion_cnt(question_cnt.get(i).getQuestion_cnt());
         }
+
+//        for (int i =0; i<list.size(); i++){
+//            if (question_cnt.get(i)!=null) list.get(i).setQuestion_cnt(question_cnt.get(i));
+//        }
 
         for (Problem p:list){
             if (p.getLevel()==0) continue;
@@ -72,7 +78,7 @@ public class ProblemServiceImpl implements ProblemService {
             Map<Object, Object> map = redisTemplate.opsForHash().entries("level:"+i);
         }
         redisTemplate.opsForValue().set("curId:" ,list.get(list.size()-1).getId());
-
+        problemRepository.saveAll(list);
 
     }
 
