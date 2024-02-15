@@ -223,7 +223,7 @@ const CodeEditor = forwardRef(({ onChange }: CodeEditorProps, ref) => {
       await client.attach(doc);
 
       doc.update(root => {
-        if (!root.content) {
+        if (!root.content && isSender) {
           // eslint-disable-next-line no-param-reassign
           root.content = new Text();
           root.content.edit(0, 0, DEFAULT_CODE);
@@ -273,6 +273,11 @@ const CodeEditor = forwardRef(({ onChange }: CodeEditorProps, ref) => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       closeClient(client);
     };
+  }, []);
+
+  useEffect(() => {
+    // 맨 처음 default code 삽입
+    handleAddHistory({ preStr: DEFAULT_CODE, nextStr: '' });
   }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
