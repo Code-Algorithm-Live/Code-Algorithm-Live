@@ -49,10 +49,7 @@ const QuestionChatting = ({ messageProps, messageSender }: IMessageProps) => {
         <MessageContainer>
           {messageProps.map((message, index) => {
             let isFirst = false;
-            if (
-              index === 0 ||
-              messageProps[index - 1][0] !== message[index][0]
-            ) {
+            if (index === 0 || messageProps[index - 1][0] !== message[0]) {
               isFirst = true;
             }
             if (sender === message[0]) {
