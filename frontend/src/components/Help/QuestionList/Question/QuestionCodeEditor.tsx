@@ -39,7 +39,7 @@ const QuestionCodeEditor = ({ initialData }: { initialData: string }) => {
       <ReactCodeMirror
         value={valueData}
         theme={atomone}
-        height="600px"
+        height="550px"
         width="100%;"
         extensions={[java(), editorTheme]}
         readOnly={true}

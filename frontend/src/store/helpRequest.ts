@@ -8,6 +8,9 @@ interface IHelpRequest {
   zustandHelpRequestTime: number;
   setZustandHelpRequestTime: (newRequestTime: number) => void;
   removeHelpRequestTime: () => void;
+  requestList: string[];
+  addRequestList: (item: string) => void;
+  setRequestList: () => void;
 }
 
 const useHelpRequestStore = create<IHelpRequest>()(
@@ -21,6 +24,10 @@ const useHelpRequestStore = create<IHelpRequest>()(
       setZustandHelpRequestTime: (newRequestTime: number) =>
         set({ zustandHelpRequestTime: newRequestTime }),
       removeHelpRequestTime: () => set({ zustandHelpRequestTime: 0 }),
+      requestList: [],
+      addRequestList: (item: string) =>
+        set(state => ({ requestList: [...state.requestList, item] })),
+      setRequestList: () => set({ requestList: [] }),
     }),
     {
       name: 'helpRequest',

@@ -1,13 +1,12 @@
 .userInfo {
   width: 207px;
-  height: 52px;
   display: flex;
+  align-items: center;
+  gap: 30px;
 }
+
 .name {
-  size: 16px;
+  font-size: 18px;
   font-weight: bold;
-}
-.detailDesc {
-  size: 14px;
-  color: var(--user-font-color);
+  font-family: Pretendard;
 }

@@ -15,7 +15,6 @@ import useHelpRequestStore from '@/store/helpRequest';
 
 interface IHelpUser {
   userData: HPReceiver;
-  mainLanguage: string;
 }
 
 interface IFetchPostHelp {
@@ -31,12 +30,16 @@ interface IData {
   url: string;
 }
 
-const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
+const UserHelp = ({ userData }: IHelpUser) => {
   const { data: session } = useSession();
   const { zustandTitle, zustandContent } = useProblemInfoStore();
   const { zustandProblemNumber } = useProblemNumberStore();
-  const { zustandHelpRequestTime, setZustandHelpRequestTime } =
-    useHelpRequestStore();
+  const {
+    zustandHelpRequestTime,
+    setZustandHelpRequestTime,
+    requestList,
+    addRequestList,
+  } = useHelpRequestStore();
 
   const data: IData = {
     nickname: userData.nickname,
@@ -79,6 +82,7 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
   });
   // TODO:클래스 이름 바꾸기
   const presentHelpRequest = zustandHelpRequestTime;
+  const requestingHelp = requestList.includes(userData.nickname);
   const handleClick = () => {
     const updateHelpRequest = presentHelpRequest + 1;
     setZustandHelpRequestTime(updateHelpRequest);
@@ -100,21 +104,27 @@ const UserHelp = ({ userData, mainLanguage }: IHelpUser) => {
     };
     instance
       .post<IFetchPostHelp>('/help/send', postHelpData)
+      .then(() => {
+        addRequestList(userData.nickname);
+      })
       // eslint-disable-next-line no-console
       .catch(Error => console.error(Error));
   };
   return (
     <div className={styles.container}>
-      <UserInfo userData={data} mainLanguage={mainLanguage} />
+      <UserInfo userData={data} />
       {presentHelpRequest >= 5 ? (
-        <button className={styles.help} onClick={handleClick} disabled>
+        <button className={styles.helped} onClick={handleClick} disabled>
           {sendHelpMutation.isPending && <>요청하는 중...</>}
           {!sendHelpMutation.isPending && <>요청하기</>}
         </button>
       ) : (
-        <button className={styles.help} onClick={handleClick}>
-          {sendHelpMutation.isPending && <>요청하는 중...</>}
-          {!sendHelpMutation.isPending && <>요청하기</>}
+        <button
+          className={requestingHelp ? styles.helped : styles.help}
+          onClick={handleClick}
+          disabled={requestingHelp}
+        >
+          {requestingHelp ? '요청 완료' : '요청하기'}
         </button>
       )}
     </div>

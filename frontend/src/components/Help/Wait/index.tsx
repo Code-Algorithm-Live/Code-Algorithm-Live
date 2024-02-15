@@ -23,7 +23,7 @@ export default function Wait() {
     <div className={style.page}>
       <StopWatch />
       <Coala />
-      <p>기다리는 동안..</p>
+      <p className={style.text}>기다리는 동안..</p>
       <div className={style.moveButton}>
         <MoveHelp problemNumber={problemNumber} text="도움 요청하기"></MoveHelp>
         <MoveHelp
