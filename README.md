@@ -1,7 +1,9 @@
 # README
-# Coala (코알라: 코드 알고리즘 라이브)
+# SpringBoot, Next.js
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/be52fccd-e518-45d4-bc34-125e2f9bc1dd/db45a140-2166-4180-92cc-46d70b201aed/Untitled.png)
+# Coala (Code Algorithm Live)
+
+<img src="/uploads/bf6bb134c19afad7191fba3846283501/image.png">
 
 ## 프로젝트 정보
 
@@ -15,13 +17,13 @@ Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 �
 
   * 차승윤: 팀장, 지라매니저, 채팅, 인프라
 
-  * 차우열: 문제 추천, 코드 편집기 컴파일
+  * 차우열: 문제 추천, 코드 편집기 컴파일, 페어프로그래밍
 
   * 이재진: 싸탈
 
 * 프론트
 
-  * 박진아: 채팅과 페어프로그래밍, 프론트 팀장
+  * 박진아: 채팅과 페어프로그래밍, 프론트 팀장, 인프라, Git 관리
 
   * 이재종: 유저관리 기능과 메인페이지
 
@@ -109,3 +111,5 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
 </div>
 
 ## 아키텍처
+
+![image](/uploads/c3010af5dcfa3c359e143afaa7d4f04c/image.png)
