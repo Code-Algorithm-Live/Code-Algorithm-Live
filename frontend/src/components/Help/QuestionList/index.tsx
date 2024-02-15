@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
 import { instance } from '@/api/instance';
 import NavBar from '@/components/Help/NavBar';
 import Pagination from '@/components/Help/QuestionList/Pagination';
@@ -14,25 +13,24 @@ function Form() {
   const [problemHistoryList, setProblemHistoryList] = useState<HistoryList[]>();
   const [currentPage, setCurrentPage] = useState(1);
   const { zustandProblemNumber } = useProblemNumberStore();
-  const problemNumber = zustandProblemNumber;
   useEffect(() => {
     instance
-      .get<HistoryList[]>(`/chat/history/list/${Number(problemNumber)}`)
+      .get<HistoryList[]>(`/chat/history/list/${zustandProblemNumber}`)
       .then(({ data }: { data: HistoryList[] }) => setProblemHistoryList(data))
       // eslint-disable-next-line no-console
       .catch(Error => console.log(Error));
-  }, [problemNumber]);
+  }, [zustandProblemNumber]);
 
   let currentPageData: HistoryList[] = [];
   let totalPage = 0;
 
-  const numberProps: string = `${problemNumber}번 문제`;
+  const numberProps: string = `${zustandProblemNumber}번 문제`;
 
   if (!problemHistoryList) {
     return (
       <div>
         <strong>
-          <NavBar sort={numberProps} />
+          <NavBar sort={numberProps} pushPage="wait" />
         </strong>
         <div className={styles.container}>
           <div className={styles.sort}>질문 히스토리 보기</div>
@@ -61,7 +59,7 @@ function Form() {
   return (
     <div>
       <strong>
-        <NavBar sort={numberProps} />
+        <NavBar sort={numberProps} pushPage="wait" />
       </strong>
       <div className={styles.container}>
         <div className={styles.sort}>질문 히스토리 보기</div>
