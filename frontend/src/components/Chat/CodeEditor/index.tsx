@@ -14,6 +14,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import yorkie, {
+  Client,
   DocEventType,
   EditOpInfo,
   OperationInfo,
@@ -55,7 +56,13 @@ const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
 const MAX_HISTORY = 10;
 
-const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
+const CodeEditor = ({
+  onChange,
+  onCloseRoom,
+}: {
+  onChange: (content: string) => void;
+  onCloseRoom: () => void;
+}) => {
   const { roomId } = useParams<{ roomId: string }>();
   const DOC_NAME = `${roomId}-${new Date()
     .toISOString()
@@ -161,6 +168,18 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
     }
   };
 
+  const closeClient = async (client: Client) => {
+    console.log('close');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/return-await
+    await client.deactivate();
+  };
+
+  const handleClose = () => {
+    // TODO: 채팅방 종료
+    if (isSender) flushHistory();
+    onCloseRoom();
+  };
+
   // create a document then attach it into the client.
   useEffect(() => {
     const client = new yorkie.Client(yorkieBaseURL, {
@@ -242,6 +261,11 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
         onChange(content);
       },
     });
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      closeClient(client);
+    };
   }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.

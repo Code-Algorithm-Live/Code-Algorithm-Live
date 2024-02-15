@@ -12,6 +12,7 @@ import QuestionModal from '@/components/Chat/QuestionModal';
 import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
+import { useRouter } from 'next/navigation';
 
 const Container = styled.div`
   display: flex;
@@ -185,6 +186,7 @@ export default function Chat() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { helpForm } = useHelpFromStore();
+  const router = useRouter();
 
   const handleCodeEditorChange = (value: string) => setCode(value);
 
@@ -201,6 +203,10 @@ export default function Chat() {
   };
   const handleClose = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCloseRoom = () => {
+    router.push('/');
   };
 
   const modalData = helpForm as HelpForm;
@@ -230,11 +236,14 @@ export default function Chat() {
             <LeftContainer>
               <ProblemView />
               <div className="bottomMenuContainer">
-                <button>나가기</button>
+                <button onClick={handleCloseRoom}>나가기</button>
               </div>
             </LeftContainer>
             <CodeEditorContainer>
-              <CodeEditor onChange={handleCodeEditorChange} />
+              <CodeEditor
+                onChange={handleCodeEditorChange}
+                onCloseRoom={handleCloseRoom}
+              />
               <InputOutput
                 isRunning={compileMutation.isPending}
                 onRun={input => handleRun(input)}
