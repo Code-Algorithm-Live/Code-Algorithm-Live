@@ -20,7 +20,7 @@ const MoveHelp = ({ text, problemNumber }: MoveProps) => {
   return (
     <Link href={`/help/${move}`}>
       <div className={style.form}>
-        <p className={style.number}>{problemNumber}</p>
+        <p className={style.number}>{problemNumber}번 문제</p>
         <p className={style.sort}>{text}</p>
         <Image
           className={style.moveImage}

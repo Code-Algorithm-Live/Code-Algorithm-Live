@@ -1,11 +1,11 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { instance } from '@/api/instance';
 import QuillEditor from '@/components/Common/TextEditor/QuillEditor';
 import TextInput from '@/components/Common/TextInput';
 import LinkPreview from '@/components/Help/Wait/LinkPreview';
 // import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import styles from '@/components/Help/index.module.scss';
 import useDebounce from '@/hooks/useDebounce';
 import { HelpDto, RoomUuid, Sender } from '@/types/Help';
@@ -25,7 +25,8 @@ function Form() {
   const { setZustandProblemNumber } = useProblemNumberStore();
   const { setZustandTitle, setZustandContent } = useProblemInfoStore();
   const { setZustandStartTime } = useStopwatchStore();
-  const { removeHelpRequestTime } = useHelpRequestStore();
+  const { removeHelpRequestTime, setRequestList, setZustandRefreshStart } =
+    useHelpRequestStore();
   const debouncedNumber = useDebounce(middleNumber, 2000);
   const [problemNum, setProblemNum] = useState('');
   const [loading, setLoading] = useState(false);
@@ -80,6 +81,8 @@ function Form() {
     setZustandContent(formContent);
     setZustandProblemNumber(problemNumber);
     setZustandStartTime(nowTime);
+    setRequestList();
+    setZustandRefreshStart(-600001);
     removeHelpRequestTime();
 
     const data = {

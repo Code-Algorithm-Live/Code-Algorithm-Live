@@ -55,14 +55,7 @@ const SidebarContainer = styled.div<SidebarContainerProps>`
   gap: 25px;
   animation: ${({ $historyBarControl }) =>
       $historyBarControl ? slideIn : slideOut}
-    0.3s ease-in-out;
-`;
-
-const SubContainer = styled.div<SidebarContainerProps>`
-  display: ${({ $historyBarControl }) =>
-    $historyBarControl ? 'none' : 'flex'};
-  min-width: 120px;
-  height: calc(100vh - 48px);
+    0.5s ease-in-out;
 `;
 
 const Sidebar = () => {
@@ -110,18 +103,15 @@ const Sidebar = () => {
   const historyList = selectedHistory === 'question' ? qHistory : aHistory;
 
   return (
-    <>
-      <SubContainer $historyBarControl={historyBarControl}></SubContainer>
-      <SidebarContainer $historyBarControl={historyBarControl}>
-        <Select selectedValue={selectedHistory} onChange={changeHistory} />
-        {status === 'authenticated' ? (
-          <List historyList={historyList} />
-        ) : (
-          <Loader />
-        )}
-        <Button />
-      </SidebarContainer>
-    </>
+    <SidebarContainer $historyBarControl={historyBarControl}>
+      <Select selectedValue={selectedHistory} onChange={changeHistory} />
+      {status === 'authenticated' ? (
+        <List historyList={historyList} />
+      ) : (
+        <Loader />
+      )}
+      <Button />
+    </SidebarContainer>
   );
 };
 

@@ -1,10 +1,22 @@
 import Link from 'next/link';
 import styles from '@/components/Help/QuestionList/QuestionBoard.module.scss';
 import { HistoryList } from '@/types/Chat';
+import useHistoryProblemStore from '@/store/historyProblem';
 
 // 데이터 props으로 받아오기
 const QuestionBoard = ({ problemData }: { problemData: HistoryList }) => {
+  const {
+    setZustandHistorySender,
+    setZustandHistoryNumber,
+    setZustandHistoryTitle,
+    setZustandHistoryContent,
+  } = useHistoryProblemStore();
   const date = problemData.date.substring(0, 10);
+  setZustandHistoryContent(problemData.content);
+  setZustandHistoryNumber(problemData.problemId);
+  setZustandHistorySender(problemData.sender);
+  setZustandHistoryTitle(problemData.title);
+
   return (
     <Link href={`/help/question-list/question?roomId=${problemData.roomId}`}>
       <div className={styles.container}>

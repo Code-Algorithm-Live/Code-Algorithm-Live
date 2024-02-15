@@ -6,14 +6,25 @@
   height: 82px;
 }
 .help {
-  width: 145px;
+  width: 100px;
   height: 34px;
-  background-color: var(--user-help-undo-color);
-  border-radius: 16px;
+  background-color: var(--sub-color);
+  border-radius: 7px;
+  font-size: 14px;
+  font-family: Pretendard;
+  font-weight: 400;
+  color: var(--white-color);
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--sub-hover-color);
+  }
 }
 .helped {
-  width: 145px;
+  width: 100px;
   height: 34px;
-  border-radius: 16px;
   background-color: var(--user-help-did-color);
+  border-radius: 7px;
+  font-size: 14px;
+  font-family: Pretendard;
+  font-weight: 400;
 }
