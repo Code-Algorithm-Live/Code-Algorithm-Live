@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import useHelpFromStore from '@/store/helpForm';
 
 const Container = styled.div`
   display: flex;
@@ -40,12 +41,12 @@ const ProfileImageWrapper = styled.div`
   margin-right: 8px;
 `;
 
-const Profile = styled.div`
+const Profile = styled.div<{ imageUrl?: string }>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-
-  background: #fff;
+  background-image: url(${props => props.imageUrl});
+  background-size: cover;
 `;
 
 const ProfileSpace = styled.div`
@@ -54,9 +55,10 @@ const ProfileSpace = styled.div`
 `;
 
 const ProfileImage = () => {
+  const { helpForm } = useHelpFromStore();
   return (
     <ProfileImageWrapper>
-      <Profile />
+      <Profile imageUrl={helpForm?.sender.image} />
     </ProfileImageWrapper>
   );
 };
