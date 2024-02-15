@@ -11,9 +11,16 @@ import ReactCodeMirror, {
 } from '@uiw/react-codemirror';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import yorkie, {
+  Client,
   DocEventType,
   EditOpInfo,
   OperationInfo,
@@ -55,13 +62,18 @@ const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
 const MAX_HISTORY = 10;
 
-const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
+interface CodeEditorProps {
+  onChange: (content: string) => void;
+}
+
+// eslint-disable-next-line react/display-name
+const CodeEditor = forwardRef(({ onChange }: CodeEditorProps, ref) => {
   const { roomId } = useParams<{ roomId: string }>();
   const DOC_NAME = `${roomId}-${new Date()
     .toISOString()
     .substring(0, 10)
     .replace(/-/g, '')}`;
-  const ref = useRef<HTMLDivElement>(null);
+  const codeEditorContainerRef = useRef<HTMLDivElement>(null);
   const codeMirrorView = useRef<ReactCodeMirrorRef>({});
   const [doc] = useState(() => new yorkie.Document<YorkieDoc>(DOC_NAME));
   const preContent = useRef('');
@@ -75,9 +87,10 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
 
   const flushHistory = () => {
     createHistoryMutation.mutate({ roomUuid: roomId, list: history });
+    setHistory([]);
+    console.log('history flush', history.length);
     if (createHistoryMutation.isSuccess) {
       console.log('flush');
-      setHistory([]);
     }
   };
 
@@ -161,6 +174,19 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
     }
   };
 
+  const closeClient = async (client: Client) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/return-await
+    await client.deactivate();
+  };
+
+  const handleClose = () => {
+    // TODO: 채팅방 종료시  flush
+    if (isSender) flushHistory();
+  };
+  useImperativeHandle(ref, () => ({
+    closeCoding: handleClose,
+  }));
+
   // create a document then attach it into the client.
   useEffect(() => {
     const client = new yorkie.Client(yorkieBaseURL, {
@@ -242,21 +268,26 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
         onChange(content);
       },
     });
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      closeClient(client);
+    };
   }, []);
 
   // 코드 에디터의 최대 높이를 렌더링된 사이즈만큼 지정합니다.
   useEffect(() => {
-    if (!ref.current) return;
+    if (!codeEditorContainerRef.current) return;
     setEleOffset({
-      height: `${ref.current.offsetHeight - 10}px`,
-      width: `${ref.current.offsetWidth}px`,
+      height: `${codeEditorContainerRef.current.offsetHeight - 10}px`,
+      width: `${codeEditorContainerRef.current.offsetWidth}px`,
     });
   }, []);
 
   const { width: maxWidth, height: maxHeight } = eleOffset;
 
   return (
-    <Container ref={ref}>
+    <Container ref={codeEditorContainerRef}>
       <ReactCodeMirror
         theme={atomone}
         maxWidth={maxWidth}
@@ -267,6 +298,6 @@ const CodeEditor = ({ onChange }: { onChange: (content: string) => void }) => {
       />
     </Container>
   );
-};
+});
 
 export default CodeEditor;
