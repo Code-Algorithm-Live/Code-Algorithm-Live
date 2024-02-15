@@ -204,7 +204,7 @@ public class ProblemServiceImpl implements ProblemService {
             rangedProblemArr[i] = new LinkedHashMap<>();
 
             Map<Object, Object> map = redisTemplate.opsForHash().entries("level:"+i);
-
+            if (map==null) return new CurateInfo(solvedId, new ArrayList<>(), new ArrayList<>());
             for (Map.Entry<Object, Object> entry:map.entrySet()){
                 int key = Integer.parseInt((String)entry.getKey());
                 if (problemIds.contains(key)) continue;
