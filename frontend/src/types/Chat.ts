@@ -3,6 +3,7 @@ interface HistoryList {
   sender: string;
   title: string;
   problemId: number;
+  content: string;
   date: string;
 }
 

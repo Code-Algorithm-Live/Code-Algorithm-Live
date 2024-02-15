@@ -10,11 +10,6 @@ import styles from '@/components/Help/QuestionList/index.module.scss';
 import { HistoryList } from '@/types/Chat';
 import useProblemNumberStore from '@/store/problemNumber';
 
-// const getProblemNumber = () => {
-//   if (typeof window === 'undefined') return '0';
-//   return localStorage.getItem('problemNumber');
-// };
-
 function Form() {
   const [problemHistoryList, setProblemHistoryList] = useState<HistoryList[]>();
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,7 +43,7 @@ function Form() {
   }
 
   // 페이지당 문제 개수
-  const limit = 2;
+  const limit = 8;
   // 현재 페이지
   // 페이지 변경
   const handlePageChange = (pageNumber: number) => {
