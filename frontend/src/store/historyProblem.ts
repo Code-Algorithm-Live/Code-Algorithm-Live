@@ -10,11 +10,16 @@ interface IHistoryProblem {
   setZustandHistoryTitle: (newTitle: string) => void;
   zustandHistoryContent: string;
   setZustandHistoryContent: (newContent: string) => void;
+  zustandHistoryProblemName: string;
+  setZustandHistoryProblemName: (newName: string) => void;
 }
 
 const useHistoryProblemStore = create<IHistoryProblem>()(
   persist(
     set => ({
+      zustandHistoryProblemName: '',
+      setZustandHistoryProblemName: (newName: string) =>
+        set({ zustandHistoryProblemName: newName }),
       zustandHistorySender: '',
       setZustandHistorySender: (newSender: string) =>
         set({ zustandHistorySender: newSender }),

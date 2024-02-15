@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { IData, IFetchData } from '@/types/Problem';
 import { instance } from '@/api/instance';
 import Loader from '@/components/Common/Loader';
+import useHistoryProblemStore from '@/store/historyProblem';
 import styles from './LinkPreview.module.scss';
 
 function LinkPreview({
@@ -16,6 +17,7 @@ function LinkPreview({
   const [sorts, setSorts] = useState('???,???,???');
   const [link, setLink] = useState('relative-0');
   const [problem, setProblem] = useState<IData | null>(null);
+  const { setZustandHistoryProblemName } = useHistoryProblemStore();
 
   useEffect(() => {
     if (
@@ -34,10 +36,12 @@ function LinkPreview({
             tags: data.tags,
           };
           setProblem(axiosProblemData);
+          setZustandHistoryProblemName(data.title);
         })
         // eslint-disable-next-line no-console
         .catch(err => console.log(err));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [problemNumber, problem?.id]);
 
   if (loading) {

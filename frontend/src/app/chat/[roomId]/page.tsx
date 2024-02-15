@@ -8,10 +8,10 @@ import Chatting from '@/components/Chat/Chatting';
 import CodeEditor from '@/components/Chat/CodeEditor';
 import InputOutput from '@/components/Chat/InputOutput';
 import ProblemView from '@/components/Chat/ProblemView';
-import QuestionModal from '@/components/Chat/QuestionModal';
 import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
+import QuestionModal from '@/components/Chat/QuestionBanner/QuestionModal';
 
 const Container = styled.div`
   display: flex;
@@ -189,7 +189,7 @@ export default function Chat() {
   const handleCodeEditorChange = (value: string) => setCode(value);
 
   const handleRun = (input: string) => {
-    console.log(input);
+    // console.log(input);
     if (!code) return;
     if (compileMutation.isPending) return;
 

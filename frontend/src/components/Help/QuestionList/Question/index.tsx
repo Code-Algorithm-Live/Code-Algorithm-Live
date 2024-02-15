@@ -11,6 +11,8 @@ import { HistoryDto, MessageDto, ChatRoomInfo } from '@/types/HelpHistory';
 import styles from '@/components/Help/QuestionList/Question/index.module.scss';
 // import useProblemNumberStore from '@/store/problemNumber';
 import NavBar from '@/components/Help/NavBar';
+import HelpQuestionBanner from '@/components/Help/QuestionList/Question/QuestionChatting/QuestionBanner';
+import useHistoryProblemStore from '@/store/historyProblem';
 
 type IHistoryHelp = {
   historyDto: HistoryDto[];
@@ -47,6 +49,8 @@ function Form() {
   const [historyHistory, setHistoryHistory] =
     useState<HistoryDto[]>(initHistory);
   const [sender, setSender] = useState('');
+  const { zustandHistoryNumber, zustandHistoryProblemName } =
+    useHistoryProblemStore();
 
   useEffect(() => {
     if (roomId && typeof roomId === 'string') {
@@ -175,11 +179,17 @@ function Form() {
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
           <div className={styles.codeEditor}>
+            <div className={styles.Header}>
+              <div className={styles.title}>
+                {zustandHistoryNumber} {zustandHistoryProblemName}
+              </div>
+            </div>
             <QuestionCodeEditor
               initialData={History[order[currentPage - 1][0]]}
             />
           </div>
           <div>
+            <HelpQuestionBanner />
             <QuestionChatting
               messageProps={messageProps}
               messageSender={messageSender}

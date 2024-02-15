@@ -20,14 +20,6 @@ const editorTheme = EditorView.theme({
 
 const QuestionCodeEditor = ({ initialData }: { initialData: string }) => {
   const [valueData, setValueData] = useState<string>(initialData);
-  // 데이터 props로 받기
-  // readonly
-  //   const [maxHeight, setMaxHeight] = useState('');
-
-  //   useEffect(() => {
-  //     if (!ref.current) return;
-  //     setMaxHeight(`${ref.current.offsetHeight - 10}px`);
-  //   }, []);
 
   useEffect(() => {
     if (initialData !== valueData) {
