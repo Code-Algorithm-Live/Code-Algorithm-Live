@@ -53,6 +53,7 @@ public class ChatService {
                 .isClose(false)
                 .content(makeRoomDto.getContent())
                 .title(makeRoomDto.getTitle())
+                .problemId(makeRoomDto.getProblemId())
                 .build();
         chatRoomRepository.save(chatRoom);
         System.out.println("application: " + chatRoom.getSender());
