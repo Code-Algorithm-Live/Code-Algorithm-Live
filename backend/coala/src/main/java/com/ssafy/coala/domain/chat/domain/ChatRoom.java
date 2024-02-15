@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class ChatRoom {
     @Id
     @Column(name = "room_id",length = 16)
@@ -29,7 +32,6 @@ public class ChatRoom {
     private String content;
     private int problemId;
 
-//isclose, title, content, problemId
     @JsonIgnore
     @OneToMany(mappedBy = "")
     @Builder.Default

@@ -37,12 +37,15 @@ public class MatchingServiceImpl implements MatchingService{
             messagingTemplate.convertAndSend( "/sub/queue/match/"+waitDto.getReceiver().getEmail(), waitDto);
             redisService.removeUser(waitDto);
 
-            UUID roomUuid = waitDto.getRoomUuid();
+//            UUID roomUuid = waitDto.getRoomUuid();
             //룸 생성 helpDto 정보
             MakeRoomDto makeRoomDto = new MakeRoomDto();
             makeRoomDto.setRoomUuid(waitDto.getRoomUuid());
             makeRoomDto.setReceiver(waitDto.getReceiver().getNickname());
             makeRoomDto.setSender(waitDto.getSender().getNickname());
+            makeRoomDto.setTitle(waitDto.getHelpDto().getTitle());
+            makeRoomDto.setContent(waitDto.getHelpDto().getContent());
+            makeRoomDto.setProblemId(waitDto.getHelpDto().getNum());
 
             chatService.createRoom(makeRoomDto);
         }else{

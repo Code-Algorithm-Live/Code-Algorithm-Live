@@ -33,6 +33,14 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID> {
     @Query("update chatRoom set isClose = true where roomId in :roomIds")
     void updateIsCloseByRoomIds(@Param("roomIds")List <UUID> roomIds);
 
-    @Query("select c.roomId from chatRoom c where c.isClose = false")
-    List<UUID> findCloseRoomID();
+    @Query(value = "SELECT c.room_id " +
+            "FROM chat_room c " +
+            "WHERE c.is_close = FALSE " +
+            "AND EXISTS (" +
+            "    SELECT 1 " +
+            "    FROM chat_message cm " +
+            "    WHERE cm.room_id = c.room_id " +
+            "    HAVING TIMESTAMPDIFF(MINUTE, MAX(cm.date), NOW()) > 15" +
+            ")", nativeQuery = true)
+    List<UUID> findCloseRoomId();
 }
