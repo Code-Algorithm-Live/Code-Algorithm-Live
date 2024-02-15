@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { useSession } from 'next-auth/react';
 import useHelpFromStore from '@/store/helpForm';
 
 const Container = styled.div`
@@ -55,10 +56,18 @@ const ProfileSpace = styled.div`
 `;
 
 const ProfileImage = () => {
+  const { data: session } = useSession();
   const { helpForm } = useHelpFromStore();
+
+  let imageUrl = helpForm?.sender.image;
+
+  if (session?.user.image && session?.user.image === helpForm?.sender.image) {
+    imageUrl = helpForm?.receiver.image;
+  }
+
   return (
     <ProfileImageWrapper>
-      <Profile imageUrl={helpForm?.sender.image} />
+      <Profile imageUrl={imageUrl} />
     </ProfileImageWrapper>
   );
 };

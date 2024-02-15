@@ -25,7 +25,6 @@ create-env:
     paths:
       - frontend/.env
   only: 
-    - front-develop
     - develop
 
 frontend-build:

@@ -96,6 +96,8 @@ const NoticeCount = styled.span`
   color: var(--white-color);
 `;
 
+const AUTHENTICATED = 'authenticated';
+
 export default function Nav() {
   const { data: session, status } = useSession();
   const [noticeListData, setNoticeListData] = useState<NoticeForm[]>([]);
@@ -106,6 +108,8 @@ export default function Nav() {
   };
 
   useEffect(() => {
+    if (status !== AUTHENTICATED) return;
+
     const fetchData = async () => {
       try {
         const response = await instance.get(

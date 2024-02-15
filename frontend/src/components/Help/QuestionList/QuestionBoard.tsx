@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useEffect } from 'react';
 import styles from '@/components/Help/QuestionList/QuestionBoard.module.scss';
 import { HistoryList } from '@/types/Chat';
 import useHistoryProblemStore from '@/store/historyProblem';
@@ -12,10 +13,22 @@ const QuestionBoard = ({ problemData }: { problemData: HistoryList }) => {
     setZustandHistoryContent,
   } = useHistoryProblemStore();
   const date = problemData.date.substring(0, 10);
-  setZustandHistoryContent(problemData.content);
-  setZustandHistoryNumber(problemData.problemId);
-  setZustandHistorySender(problemData.sender);
-  setZustandHistoryTitle(problemData.title);
+
+  useEffect(() => {
+    setZustandHistoryContent(problemData.content);
+    setZustandHistoryNumber(problemData.problemId);
+    setZustandHistorySender(problemData.sender);
+    setZustandHistoryTitle(problemData.title);
+  }, [
+    problemData.content,
+    problemData.problemId,
+    problemData.sender,
+    problemData.title,
+    setZustandHistoryContent,
+    setZustandHistoryNumber,
+    setZustandHistorySender,
+    setZustandHistoryTitle,
+  ]);
 
   return (
     <Link href={`/help/question-list/question?roomId=${problemData.roomId}`}>
