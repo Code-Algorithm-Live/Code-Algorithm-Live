@@ -35,14 +35,18 @@ const MessageContainer = styled.div`
 interface IMessageProps {
   messageProps: string[][];
   messageSender: string;
-  messageSelect : (index:number) => void;
+  messageSelect: (index: number) => void;
 }
 
-const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMessageProps) => {
+const QuestionChatting = ({
+  messageProps,
+  messageSender,
+  messageSelect,
+}: IMessageProps) => {
   const sender = messageSender;
-  const handleMessageSelect = (index:number) =>{
+  const handleMessageSelect = (index: number) => {
     messageSelect(index);
-  }
+  };
 
   return (
     <div>
@@ -50,32 +54,19 @@ const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMess
         <MessageContainer>
           {messageProps.map((message, index) => {
             let isFirst = false;
-            if (
-              index === 0 ||
-              messageProps[index - 1][0] !== message[0]
-            ) {
+            if (index === 0 || messageProps[index - 1][0] !== message[0]) {
               isFirst = true;
             }
             if (sender === message[0]) {
               return (
-                <div onClick={() => handleMessageSelect(index)}>
-                <MyMessage
-                  key={index}
-                  first={isFirst}
-                  message={message[1]}
-                  date=""
-                />
+                <div key={index} onClick={() => handleMessageSelect(index)}>
+                  <MyMessage first={isFirst} message={message[1]} date="" />
                 </div>
               );
             }
             return (
-              <div onClick={() => handleMessageSelect(index)}>
-              <Message
-                key={index}
-                first={isFirst}
-                message={message[1]}
-                date=""
-              />
+              <div key={index} onClick={() => handleMessageSelect(index)}>
+                <Message first={isFirst} message={message[1]} date="" />
               </div>
             );
           })}
@@ -86,5 +77,3 @@ const QuestionChatting = ({ messageProps, messageSender, messageSelect  }: IMess
 };
 
 export default QuestionChatting;
-
-
