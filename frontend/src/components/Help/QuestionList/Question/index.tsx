@@ -173,7 +173,118 @@ function Form() {
           setHistoryHistory(historyDtoDummy);
         })
         // eslint-disable-next-line no-console
-        .catch(Error => console.log(Error));
+        .catch(Error => {console.log(Error)
+          const messageDtoDummy: MessageDto[] = [
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '차승윤',
+              message: 'test',
+              date: '105535',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '차승윤',
+              message: 'test2',
+              date: '105540',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '차승윤',
+              message: '3',
+              date: '105545',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '4',
+              date: '105550',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '5',
+              date: '105555',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '6',
+              date: '105560',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '6',
+              date: '105560',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '6',
+              date: '105560',
+            },
+            {
+              type: 'ENTER',
+              roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+              sender: '박진아',
+              message: '6',
+              date: '105560',
+            },
+          ];
+          const historyDtoDummy: HistoryDto[] = [
+            {
+              idx: 0,
+              pre: '',
+              next: '1',
+              time: '105530',
+            },
+            {
+              idx: 0,
+              pre: '',
+              next: '2',
+              time: '105549',
+            },
+            {
+              idx: 0,
+              pre: '',
+              next: '3',
+              time: '105550',
+            },
+            {
+              idx: 0,
+              pre: '',
+              next: '4',
+              time: '105551',
+            },
+            {
+              idx: 0,
+              pre: '',
+              next: '5',
+              time: '105552',
+            },
+            {
+              idx: 0,
+              pre: '',
+              next: '6',
+              time: '105558',
+            },
+            {
+              idx: 0,
+              pre: '123',
+              next: '7',
+              time: '105559',
+            },
+          ];
+          setMessageHistory(messageDtoDummy);
+          setHistoryHistory(historyDtoDummy);});
     }
   }, [roomId]);
 
