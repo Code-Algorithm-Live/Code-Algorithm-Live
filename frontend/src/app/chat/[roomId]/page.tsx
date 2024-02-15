@@ -1,8 +1,9 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
 import { fetchPostCompiler } from '@/api/chat';
 import Chatting from '@/components/Chat/Chatting';
 import CodeEditor from '@/components/Chat/CodeEditor';
@@ -12,7 +13,6 @@ import QuestionModal from '@/components/Chat/QuestionModal';
 import Timer from '@/components/Chat/Timer';
 import useHelpFromStore from '@/store/helpForm';
 import { HelpForm } from '@/types/Help';
-import { useRouter } from 'next/navigation';
 
 const Container = styled.div`
   display: flex;
@@ -186,6 +186,12 @@ export default function Chat() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { helpForm } = useHelpFromStore();
+  const handleCloseCodingRef = useRef<{
+    closeCoding: () => void;
+  }>();
+  const handleCloseChatRef = useRef<{
+    closeChat: () => void;
+  }>();
   const router = useRouter();
 
   const handleCodeEditorChange = (value: string) => setCode(value);
@@ -206,6 +212,8 @@ export default function Chat() {
   };
 
   const handleCloseRoom = () => {
+    handleCloseCodingRef.current?.closeCoding();
+    handleCloseChatRef.current?.closeChat();
     router.push('/');
   };
 
@@ -242,7 +250,7 @@ export default function Chat() {
             <CodeEditorContainer>
               <CodeEditor
                 onChange={handleCodeEditorChange}
-                onCloseRoom={handleCloseRoom}
+                ref={handleCloseCodingRef}
               />
               <InputOutput
                 isRunning={compileMutation.isPending}
@@ -276,7 +284,7 @@ export default function Chat() {
             </div>
           </QuestionBannerContainer>
           <div className="chattingContainer">
-            <Chatting />
+            <Chatting ref={handleCloseChatRef} />
           </div>
         </RightContainer>
       </Container>

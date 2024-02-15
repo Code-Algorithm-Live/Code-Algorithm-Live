@@ -184,7 +184,7 @@ const CodeEditor = forwardRef(({ onChange }: CodeEditorProps, ref) => {
     if (isSender) flushHistory();
   };
   useImperativeHandle(ref, () => ({
-    handleClose,
+    closeCoding: handleClose,
   }));
 
   // create a document then attach it into the client.
