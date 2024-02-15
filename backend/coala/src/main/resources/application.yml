@@ -40,6 +40,6 @@ spring:
 
 file:
   upload:
-    directory: C:/coala/data/
+    directory: /coala/data/
     
 
