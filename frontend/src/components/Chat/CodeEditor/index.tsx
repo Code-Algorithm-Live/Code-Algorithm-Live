@@ -52,12 +52,7 @@ const editorTheme = EditorView.theme({
   },
 });
 
-const DEFAULT_CODE = `
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, world!");
-    }
-}`;
+const DEFAULT_CODE = ``;
 const yorkieBaseURL = process.env.NEXT_PUBLIC_YORKIE_BASE_URL || '';
 const YORKIE_API_KEY = process.env.NEXT_PUBLIC_YORKIE_API_KEY || '';
 const MAX_HISTORY = 10;

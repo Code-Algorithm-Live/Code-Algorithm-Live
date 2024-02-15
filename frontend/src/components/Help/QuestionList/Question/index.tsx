@@ -189,16 +189,17 @@ function Form() {
             messageDto,
           }: { historyDto: HistoryDto[]; messageDto: MessageDto[] } = data;
           let date = new Date();
-          if (historyDto.length > 0) {
+          if (historyDto.length === 0) {
             date = new Date(historyDto[0].time);
             date.setSeconds(date.getSeconds() - 1);
+            historyDto.unshift({
+              idx: 120,
+              pre: '',
+              next: 'public class Main\n{ public static void main(String[] args) {\nSystem.out.println("Hello, world!");\n}\n} ',
+              time: date.toISOString(),
+            });
           }
-          historyDto.unshift({
-            idx: 120,
-            pre: '',
-            next: 'public class Main\n{ public static void main(String[] args) {\nSystem.out.println("Hello, world!");\n}\n} ',
-            time: date.toISOString(),
-          });
+
           setMessageHistory(messageDto);
           setHistoryHistory(historyDto);
         })

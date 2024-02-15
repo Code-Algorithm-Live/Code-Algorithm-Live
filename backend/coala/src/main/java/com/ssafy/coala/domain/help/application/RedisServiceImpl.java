@@ -109,7 +109,7 @@ public class RedisServiceImpl implements RedisService {
         redisTemplate.opsForList().rightPush(Integer.toString(waitDto.getHelpDto().getNum()), waitDto);
         //대기열 만료 시간 설정
         String hashKey = Integer.toString(waitDto.getSender().hashCode());
-        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
+        redisTemplate.opsForHash().put(MATCH_QUEUE_KEY + ":expiration", hashKey, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(300));
 
         problemService.questionCntIncrease(waitDto.getHelpDto().getNum());
     }
