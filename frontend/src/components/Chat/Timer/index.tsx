@@ -53,7 +53,7 @@ const REMAIN_TIME = convertMinutesToMilliseconds(9); // 연장하기 버튼이 �
 const EXTEND_TIME = 30; // 연장 시간
 
 const Timer = () => {
-  const { time, increaseTime, clearTimer } = useTimer({ initMinutes: 10 });
+  const { time, increaseTime, clearTimer } = useTimer({ initMinutes: 60 });
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
