@@ -59,7 +59,7 @@ docker-build:
     - docker push ${DOCKER_HUB_USER}/frontend:frontend-latest
   only:
     - develop # master 브랜치에 push될 때만 배포
-    - front-develop
+  
 
 docker-pull:
   stage: docker-pull
@@ -80,4 +80,4 @@ docker-pull:
     - docker image prune -f
   only:
     - develop # master 브랜치에 push될 때만 배포
-    - front-develop
+
