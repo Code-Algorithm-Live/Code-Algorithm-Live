@@ -158,7 +158,6 @@ export default function Chat() {
               <div className="lang">
                 <select name="" id="">
                   <option value="">java</option>
-                  <option value="">python</option>
                 </select>
               </div>
             </div>
