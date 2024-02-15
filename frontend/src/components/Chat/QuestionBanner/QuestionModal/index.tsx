@@ -1,7 +1,7 @@
 import BasicModal from '@/components/Common/Modal';
 import QuestionContent, {
   QuestionContentProps,
-} from '@/components/Chat/QuestionModal/QuestionContent';
+} from '@/components/Chat/QuestionBanner/QuestionModal/QuestionContent';
 
 const QuestionModal = ({
   isOpen,

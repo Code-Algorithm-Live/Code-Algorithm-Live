@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import Message from '@/components/Chat/Chatting/Message';
 import MyMessage from '@/components/Chat/Chatting/MyMessage';
-// import MyBubble from '@/components/Chat/Chatting/MyMessage';
+import QuestionBanner from './QuestionBanner';
 
 const Container = styled.div`
   position: relative;
@@ -9,6 +9,8 @@ const Container = styled.div`
   width: 30%;
   min-width: 327px;
   background: var(--editorBlack, #282a36);
+
+  overflow: hidden;
 `;
 
 const MessageContainer = styled.div`
@@ -17,6 +19,7 @@ const MessageContainer = styled.div`
   gap: 24px;
 
   min-width: 327px;
+  height: 488px;
   padding: 7px;
   overflow-y: scroll;
 
@@ -42,6 +45,7 @@ const QuestionChatting = ({ messageProps, messageSender }: IMessageProps) => {
   return (
     <div>
       <Container>
+        <QuestionBanner />
         <MessageContainer>
           {messageProps.map((message, index) => {
             let isFirst = false;
