@@ -41,7 +41,6 @@ Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 �
 - 노션 가이드 링크
 https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
 
-## 화면 구성
 
 ## 주요 기능
 
@@ -91,7 +90,7 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   <img src="https://img.shields.io/badge/Redis-003545?style=for-the-badge&logo=Redis&logoColor=black"> 
   <br>
   
-  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+  <img src="https://img.shields.io/badge/Next.js-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
   <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
   <br>
   
