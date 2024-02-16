@@ -207,6 +207,7 @@ function Form() {
         // eslint-disable-next-line no-console
         .catch(Error => console.log(Error));
 
+      /** TODO: 백엔드 api sender 값 수정 필요 
       instance
         .get<ChatRoomInfo>(`/chat/room/${roomId}`)
         .then(({ data }: { data: ChatRoomInfo }) => {
@@ -215,6 +216,7 @@ function Form() {
         })
         // eslint-disable-next-line no-console
         .catch(Error => console.error(Error));
+   */
     }
   }, [roomId]);
 
