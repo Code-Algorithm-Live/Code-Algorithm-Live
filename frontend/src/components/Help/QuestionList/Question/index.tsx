@@ -202,6 +202,7 @@ function Form() {
 
           setMessageHistory(messageDto);
           setHistoryHistory(historyDto);
+          setSender(messageDto[0].sender);
         })
         // eslint-disable-next-line no-console
         .catch(Error => console.log(Error));
@@ -210,6 +211,7 @@ function Form() {
         .get<ChatRoomInfo>(`/chat/room/${roomId}`)
         .then(({ data }: { data: ChatRoomInfo }) => {
           setSender(data.sender);
+          console.log('data', data);
         })
         // eslint-disable-next-line no-console
         .catch(Error => console.error(Error));
@@ -217,6 +219,8 @@ function Form() {
   }, [roomId]);
 
   const messageSender = sender;
+
+  console.log('sender', sender);
 
   const [currentPage, setCurrentPage] = useState(1);
   const historyPage = historyHistory.length;
