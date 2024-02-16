@@ -17,8 +17,23 @@ type IHistoryHelp = {
   messageDto: MessageDto[];
 };
 
-const initHistory: HistoryDto[] = [];
-const initMessage: MessageDto[] = [];
+const initHistory: HistoryDto[] = [
+  {
+    idx: 1,
+    pre: '',
+    next: '',
+    time: '2024-02-14T07:42:07.368Z',
+  },
+];
+const initMessage: MessageDto[] = [
+  {
+    type: 'TALK',
+    roomId: '',
+    sender: '',
+    message: '',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+];
 /**
  * 문제 번호, 질문 번호, 제목, 내용, 질문자 닉네임은 히스토리 들어오려고 클릭하면 hitstoryProblem.ts(스토어)에 들어가도록 해놓음. 필요 시 사용
  */
@@ -150,9 +165,7 @@ function Form() {
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
           <div className={styles.codeEditor}>
-            <QuestionCodeEditor
-              initialData={History.length > 0 ? History[currentPage - 1] : ''}
-            />
+            <QuestionCodeEditor initialData={History[currentPage - 1]} />
           </div>
           <div>
             <QuestionChatting

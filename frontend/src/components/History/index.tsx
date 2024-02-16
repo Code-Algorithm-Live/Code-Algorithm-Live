@@ -19,8 +19,23 @@ type IHistoryHelp = {
   messageDto: MessageDto[];
 };
 
-const initHistory: HistoryDto[] = [];
-const initMessage: MessageDto[] = [];
+const initHistory: HistoryDto[] = [
+  {
+    idx: 1,
+    pre: '',
+    next: '',
+    time: '2024-02-14T07:42:07.368Z',
+  },
+];
+const initMessage: MessageDto[] = [
+  {
+    type: 'TALK',
+    roomId: '',
+    sender: '',
+    message: '',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+];
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -144,9 +159,7 @@ const HistoryPage = () => {
         <Container>
           <HistoryContainer>
             <div className={styles.codeEditor}>
-              <QuestionCodeEditor
-                initialData={History.length > 0 ? History[currentPage - 1] : ''}
-              />
+              <QuestionCodeEditor initialData={History[currentPage - 1]} />
             </div>
             <div>
               <QuestionChatting
