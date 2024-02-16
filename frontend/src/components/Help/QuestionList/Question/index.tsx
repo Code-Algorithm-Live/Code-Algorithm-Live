@@ -7,7 +7,7 @@ import QuestionCodeEditor from '@/components/Help/QuestionList/Question/Question
 import QuestionChatting from '@/components/Help/QuestionList/Question/QuestionChatting';
 import MoveButton from '@/components/Help/QuestionList/Question/MoveButton';
 import SlideBar from '@/components/Help/QuestionList/Question/SlideBar';
-import { HistoryDto, MessageDto, ChatRoomInfo } from '@/types/HelpHistory';
+import { HistoryDto, MessageDto } from '@/types/HelpHistory';
 import styles from '@/components/Help/QuestionList/Question/index.module.scss';
 // import useProblemNumberStore from '@/store/problemNumber';
 import NavBar from '@/components/Help/NavBar';
@@ -17,154 +17,8 @@ type IHistoryHelp = {
   messageDto: MessageDto[];
 };
 
-const initHistory: HistoryDto[] = [
-  {
-    idx: 111,
-    pre: '      qeqrewtert\n        xcvb\n        fsd\n        h\n        ',
-    next: '',
-    time: '2024-02-14T07:42:07.368Z',
-  },
-  {
-    idx: 111,
-    pre: '\n',
-    next: '',
-    time: '2024-02-14T07:42:07.619Z',
-  },
-  {
-    idx: 115,
-    pre: '',
-    next: '  \n    ',
-    time: '2024-02-14T07:42:07.654Z',
-  },
-  {
-    idx: 115,
-    pre: '  ',
-    next: 'dqwdwqdasdasdsadasd',
-    time: '2024-02-14T07:42:09.073Z',
-  },
-  {
-    idx: 113,
-    pre: '  ',
-    next: 'sasaddasads',
-    time: '2024-02-14T07:42:09.423Z',
-  },
-  {
-    idx: 111,
-    pre: '  ',
-    next: '',
-    time: '2024-02-14T07:42:09.704Z',
-  },
-  {
-    idx: 111,
-    pre: '\n',
-    next: '',
-    time: '2024-02-14T07:42:09.974Z',
-  },
-  {
-    idx: 117,
-    pre: '',
-    next: '  \n',
-    time: '2024-02-14T07:43:59.036Z',
-  },
-  {
-    idx: 119,
-    pre: '',
-    next: 'w',
-    time: '2024-02-14T07:43:59.665Z',
-  },
-  {
-    idx: 120,
-    pre: '',
-    next: 'e',
-    time: '2024-02-14T07:43:59.810Z',
-  },
-];
-const initMessage: MessageDto[] = [
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender1',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-  {
-    type: 'TALK',
-    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    sender: 'sender2',
-    message: '',
-    date: '2024-02-12T03:18:20.7195703',
-  },
-];
+const initHistory: HistoryDto[] = [];
+const initMessage: MessageDto[] = [];
 /**
  * 문제 번호, 질문 번호, 제목, 내용, 질문자 닉네임은 히스토리 들어오려고 클릭하면 hitstoryProblem.ts(스토어)에 들어가도록 해놓음. 필요 시 사용
  */
