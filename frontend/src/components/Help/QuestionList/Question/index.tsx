@@ -84,7 +84,84 @@ const initMessage: MessageDto[] = [
     type: 'TALK',
     roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     sender: 'sender1',
+    message: '423424234234234234',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: '2asdfsdfasfsdfs',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: 'asdfasdfsf',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender1',
+    message: 'asdfsfasfdas',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender1',
+    message: 'cvbcvbcvb',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender1',
+    message: 'rwteert',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: 'dfgdfgdfsg',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: 'ngnfghdfgegr',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: 'erwerwrwerewrwewrwrwrewrwerwe',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender1',
+    message: 'ewrewrwr',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender1',
     message: '',
+    date: '2024-02-12T03:18:20.7195703',
+  },
+  {
+    type: 'TALK',
+    roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    sender: 'sender2',
+    message: '3333333333333333333333333',
     date: '2024-02-12T03:18:20.7195703',
   },
 ];
@@ -100,7 +177,7 @@ function Form() {
     useState<MessageDto[]>(initMessage);
   const [historyHistory, setHistoryHistory] =
     useState<HistoryDto[]>(initHistory);
-  const [sender, setSender] = useState('');
+  const [sender, setSender] = useState('sender1');
 
   useEffect(() => {
     if (roomId && typeof roomId === 'string') {
@@ -116,17 +193,16 @@ function Form() {
         })
         // eslint-disable-next-line no-console
         .catch(Error => console.log(Error));
-    }
-  }, [roomId]);
 
-  useEffect(() => {
-    instance
-      .get<ChatRoomInfo>(`/chat/room/${roomId}`)
-      .then(({ data }: { data: ChatRoomInfo }) => {
-        setSender(data.sender);
-      })
-      // eslint-disable-next-line no-console
-      .catch(Error => console.error(Error));
+      instance
+        .get<ChatRoomInfo>(`/chat/room/${roomId}`)
+        .then(({ data }: { data: ChatRoomInfo }) => {
+          setSender(data.sender);
+          console.log('sender', sender);
+        })
+        // eslint-disable-next-line no-console
+        .catch(Error => console.error(Error));
+    }
   }, [roomId]);
 
   const messageSender = sender;
@@ -217,6 +293,9 @@ function Form() {
 
   // 현재페이지에 맞는 데이터값 파악(ex- 메세지 몇 번째, 히스토리 몇 번째)
   //    양 데이터 초기값 시간 비교
+
+  console.log('messageProps', messageProps);
+  console.log('sender', sender);
 
   return (
     <div>
