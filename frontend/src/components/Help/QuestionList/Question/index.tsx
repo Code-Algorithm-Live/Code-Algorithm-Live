@@ -150,7 +150,9 @@ function Form() {
       <div className={styles.allContainer}>
         <div className={styles.historyContainer}>
           <div className={styles.codeEditor}>
-            <QuestionCodeEditor initialData={History[currentPage - 1]} />
+            <QuestionCodeEditor
+              initialData={History.length > 0 ? History[currentPage - 1] : ''}
+            />
           </div>
           <div>
             <QuestionChatting
