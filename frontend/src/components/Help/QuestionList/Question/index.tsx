@@ -205,17 +205,15 @@ function Form() {
         })
         // eslint-disable-next-line no-console
         .catch(Error => console.log(Error));
-    }
-  }, [roomId]);
 
-  useEffect(() => {
-    instance
-      .get<ChatRoomInfo>(`/chat/room/${roomId}`)
-      .then(({ data }: { data: ChatRoomInfo }) => {
-        setSender(data.sender);
-      })
-      // eslint-disable-next-line no-console
-      .catch(Error => console.error(Error));
+      instance
+        .get<ChatRoomInfo>(`/chat/room/${roomId}`)
+        .then(({ data }: { data: ChatRoomInfo }) => {
+          setSender(data.sender);
+        })
+        // eslint-disable-next-line no-console
+        .catch(Error => console.error(Error));
+    }
   }, [roomId]);
 
   const messageSender = sender;
