@@ -41,6 +41,21 @@ Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 �
 - 노션 가이드 링크
 https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
 
+## 화면 구성
+### 메인페이지
+<img src="/uploads/8b2fb9b163b8d30e77f6250e1e6d4b42/추천.gif">
+
+### 도움 요청 대기열
+<img src="/uploads/e02d9066cbe2d00154a942a6d59613ca/Animation.gif">
+
+### 채팅, 페어프로그래밍
+<img src="/uploads/18046f8889192ed8091e3d0d2c45d941/채팅.gif">
+
+### 코드 편집
+<img src="/uploads/e77ba08afb95f1b5acd24ee7426aae3e/페어프로그래밍.gif">
+
+### 히스토리 보기
+<img src="/uploads/3e9db8cf2adac5af0c936756d49d44c5/히스토리보기.gif">
 
 ## 주요 기능
 
@@ -90,7 +105,7 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   <img src="https://img.shields.io/badge/Redis-003545?style=for-the-badge&logo=Redis&logoColor=black"> 
   <br>
   
-  <img src="https://img.shields.io/badge/Next.js-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+  <img src="https://img.shields.io/badge/next.js-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
   <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
   <br>
   
@@ -111,4 +126,4 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
 
 ## 아키텍처
 
-![image](/uploads/c3010af5dcfa3c359e143afaa7d4f04c/image.png)
+![image](/uploads/7644fadbacdc701e32ec45173d7bdf7e/image__6_.png)
