@@ -96,8 +96,8 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   
   <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
   <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
-  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
   <img src="https://img.shields.io/badge/Typescript-F7DF1E?style=for-the-badge&logo=Typescript&logoColor=white">
+   <img src="https://img.shields.io/badge/ZusTand-F7DF1E?style=for-the-badge&logo=zustand&logoColor=black">
    
   <br>
   
@@ -109,8 +109,9 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
   <br>
   
-  <img src="https://img.shields.io/badge/spring-boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white">
-  <img src="https://img.shields.io/badge/WebSocket-6DB33F?style=for-the-badge&logo=WebSocket&logoColor=black">  
+  <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white">
+  <img src="https://img.shields.io/badge/WebSocket-6DB33F?style=for-the-badge&logo=WebSocket&logoColor=black">
+  <img src="https://img.shields.io/badge/stomp-6DB33F?style=for-the-badge&logo=stomp&logoColor=white">  
   <br>
 
   <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> 
@@ -120,7 +121,7 @@ https://fern-marble-d91.notion.site/SSAFY-3ad03986590b4b738aed7c54107734bb?pvs=4
   
   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
   <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/fontawesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white">
+  
   <br>
 </div>
 
