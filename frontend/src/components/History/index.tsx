@@ -2,7 +2,7 @@
 
 import styled from 'styled-components';
 import { useParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { instance } from '@/api/instance';
 import { HistoryDto, MessageDto } from '@/types/HelpHistory';
@@ -108,13 +108,14 @@ const HistoryContainer = styled.div`
 
 const HistoryPage = () => {
   const params = useParams<{ roomId: string }>();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const { roomId } = params;
   const [messageHistory, setMessageHistory] =
     useState<MessageDto[]>(initMessage);
   const [historyHistory, setHistoryHistory] =
     useState<HistoryDto[]>(initHistory);
-  const messageSender = session?.user.name as string;
+  // TODO: 백엔드 api 수정 필요 const messageSender = session?.user.name as string;
+  const messageSender = messageHistory[0].sender;
 
   useEffect(() => {
     if (roomId && typeof roomId === 'string') {
