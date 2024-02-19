@@ -4,3 +4,6 @@ node_modules
 frontend/.next/
 frontend/node_modules/
 frontend/.vscode/
+
+backend/coala/src/main/resources/application.yml
+backend/coala/src/main/resources/application-jwt.yml
