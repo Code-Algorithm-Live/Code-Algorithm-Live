@@ -1,13 +1,14 @@
-# README
-# SpringBoot, Next.js
+# 나를 위한 알고리즘 문제 추천과 동시 편집 기능을 제공, 코드 알고리즘 라이브
 
-# Coala (Code Algorithm Live)
+![추천](https://github.com/Code-Algorithm-Live/Code-Algorithm-Live/assets/76770475/f9db868d-fafc-4d8e-818b-daff2aa92034)
 
-<img src="/uploads/bf6bb134c19afad7191fba3846283501/image.png">
+
+![Untitled](https://github.com/Code-Algorithm-Live/Code-Algorithm-Live/assets/76770475/4ba729d6-2466-4315-8ae3-77e826a70fbd)
 
 ## 프로젝트 정보
 
-Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 프로젝트입니다.
+SpringBoot와 Next.js를 사용하여 (1/8 ~ 2/16) 동안 개발한 프로젝트입니다.
+
 
 ## 팀 소개
 
@@ -15,19 +16,17 @@ Coala는 SSAFY 2학기 공통 프로젝트 기간(1/8 ~ 2/16) 동안 개발한 �
 
 * 백엔드
 
-  * 차승윤: 팀장, 지라매니저, 채팅, 인프라
+  * 차승윤: 팀장, Backend(채팅, 알림, 회원), Infra
 
-  * 차우열: 문제 추천, 코드 편집기 컴파일, 페어프로그래밍
-
-  * 이재진: 싸탈
+  * 차우열: Backend(문제 추천, 코드 편집기 컴파일, 페어프로그래밍, 알림, 회원), DB관리
 
 * 프론트
 
-  * 박진아: 채팅과 페어프로그래밍, 프론트 팀장, 인프라, Git 관리
+  * 박진아: 프론트 팀장, 채팅과 페어프로그래밍, Infra, Git 관리
 
-  * 이재종: 유저관리 기능과 메인페이지
+  * 이재종: 유저관리 기능과 메인페이지 UI
 
-  * 유현정: 도움 요청 프로세스
+  * 유현정: 도움 요청 프로세스 UI
 
 ## 프로젝트 소개
 
